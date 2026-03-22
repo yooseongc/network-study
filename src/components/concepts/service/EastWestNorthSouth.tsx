@@ -23,7 +23,7 @@ export function EastWestNorthSouth() {
             const fontSize = Math.max(7.5, Math.min(11, width / 45))
             const subFontSize = Math.max(6, fontSize * 0.75)
             const titleSize = Math.max(10, Math.min(14, width / 35))
-            const padX = Math.max(16, width * 0.05)
+            const padX = Math.max(36, width * 0.08)
 
             // Rack sizing - responsive
             const rackW = Math.min(80, (width - 120) / 4)
@@ -49,8 +49,8 @@ export function EastWestNorthSouth() {
             const borderDevStartY = dcTop + 28
             const borderDevGap = Math.max(28, (dcBottom - dcTop) * 0.1)
 
-            // Rack row at bottom of DC
-            const rackY = dcBottom - rackH * 0.8
+            // Rack row — leave space below for E-W arrows
+            const rackY = dcBottom - rackH * 1.8
 
             // ── Title ──
             g.append('text')
@@ -105,7 +105,8 @@ export function EastWestNorthSouth() {
                 .attr('stroke-dasharray', '6,4')
 
             g.append('text')
-                .attr('x', dcLeft + 10).attr('y', dcTop + fontSize + 4)
+                .attr('x', dcRight - 10).attr('y', dcTop + fontSize + 4)
+                .attr('text-anchor', 'end')
                 .attr('font-size', fontSize).attr('font-weight', 700)
                 .attr('fill', tc.textMuted).attr('font-family', MONO)
                 .text('Datacenter')
@@ -177,11 +178,16 @@ export function EastWestNorthSouth() {
                     .attr('font-size', fontSize * 0.85).attr('font-weight', 700)
                     .attr('fill', rc.text).attr('font-family', FONT)
                     .text(rack.label)
+                // sublabel: truncate to fit inside rack box
+                const maxChars = Math.max(4, Math.floor(rackW / (subFontSize * 0.55)))
+                const subText = rack.sublabel.length > maxChars
+                    ? rack.sublabel.slice(0, maxChars - 1) + '…'
+                    : rack.sublabel
                 rg.append('text')
                     .attr('text-anchor', 'middle').attr('y', rackH * 0.28)
                     .attr('font-size', subFontSize)
                     .attr('fill', tc.textDim).attr('font-family', MONO)
-                    .text(rack.sublabel)
+                    .text(subText)
             })
 
             // Connect Core Switch to racks
@@ -196,7 +202,8 @@ export function EastWestNorthSouth() {
             // ── North-South traffic arrows ──
             const showNS = view === 'both' || view === 'ns'
             if (showNS) {
-                const nsX = dcLeft + 14
+                // N-S arrows run outside the DC box (left side)
+                const nsX = Math.max(6, dcLeft - 18)
 
                 // NS down arrow
                 g.append('line')
@@ -216,15 +223,15 @@ export function EastWestNorthSouth() {
                     .attr('marker-end', 'url(#ns-arrow)')
                     .attr('opacity', 0.8)
 
-                // NS rotated label
+                // NS rotated label — positioned left of arrows
                 const nsMidY = (internetY + cloudRy + rackY - rackH / 2) / 2
                 g.append('text')
                     .attr('x', nsX + 5).attr('y', nsMidY)
                     .attr('text-anchor', 'middle')
-                    .attr('font-size', fontSize * 0.8).attr('font-weight', 700)
+                    .attr('font-size', fontSize * 0.75).attr('font-weight', 700)
                     .attr('fill', tc.blueText).attr('font-family', MONO)
                     .attr('transform', `rotate(-90, ${nsX + 5}, ${nsMidY})`)
-                    .text('North-South (N-S)')
+                    .text('N-S Traffic')
 
                 // NS badge - responsive position
                 const badgeW = Math.min(180, width * 0.4)
@@ -300,7 +307,7 @@ export function EastWestNorthSouth() {
             <D3Container
                 renderFn={renderFn}
                 deps={[isDark, view]}
-                height={450}
+                height={500}
                 className="rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900"
                 zoomable
             />
