@@ -163,7 +163,7 @@ export function L4vsL7Diagram() {
             drawBox(l4x + svOff, startY + 116, boxW4 / 2 - 8, 34, 'Server B', 'amber')
 
             // L4 notes
-            const noteY = startY + 170
+            const noteY = startY + 176
             const notes4 = [
                 'TCP 연결을 종료하지 않음',
                 'IP/Port 기반 라우팅',
@@ -190,15 +190,17 @@ export function L4vsL7Diagram() {
 
             drawBox(l7x, startY + 52, boxW7, 44, 'L7 LB', 'green', 'HTTP 라우팅/TLS 종료')
 
-            // Multiple routing paths
-            drawArrow(l7x - 40, startY + 96, l7x - 50, startY + 114, '/api')
-            drawArrow(l7x, startY + 96, l7x, startY + 114, '/web')
-            drawArrow(l7x + 40, startY + 96, l7x + 50, startY + 114, '/ws')
+            // Multiple routing paths — wider spacing
+            const svOff7 = Math.min(colW / 3, 80)
+            const svBoxW7 = Math.min(svOff7 - 10, 58)
 
-            const svOff7 = 60
-            drawBox(l7x - svOff7, startY + 116, boxW7 / 3 - 2, 34, 'API', 'cyan')
-            drawBox(l7x, startY + 116, boxW7 / 3 - 2, 34, 'Web', 'cyan')
-            drawBox(l7x + svOff7, startY + 116, boxW7 / 3 - 2, 34, 'WS', 'cyan')
+            drawArrow(l7x - 30, startY + 96, l7x - svOff7, startY + 118, '/api')
+            drawArrow(l7x, startY + 96, l7x, startY + 118, '/web')
+            drawArrow(l7x + 30, startY + 96, l7x + svOff7, startY + 118, '/ws')
+
+            drawBox(l7x - svOff7, startY + 120, svBoxW7, 34, 'API', 'cyan')
+            drawBox(l7x, startY + 120, svBoxW7, 34, 'Web', 'cyan')
+            drawBox(l7x + svOff7, startY + 120, svBoxW7, 34, 'WS', 'cyan')
 
             // L7 notes
             const notes7 = [

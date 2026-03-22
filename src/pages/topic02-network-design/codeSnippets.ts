@@ -269,3 +269,49 @@ export const serverFarmHaDiagramCode = `# ── 서버팜 이중화 구성 (Dua
 # ▸ Core-ToR 간: ECMP 또는 MLAG peer-link
 # ▸ LB HA pair: VRRP로 VIP 공유, health check로 서버 상태 감시
 `
+
+export const vlanSwitchConfigCode = `# ── Cisco IOS 스위치 VLAN 설정 예시 ──────────────────────
+
+# 1) VLAN 생성
+Switch(config)# vlan 100
+Switch(config-vlan)# name SERVER
+Switch(config)# vlan 200
+Switch(config-vlan)# name USER
+Switch(config)# vlan 300
+Switch(config-vlan)# name MGMT
+Switch(config)# vlan 400
+Switch(config-vlan)# name VOIP
+Switch(config)# vlan 500
+Switch(config-vlan)# name GUEST
+Switch(config)# vlan 999
+Switch(config-vlan)# name UNUSED
+
+# 2) Access 포트 설정 (사용자 PC 연결 포트)
+Switch(config)# interface GigabitEthernet0/1
+Switch(config-if)# switchport mode access
+Switch(config-if)# switchport access vlan 200
+Switch(config-if)# spanning-tree portfast
+
+# 3) IP Phone + PC 연결 포트 (Voice VLAN)
+Switch(config)# interface GigabitEthernet0/2
+Switch(config-if)# switchport mode access
+Switch(config-if)# switchport access vlan 200      ! PC 트래픽
+Switch(config-if)# switchport voice vlan 400        ! VoIP 트래픽
+
+# 4) Trunk 포트 설정 (스위치 간 연결)
+Switch(config)# interface GigabitEthernet0/24
+Switch(config-if)# switchport mode trunk
+Switch(config-if)# switchport trunk allowed vlan 100,200,300,400
+Switch(config-if)# switchport trunk native vlan 999  ! 보안: 미사용 VLAN
+
+# 5) 미사용 포트 보안 처리
+Switch(config)# interface range GigabitEthernet0/10-20
+Switch(config-if-range)# switchport mode access
+Switch(config-if-range)# switchport access vlan 999
+Switch(config-if-range)# shutdown
+
+# ── Linux VLAN 설정 (iproute2) ────────────────────────
+$ ip link add link eth0 name eth0.100 type vlan id 100
+$ ip addr add 10.10.0.10/16 dev eth0.100
+$ ip link set eth0.100 up`
+

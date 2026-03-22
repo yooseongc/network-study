@@ -23,7 +23,7 @@ export function EastWestNorthSouth() {
             const fontSize = Math.max(7.5, Math.min(11, width / 45))
             const subFontSize = Math.max(6, fontSize * 0.75)
             const titleSize = Math.max(10, Math.min(14, width / 35))
-            const padX = Math.max(36, width * 0.08)
+            const padX = Math.max(50, width * 0.10)
 
             // Rack sizing - responsive
             const rackW = Math.min(80, (width - 120) / 4)
@@ -41,7 +41,7 @@ export function EastWestNorthSouth() {
             const cloudRy = Math.min(20, height * 0.04)
 
             const dcTop = internetY + cloudRy + 22
-            const dcBottom = height - 28
+            const dcBottom = height - 50
             const dcLeft = padX
             const dcRight = width - padX
 
@@ -50,7 +50,7 @@ export function EastWestNorthSouth() {
             const borderDevGap = Math.max(28, (dcBottom - dcTop) * 0.1)
 
             // Rack row — leave space below for E-W arrows
-            const rackY = dcBottom - rackH * 1.8
+            const rackY = dcBottom - rackH * 2.2
 
             // ── Title ──
             g.append('text')
@@ -203,12 +203,12 @@ export function EastWestNorthSouth() {
             const showNS = view === 'both' || view === 'ns'
             if (showNS) {
                 // N-S arrows run outside the DC box (left side)
-                const nsX = Math.max(6, dcLeft - 18)
+                const nsArrowX = Math.max(22, dcLeft - 14)
 
                 // NS down arrow
                 g.append('line')
-                    .attr('x1', nsX).attr('y1', internetY + cloudRy)
-                    .attr('x2', nsX).attr('y2', rackY - rackH / 2 - 4)
+                    .attr('x1', nsArrowX).attr('y1', internetY + cloudRy)
+                    .attr('x2', nsArrowX).attr('y2', rackY - rackH / 2 - 4)
                     .attr('stroke', tc.blueStroke).attr('stroke-width', 2.5)
                     .attr('stroke-dasharray', '6,3')
                     .attr('marker-end', 'url(#ns-arrow)')
@@ -216,21 +216,22 @@ export function EastWestNorthSouth() {
 
                 // NS up arrow
                 g.append('line')
-                    .attr('x1', nsX + 10).attr('y1', rackY - rackH / 2 - 4)
-                    .attr('x2', nsX + 10).attr('y2', internetY + cloudRy)
+                    .attr('x1', nsArrowX + 10).attr('y1', rackY - rackH / 2 - 4)
+                    .attr('x2', nsArrowX + 10).attr('y2', internetY + cloudRy)
                     .attr('stroke', tc.blueStroke).attr('stroke-width', 2.5)
                     .attr('stroke-dasharray', '6,3')
                     .attr('marker-end', 'url(#ns-arrow)')
                     .attr('opacity', 0.8)
 
-                // NS rotated label — positioned left of arrows
+                // NS rotated label — positioned well left of arrows so it doesn't overlap
                 const nsMidY = (internetY + cloudRy + rackY - rackH / 2) / 2
+                const nsLabelX = Math.max(8, nsArrowX - 12)
                 g.append('text')
-                    .attr('x', nsX + 5).attr('y', nsMidY)
+                    .attr('x', nsLabelX).attr('y', nsMidY)
                     .attr('text-anchor', 'middle')
                     .attr('font-size', fontSize * 0.75).attr('font-weight', 700)
                     .attr('fill', tc.blueText).attr('font-family', MONO)
-                    .attr('transform', `rotate(-90, ${nsX + 5}, ${nsMidY})`)
+                    .attr('transform', `rotate(-90, ${nsLabelX}, ${nsMidY})`)
                     .text('N-S Traffic')
 
                 // NS badge - responsive position
@@ -307,7 +308,7 @@ export function EastWestNorthSouth() {
             <D3Container
                 renderFn={renderFn}
                 deps={[isDark, view]}
-                height={500}
+                height={560}
                 className="rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900"
                 zoomable
             />

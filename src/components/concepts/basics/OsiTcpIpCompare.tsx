@@ -143,18 +143,20 @@ export function OsiTcpIpCompare() {
                     .attr('y1', tcpY + 1)
                     .attr('x2', lineX2 - 4)
                     .attr('y2', tcpY + 1)
-                    .attr('stroke', c.border)
+                    .attr('stroke', c.textMuted)
                     .attr('stroke-width', 1)
                     .attr('stroke-dasharray', '4,3')
+                    .attr('opacity', 0.6)
 
                 g.append('line')
                     .attr('x1', lineX1 + 4)
                     .attr('y1', tcpY + h)
                     .attr('x2', lineX2 - 4)
                     .attr('y2', tcpY + h)
-                    .attr('stroke', c.border)
+                    .attr('stroke', c.textMuted)
                     .attr('stroke-width', 1)
                     .attr('stroke-dasharray', '4,3')
+                    .attr('opacity', 0.6)
 
                 tcpY += h + layerGap
             })

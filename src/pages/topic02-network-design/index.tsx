@@ -10,6 +10,7 @@ import { TopicNavigation } from '../../components/ui/TopicNavigation'
 import { CodeBlock } from '../../components/viz/CodeBlock'
 import { HomeVsEnterprise } from '../../components/concepts/topology/HomeVsEnterprise'
 import { NetworkTiersDiagram } from '../../components/concepts/topology/NetworkTiersDiagram'
+import { DevicePlacementDiagram } from '../../components/concepts/topology/DevicePlacementDiagram'
 import {
     homeNetworkConfigCode,
     enterpriseSubnetCode,
@@ -21,6 +22,7 @@ import {
     switchVerifyCommandsCode,
     dualIspVrrpDiagramCode,
     serverFarmHaDiagramCode,
+    vlanSwitchConfigCode,
 } from './codeSnippets'
 
 /* ── 인라인 데이터 ─────────────────────────────────────────────────── */
@@ -104,6 +106,15 @@ const redundancyDetailRows = [
     { cells: ['회선 이중화 (Dual ISP)', '서로 다른 ISP 2회선', 'ISP 장애 시 자동 전환', '인터넷 경계'] },
 ]
 
+const vlanDesignRows = [
+    { cells: ['100', '서버망', '10.10.0.0/16', 'DB, WAS, 파일 서버', '관리망에서만 SSH 허용'] },
+    { cells: ['200', '사용자망', '10.20.0.0/16', '직원 PC, 노트북', '인터넷 허용, 서버망 제한적 접근'] },
+    { cells: ['300', '관리망', '10.30.0.0/24', '스위치/라우터 관리 인터페이스', '관리자만 접근, ACL 엄격'] },
+    { cells: ['400', 'VoIP', '10.40.0.0/24', 'IP Phone', 'QoS 우선 (DSCP EF), 인터넷 차단'] },
+    { cells: ['500', '게스트', '10.50.0.0/24', '방문자 Wi-Fi', '인터넷만 허용, 내부망 완전 차단'] },
+    { cells: ['999', 'Native/Unused', '—', '미사용 포트 격리', '트래픽 차단 (보안)'] },
+]
+
 /* ── 컴포넌트 ──────────────────────────────────────────────────────── */
 
 export default function Topic02() {
@@ -182,6 +193,16 @@ export default function Topic02() {
                     </InfoBox>
                 </CardGrid>
                 <CodeBlock code={homeNetworkConfigCode} language="bash" filename="가정용 공유기 NAT 구성" />
+            </Section>
+
+            {/* ── 장비 배치도 (2.4~2.8 개요) ──────────────────── */}
+            <Section id="s024map" title="이중화 네트워크 장비 배치도">
+                <Prose>
+                    아래 다이어그램은 기업 네트워크의 이중화 구성 예시입니다.
+                    각 계층에서 장비를 2대씩 배치하고, VRRP/MC-LAG/LACP 등으로 이중화합니다.
+                    버튼을 눌러 장비 유형별로 하이라이트할 수 있습니다.
+                </Prose>
+                <DevicePlacementDiagram />
             </Section>
 
             {/* ── 2.4 L2 스위치 ─────────────────────────────────── */}
@@ -286,22 +307,59 @@ export default function Topic02() {
             </Section>
 
             {/* ── 2.10 망 분리 ──────────────────────────────────── */}
-            <Section id="s0210" title="2.10  망 분리의 원칙">
+            <Section id="s0210" title="2.10  망 분리의 원칙과 VLAN 설계">
                 <Prose>
-                    기업 네트워크는 용도에 따라 서버망, 사용자망, 관리망으로 분리합니다.
+                    기업 네트워크는 용도에 따라 서버망, 사용자망, 관리망 등으로 분리합니다.
+                    이 분리는 물리적으로 스위치를 나누는 것이 아니라, 하나의 스위치에서
+                    VLAN(Virtual LAN)을 이용하여 논리적으로 구현합니다.
                 </Prose>
+
+                <Alert variant="tip" title="왜 VLAN으로 망을 분리하는가?">
+                    같은 스위치에 연결되어 있어도 VLAN이 다르면 통신이 불가능합니다.
+                    VLAN 간 통신은 반드시 L3 스위치/라우터를 거쳐야 하므로, 이 지점에서 ACL(접근 제어)을
+                    적용할 수 있습니다. 브로드캐스트 도메인도 VLAN 단위로 분리되어 네트워크 효율이 높아집니다.
+                </Alert>
+
+                <InfoTable
+                    headers={['VLAN ID', '용도', '서브넷', '연결 장비', 'ACL 정책']}
+                    rows={vlanDesignRows}
+                />
+
                 <CodeBlock code={enterpriseSubnetCode} language="bash" filename="기업 서브넷 설계 예시" />
+
                 <CardGrid cols={3}>
-                    <InfoBox color="blue" title="서버망">
-                        웹 서버, DB 서버 등이 위치합니다. 대역: 10.10.x.x/16
+                    <InfoBox color="blue" title="서버망 (VLAN 100)">
+                        웹 서버, DB 서버 등이 위치합니다.
+                        사용자망에서의 접근은 특정 포트만 허용합니다.
                     </InfoBox>
-                    <InfoBox color="green" title="사용자망">
-                        직원들의 PC, 노트북이 연결됩니다. 대역: 10.20.x.x/16
+                    <InfoBox color="green" title="사용자망 (VLAN 200)">
+                        직원들의 PC, 노트북이 연결됩니다.
+                        인터넷 접속은 프록시를 경유합니다.
                     </InfoBox>
-                    <InfoBox color="purple" title="관리망">
-                        네트워크 장비 관리 전용 망입니다. 대역: 10.30.x.x/16
+                    <InfoBox color="purple" title="관리망 (VLAN 300)">
+                        네트워크 장비 관리 전용 망입니다.
+                        네트워크 관리자만 접근 가능합니다.
                     </InfoBox>
                 </CardGrid>
+
+                <CardGrid cols={2}>
+                    <InfoBox color="amber" title="VoIP (VLAN 400)">
+                        IP Phone 전용 VLAN입니다. QoS(DSCP EF) 우선 처리로
+                        통화 품질을 보장하며, 데이터 트래픽과 분리합니다.
+                    </InfoBox>
+                    <InfoBox color="gray" title="게스트 (VLAN 500)">
+                        방문자 Wi-Fi 전용입니다. 인터넷만 허용하고
+                        내부 서버/사용자망 접근은 완전 차단합니다.
+                    </InfoBox>
+                </CardGrid>
+
+                <CodeBlock code={vlanSwitchConfigCode} language="bash" filename="스위치 VLAN 설정 (Cisco IOS / Linux)" />
+
+                <Alert variant="warning" title="VLAN 999 (Native/Unused)">
+                    미사용 포트는 반드시 별도 VLAN에 할당하고 shutdown 처리합니다.
+                    Trunk 포트의 Native VLAN도 기본값(1)이 아닌 미사용 VLAN으로 변경하여
+                    VLAN hopping 공격을 방지합니다.
+                </Alert>
             </Section>
 
             {/* ── 2.11 DMZ ──────────────────────────────────────── */}

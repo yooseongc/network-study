@@ -1,3 +1,4 @@
+import { CardGrid } from '../../components/ui/CardGrid'
 import { Section } from '../../components/ui/Section'
 import { Prose } from '../../components/ui/Prose'
 import { InfoTable } from '../../components/ui/InfoTable'
@@ -287,13 +288,27 @@ export default function Topic09LinuxStack() {
                     그리고 모든 패킷을 표현하는 sk_buff 구조체의 내부를 살펴보았습니다.
                 </Prose>
 
-                <InfoBox color="gray" title="핵심 정리">
-                    1) 리눅스 네트워크 스택은 User Space &rarr; System Call &rarr; Socket &rarr; Transport &rarr; IP &rarr; Netfilter &rarr; Driver &rarr; NIC의 계층 구조입니다.
-                    2) NIC 드라이버는 DMA Ring Buffer를 통해 패킷을 효율적으로 전달하며, ethtool로 관리합니다.
-                    3) NAPI는 인터럽트와 폴링의 하이브리드 모델로, 고속 패킷 처리를 효율화합니다.
-                    4) sk_buff(skb)는 head/data/tail/end 포인터로 제로카피 패킷 처리를 구현합니다.
-                    5) sysctl의 rp_filter, ip_forward, tcp_* 파라미터로 네트워크 동작과 성능을 제어합니다.
-                </InfoBox>
+                <CardGrid cols={2}>
+                    <InfoBox color="blue" title="네트워크 스택 구조">
+                        User Space → System Call → Socket → Transport → IP → Netfilter → Driver → NIC 계층으로 구성됩니다.
+                    </InfoBox>
+                    <InfoBox color="green" title="NIC 드라이버">
+                        DMA Ring Buffer를 통해 패킷을 CPU 개입 없이 메모리로 전달합니다.
+                        ethtool로 offload, 통계, 링 버퍼 크기를 관리합니다.
+                    </InfoBox>
+                    <InfoBox color="amber" title="NAPI">
+                        인터럽트(소량 트래픽) + 폴링(대량 트래픽) 하이브리드 모델로
+                        인터럽트 오버헤드를 줄이고 고속 패킷 처리를 효율화합니다.
+                    </InfoBox>
+                    <InfoBox color="purple" title="sk_buff (skb)">
+                        head/data/tail/end 4개 포인터로 헤더 추가/제거 시 메모리 복사 없이
+                        포인터만 이동하여 제로카피 패킷 처리를 구현합니다.
+                    </InfoBox>
+                    <InfoBox color="cyan" title="sysctl 파라미터">
+                        rp_filter(역방향 경로 검증), ip_forward(라우팅 활성화),
+                        tcp_* 파라미터로 네트워크 동작과 성능을 세밀하게 제어합니다.
+                    </InfoBox>
+                </CardGrid>
 
                 <Alert variant="info" title="다음 토픽:">
                     Topic 10에서는 iproute2 도구를 활용한 리눅스 네트워크 관리를 상세히 다룹니다.

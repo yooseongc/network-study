@@ -27,7 +27,7 @@ export function NetworkTiersDiagram() {
             const tiers = [
                 { y: 30, h: 90, label: 'Core Layer', sublabel: '고속 백본, 라우팅 집중', fill: tc.redFill, stroke: tc.redStroke, text: tc.redText },
                 { y: 135, h: 110, label: 'Distribution Layer', sublabel: '정책, VLAN 간 라우팅, ACL', fill: tc.amberFill, stroke: tc.amberStroke, text: tc.amberText },
-                { y: 260, h: 110, label: 'Access Layer', sublabel: '사용자/서버 연결, PoE', fill: tc.greenFill, stroke: tc.greenStroke, text: tc.greenText },
+                { y: 260, h: 150, label: 'Access Layer', sublabel: '사용자/서버 연결, PoE', fill: tc.greenFill, stroke: tc.greenStroke, text: tc.greenText },
             ]
 
             for (const tier of tiers) {
@@ -158,7 +158,7 @@ export function NetworkTiersDiagram() {
         <D3Container
             renderFn={renderFn}
             deps={[isDark]}
-            height={390}
+            height={430}
             className="rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900"
             zoomable
         />

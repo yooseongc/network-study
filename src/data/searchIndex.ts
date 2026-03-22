@@ -28,7 +28,8 @@ export const sectionIndex: SectionEntry[] = [
     { topicId: '02-network-design', sectionId: 's027', title: '2.7  방화벽', route: '/topic/02-network-design#s027' },
     { topicId: '02-network-design', sectionId: 's028', title: '2.8  L4 / L7 로드밸런서', route: '/topic/02-network-design#s028' },
     { topicId: '02-network-design', sectionId: 's029', title: '2.9  스위치 계층 구조 (3-Tier Architecture)', route: '/topic/02-network-design#s029' },
-    { topicId: '02-network-design', sectionId: 's0210', title: '2.10  망 분리의 원칙', route: '/topic/02-network-design#s0210' },
+    { topicId: '02-network-design', sectionId: 's024map', title: '이중화 네트워크 장비 배치도', route: '/topic/02-network-design#s024map' },
+    { topicId: '02-network-design', sectionId: 's0210', title: '2.10  망 분리의 원칙과 VLAN 설계', route: '/topic/02-network-design#s0210' },
     { topicId: '02-network-design', sectionId: 's0211', title: '2.11  DMZ의 개념과 목적', route: '/topic/02-network-design#s0211' },
     { topicId: '02-network-design', sectionId: 's0212', title: '2.12  보안장비 배치', route: '/topic/02-network-design#s0212' },
     { topicId: '02-network-design', sectionId: 's0213', title: '2.13  이중화 구성 상세', route: '/topic/02-network-design#s0213' },
@@ -43,8 +44,10 @@ export const sectionIndex: SectionEntry[] = [
     { topicId: '03-link-layer', sectionId: 's036', title: '3.6  ARP 동작 과정', route: '/topic/03-link-layer#s036' },
     { topicId: '03-link-layer', sectionId: 's037', title: '3.7  유니캐스트, 브로드캐스트, 멀티캐스트', route: '/topic/03-link-layer#s037' },
     { topicId: '03-link-layer', sectionId: 's038', title: '3.8  VLAN과 802.1Q', route: '/topic/03-link-layer#s038' },
-    { topicId: '03-link-layer', sectionId: 's039', title: '3.9  NIC Bonding과 LACP', route: '/topic/03-link-layer#s039' },
-    { topicId: '03-link-layer', sectionId: 's0310', title: '3.10  요약', route: '/topic/03-link-layer#s0310' },
+    { topicId: '03-link-layer', sectionId: 's039', title: '3.9  Double VLAN (QinQ)과 VLAN 확장', route: '/topic/03-link-layer#s039' },
+    { topicId: '03-link-layer', sectionId: 's0310', title: '3.10  NIC Bonding과 LACP', route: '/topic/03-link-layer#s0310' },
+    { topicId: '03-link-layer', sectionId: 's0311', title: '3.11  Speed, Duplex, Link State', route: '/topic/03-link-layer#s0311' },
+    { topicId: '03-link-layer', sectionId: 's0312', title: '3.12  요약', route: '/topic/03-link-layer#s0312' },
 
     // Topic 04 — IP 주소와 라우팅의 기초
     { topicId: '04-ip-routing', sectionId: 's041', title: '4.1  IPv4 주소 구조', route: '/topic/04-ip-routing#s041' },

@@ -217,7 +217,7 @@ export function TroubleshootFlowDiagram() {
 
     return (
         <div className="space-y-3">
-            <D3Container renderFn={render} deps={[isDark, activeStep]} height={590} />
+            <D3Container renderFn={render} deps={[isDark, activeStep]} height={640} />
             <div className="flex items-center justify-center gap-2">
                 <button
                     onClick={() => setActiveStep(Math.max(0, activeStep - 1))}

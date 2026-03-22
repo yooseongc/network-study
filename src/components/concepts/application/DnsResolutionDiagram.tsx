@@ -33,15 +33,15 @@ const dnsSteps = [
     },
 ]
 
-/* positions */
-const CX = 70   // Client
-const LX = 210  // Local Resolver
-const RX = 350  // Root NS
-const TX = 490  // TLD NS
-const AX = 630  // Auth NS
-const Y_TOP = 40
-const Y_BOT = 130
-const BOX_W = 100
+/* positions — wider spacing to avoid label overlap */
+const CX = 70    // Client
+const LX = 240   // Local Resolver
+const RX = 420   // Root NS
+const TX = 600   // TLD NS
+const AX = 780   // Auth NS
+const Y_TOP = 44
+const Y_BOT = 140
+const BOX_W = 110
 const BOX_H = 44
 
 function ServerBox({
@@ -172,7 +172,7 @@ function Arrow({
 
 export function DnsResolutionDiagram() {
     const renderStep = (step: number) => (
-        <svg viewBox="0 0 700 180" className="w-full h-auto" style={{ maxHeight: 260 }}>
+        <svg viewBox="0 0 860 195" className="w-full h-auto" style={{ maxHeight: 280 }}>
             {/* Server boxes */}
             <ServerBox
                 x={CX} y={Y_BOT} label="Client" sub="stub resolver"
@@ -236,8 +236,8 @@ export function DnsResolutionDiagram() {
 
             {/* Query label */}
             <text
-                x={350}
-                y={175}
+                x={430}
+                y={188}
                 textAnchor="middle"
                 className="fill-gray-500 dark:fill-gray-400"
                 style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 9 }}

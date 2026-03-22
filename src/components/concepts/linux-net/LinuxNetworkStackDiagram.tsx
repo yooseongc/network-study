@@ -34,7 +34,7 @@ export function LinuxNetworkStackDiagram() {
             const innerW = width - pad.left - pad.right
             const boxW = Math.min(innerW, 560)
             const boxH = 40
-            const gap = 6
+            const gap = 16
             const totalH = layers.length * (boxH + gap) - gap
             const offsetX = pad.left + (innerW - boxW) / 2
             const offsetY = pad.top
@@ -88,61 +88,65 @@ export function LinuxNetworkStackDiagram() {
                 if (i < layers.length - 1) {
                     const arrowY = y + boxH + gap / 2
                     const arrowX = offsetX + boxW / 2
+                    // Vertical line connecting boxes
                     g.append('line')
-                        .attr('x1', arrowX - 8)
-                        .attr('y1', arrowY - 1)
-                        .attr('x2', arrowX + 8)
-                        .attr('y2', arrowY - 1)
-                        .attr('stroke', 'none')
-                    // Small downward triangle
+                        .attr('x1', arrowX)
+                        .attr('y1', y + boxH + 2)
+                        .attr('x2', arrowX)
+                        .attr('y2', y + boxH + gap - 2)
+                        .attr('stroke', c.textMuted)
+                        .attr('stroke-width', 1.5)
+                    // Downward triangle
                     g.append('path')
-                        .attr('d', `M${arrowX - 5},${arrowY - 2} L${arrowX + 5},${arrowY - 2} L${arrowX},${arrowY + 2} Z`)
-                        .attr('fill', c.textDim)
+                        .attr('d', `M${arrowX - 6},${arrowY - 3} L${arrowX + 6},${arrowY - 3} L${arrowX},${arrowY + 4} Z`)
+                        .attr('fill', c.textMuted)
                 }
             })
 
-            // Side labels
-            const txLabel = offsetY + totalH / 2 - 20
-            const rxLabel = offsetY + totalH / 2 + 10
+            // Side arrows: TX (left, top→bottom) and RX (right, bottom→top)
+            const arrowLen = totalH * 0.5
+            const sideMargin = 22
 
+            // TX — left side, downward
+            const txX = offsetX - sideMargin
+            const txTop = offsetY + totalH * 0.15
+            const txBot = txTop + arrowLen
+            g.append('line')
+                .attr('x1', txX).attr('y1', txTop)
+                .attr('x2', txX).attr('y2', txBot)
+                .attr('stroke', c.blueStroke).attr('stroke-width', 2)
+            g.append('path')
+                .attr('d', `M${txX - 5},${txBot - 6} L${txX},${txBot + 2} L${txX + 5},${txBot - 6}`)
+                .attr('fill', c.blueStroke)
             g.append('text')
-                .attr('x', offsetX - 10)
-                .attr('y', txLabel)
-                .attr('text-anchor', 'end')
-                .attr('font-size', 10)
+                .attr('x', txX).attr('y', txTop - 8)
+                .attr('text-anchor', 'middle')
+                .attr('font-size', 10).attr('font-weight', 700)
                 .attr('fill', c.blueText)
                 .attr('font-family', "'JetBrains Mono', monospace")
-                .text('TX (send)')
+                .text('TX ↓')
 
+            // RX — right side, upward
+            const rxX = offsetX + boxW + sideMargin
+            const rxBot = offsetY + totalH * 0.85
+            const rxTop = rxBot - arrowLen
+            g.append('line')
+                .attr('x1', rxX).attr('y1', rxBot)
+                .attr('x2', rxX).attr('y2', rxTop)
+                .attr('stroke', c.greenStroke).attr('stroke-width', 2)
+            g.append('path')
+                .attr('d', `M${rxX - 5},${rxTop + 6} L${rxX},${rxTop - 2} L${rxX + 5},${rxTop + 6}`)
+                .attr('fill', c.greenStroke)
             g.append('text')
-                .attr('x', offsetX + boxW + 10)
-                .attr('y', rxLabel)
-                .attr('font-size', 10)
+                .attr('x', rxX).attr('y', rxBot + 16)
+                .attr('text-anchor', 'middle')
+                .attr('font-size', 10).attr('font-weight', 700)
                 .attr('fill', c.greenText)
                 .attr('font-family', "'JetBrains Mono', monospace")
-                .text('RX (recv)')
-
-            // Down arrow for TX
-            g.append('path')
-                .attr('d', `M${offsetX - 15},${txLabel + 6} L${offsetX - 15},${txLabel + 30}`)
-                .attr('stroke', c.blueStroke)
-                .attr('stroke-width', 1.5)
-                .attr('marker-end', 'none')
-            g.append('path')
-                .attr('d', `M${offsetX - 19},${txLabel + 26} L${offsetX - 15},${txLabel + 32} L${offsetX - 11},${txLabel + 26}`)
-                .attr('fill', c.blueStroke)
-
-            // Up arrow for RX
-            g.append('path')
-                .attr('d', `M${offsetX + boxW + 15},${rxLabel + 6} L${offsetX + boxW + 15},${rxLabel - 18}`)
-                .attr('stroke', c.greenStroke)
-                .attr('stroke-width', 1.5)
-            g.append('path')
-                .attr('d', `M${offsetX + boxW + 11},${rxLabel - 14} L${offsetX + boxW + 15},${rxLabel - 20} L${offsetX + boxW + 19},${rxLabel - 14}`)
-                .attr('fill', c.greenStroke)
+                .text('RX ↑')
         },
         [isDark],
     )
 
-    return <D3Container renderFn={render} deps={[isDark]} height={460} />
+    return <D3Container renderFn={render} deps={[isDark]} height={540} />
 }

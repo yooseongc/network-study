@@ -136,7 +136,7 @@ export default function Topic03() {
 
                 <CardGrid cols={3}>
                     <StatCard title="최소 프레임 크기" value="64 bytes" color="blue" desc="Preamble/SFD 제외" />
-                    <StatCard title="최대 프레임 크기 (MTU)" value="1518 bytes" color="green" desc="표준 Ethernet" />
+                    <StatCard title="최대 프레임 크기" value="1518 bytes" color="green" desc="헤더 14B + 페이로드 1500B + FCS 4B" />
                     <StatCard title="Jumbo Frame" value="9000+ bytes" color="purple" desc="데이터센터 환경에서 사용" />
                 </CardGrid>
 
@@ -237,12 +237,13 @@ export default function Topic03() {
                 </Alert>
             </Section>
 
-            {/* ── 3.5 MAC 주소 테이블 ── */}
-            <Section id="s035" title="3.5  MAC 주소 테이블">
+            {/* ── 3.5 MAC 주소 테이블과 FDB ── */}
+            <Section id="s035" title="3.5  MAC 주소 테이블과 FDB">
                 <Prose>
-                    MAC 주소 테이블(CAM Table)은 스위치가 학습한 MAC 주소와 포트의 매핑 정보를 저장하는 테이블입니다.
-                    리눅스에서는 <InlineCode>bridge fdb show</InlineCode> 명령으로
-                    소프트웨어 브릿지의 FDB(Forwarding Database)를 확인할 수 있습니다.
+                    스위치가 학습한 MAC 주소와 포트의 매핑 정보를 저장하는 테이블을
+                    FDB(Forwarding Database) 또는 CAM Table이라고 합니다.
+                    스위치는 프레임을 수신할 때마다 출발지 MAC을 FDB에 학습하고,
+                    목적지 MAC을 FDB에서 조회하여 해당 포트로만 전달합니다.
                 </Prose>
 
                 <InfoTable
@@ -255,6 +256,34 @@ export default function Topic03() {
                         { cells: ['Aging Timer', '마지막 프레임 수신 후 경과 시간 (기본 300초)'] },
                     ]}
                 />
+
+                <CardGrid cols={2}>
+                    <InfoBox color="blue" title="하드웨어 FDB (물리 스위치)">
+                        ASIC/TCAM에 구현된 고속 MAC 테이블입니다.
+                        와이어스피드로 조회하며, 엔트리 수는 칩에 따라 8K~128K개입니다.
+                        Cisco에서는 <InlineCode>show mac address-table</InlineCode> 명령으로 확인합니다.
+                    </InfoBox>
+                    <InfoBox color="purple" title="소프트웨어 FDB (Linux Bridge)">
+                        커널의 bridge 모듈이 관리하는 해시 테이블입니다.
+                        <InlineCode>bridge fdb show</InlineCode> 명령으로 확인하며,
+                        Docker/KVM 가상 네트워크에서 사용됩니다.
+                    </InfoBox>
+                </CardGrid>
+
+                <InfoBox color="amber" title="FDB Aging과 Static Entry">
+                    <ul className="list-disc ml-4 space-y-1 mt-1">
+                        <li><strong>Aging (기본 300초)</strong>: 해당 MAC에서 프레임이 수신되지 않으면 엔트리를 자동 삭제합니다. 네트워크 변경(케이블 이동 등)을 자동 반영하기 위한 메커니즘입니다.</li>
+                        <li><strong>Static Entry</strong>: 수동 등록된 엔트리로 aging되지 않습니다. 보안 목적(포트에 특정 MAC만 허용)이나 서비스 안정성을 위해 사용합니다.</li>
+                        <li><strong>Permanent</strong>: 브릿지 자체의 MAC 주소처럼 삭제할 수 없는 영구 엔트리입니다.</li>
+                    </ul>
+                </InfoBox>
+
+                <Alert variant="info" title="VXLAN에서의 FDB">
+                    VXLAN 환경에서는 FDB가 원격 VTEP(VXLAN Tunnel Endpoint)의 IP를 함께 저장합니다.
+                    목적지 MAC이 원격 호스트에 있으면 FDB에서 해당 VTEP IP를 조회하여
+                    UDP 캡슐화 후 L3 네트워크를 통해 전달합니다.
+                    <InlineCode>bridge fdb show dev vxlan0</InlineCode>으로 확인할 수 있습니다.
+                </Alert>
 
                 <CodeBlock code={bridgeFdbCode} language="bash" filename="bridge fdb show" />
 
@@ -371,8 +400,41 @@ export default function Topic03() {
                 <CodeBlock code={vlanConfigCode} language="bash" filename="VLAN 설정 (리눅스)" />
             </Section>
 
-            {/* ── 3.9 NIC Bonding과 LACP ── */}
-            <Section id="s039" title="3.9  NIC Bonding과 LACP">
+            {/* ── 3.9 Double VLAN과 VLAN 확장 ── */}
+            <Section id="s039" title="3.9  Double VLAN (QinQ)과 VLAN 확장">
+                <Prose>
+                    표준 802.1Q VLAN은 12비트 VID로 최대 4,094개까지만 지원합니다.
+                    대규모 ISP나 멀티테넌트 환경에서는 이 한계를 극복하기 위해 VLAN 태그를 이중으로 쌓는
+                    QinQ(802.1ad)를 사용합니다.
+                </Prose>
+
+                <InfoBox color="indigo" title="QinQ (Double VLAN Tagging, 802.1ad)">
+                    기존 802.1Q 태그(Customer VLAN) 바깥에 S-Tag(Service VLAN)를 한 겹 더 추가합니다.
+                    ISP는 S-Tag로 고객사를 구분하고, 고객 내부의 C-Tag는 그대로 보존됩니다.
+                    프레임 구조: [Dest MAC | Src MAC | S-Tag(4B) | C-Tag(4B) | EtherType | Payload | FCS]
+                </InfoBox>
+
+                <InfoTable
+                    headers={['항목', '802.1Q (Single Tag)', '802.1ad (QinQ / Double Tag)']}
+                    rows={[
+                        { cells: ['태그 수', '1개 (C-Tag)', '2개 (S-Tag + C-Tag)'] },
+                        { cells: ['최대 VLAN 수', '4,094', '4,094 × 4,094 ≈ 16M'] },
+                        { cells: ['프레임 크기', '최대 1,522 bytes', '최대 1,526 bytes'] },
+                        { cells: ['사용 환경', '기업 내부, 캠퍼스', 'ISP, 데이터센터, 멀티테넌트'] },
+                        { cells: ['EtherType', '0x8100', '외부: 0x88A8, 내부: 0x8100'] },
+                    ]}
+                />
+
+                <Alert variant="info" title="VLAN의 한계와 오버레이 기술">
+                    QinQ로도 부족한 대규모 데이터센터에서는 VXLAN(Virtual Extensible LAN)을 사용합니다.
+                    VXLAN은 L2 프레임을 UDP로 캡슐화하여 L3 네트워크 위에 가상 L2 네트워크를 만들며,
+                    24비트 VNI로 약 1,600만 개의 세그먼트를 지원합니다.
+                    자세한 내용은 Topic 15 (클라우드·컨테이너 네트워크)에서 다룹니다.
+                </Alert>
+            </Section>
+
+            {/* ── 3.10 NIC Bonding과 LACP ── */}
+            <Section id="s0310" title="3.10  NIC Bonding과 LACP">
                 <Prose>
                     NIC bonding(Linux) 또는 teaming은 여러 물리 NIC를 하나의 논리 인터페이스로 묶어
                     대역폭을 확장하거나 장애 시 자동 전환(failover)을 제공하는 기술입니다.
@@ -405,12 +467,12 @@ export default function Topic03() {
                 <CodeBlock code={bondingCode} language="bash" filename="Linux NIC Bonding 설정" />
             </Section>
 
-            {/* ── 3.10 Speed/Duplex/Link State + 요약 ── */}
-            <Section id="s0310" title="3.10  요약">
+            {/* ── 3.11 Speed/Duplex/Link State ── */}
+            <Section id="s0311" title="3.11  Speed, Duplex, Link State">
                 <Prose>
                     물리 계층과 링크 계층의 상태를 파악하는 것은 네트워크 문제 해결의 첫 단계입니다.
                     Speed, Duplex, Link State는 <InlineCode>ethtool</InlineCode>이나
-                    <InlineCode> ip link</InlineCode> 명령으로 확인할 수 있습니다.
+                    <InlineCode>ip link</InlineCode> 명령으로 확인할 수 있습니다.
                 </Prose>
 
                 <InfoTable
@@ -422,7 +484,10 @@ export default function Topic03() {
                     한쪽은 Full Duplex, 다른 쪽은 Half Duplex로 설정되면 심각한 성능 저하가 발생합니다.
                     양쪽 모두 Auto-negotiation을 켜거나, 양쪽 모두 같은 값으로 고정 설정해야 합니다.
                 </Alert>
+            </Section>
 
+            {/* ── 3.12 요약 ── */}
+            <Section id="s0312" title="3.12  요약">
                 <InfoBox color="gray" title="이 토픽에서 배운 핵심 내용">
                     <ul className="list-disc ml-4 space-y-1">
                         <li><strong>Ethernet 프레임</strong>: Preamble, MAC 주소, EtherType, Payload, FCS로 구성</li>
@@ -432,8 +497,9 @@ export default function Topic03() {
                         <li><strong>ARP</strong>: IP → MAC 주소 해석, 브로드캐스트 기반</li>
                         <li><strong>유니/브로드/멀티캐스트</strong>: 수신 대상 수에 따른 전송 방식 구분</li>
                         <li><strong>VLAN</strong>: 802.1Q 태그로 논리적 네트워크 분리</li>
+                        <li><strong>QinQ</strong>: 이중 태그(802.1ad)로 ISP/멀티테넌트 VLAN 확장, VXLAN으로 L3 오버레이</li>
                         <li><strong>Bonding/LACP</strong>: NIC 묶어서 고가용성과 대역폭 확장</li>
-                        <li><strong>Link State</strong>: Speed, Duplex, Carrier 상태 모니터링</li>
+                        <li><strong>Speed/Duplex/Link State</strong>: ethtool, ip link로 물리 계층 상태 모니터링</li>
                     </ul>
                 </InfoBox>
             </Section>

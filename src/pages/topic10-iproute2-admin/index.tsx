@@ -1,3 +1,4 @@
+import { CardGrid } from '../../components/ui/CardGrid'
 import { Section } from '../../components/ui/Section'
 import { Prose } from '../../components/ui/Prose'
 import { InfoTable } from '../../components/ui/InfoTable'
@@ -371,27 +372,42 @@ export default function Topic10Iproute2Admin() {
             {/* ── 10.9 네트워크 네임스페이스와 veth ─────────── */}
             <Section id="s109" title="10.9  네트워크 네임스페이스와 veth">
                 <Prose>
-                    네트워크 네임스페이스(Network Namespace)는 리눅스 커널이 제공하는
-                    네트워크 격리 기능입니다. 각 네임스페이스는 독립적인 네트워크 스택을 가집니다:
-                    자체 인터페이스 목록, IP 주소, 라우팅 테이블, iptables 규칙,
-                    소켓 테이블이 모두 분리됩니다.
+                    네트워크 네임스페이스와 veth는 컨테이너 네트워킹의 기반 기술입니다.
+                    이 두 가지를 조합하면 하나의 호스트에서 완전히 격리된 가상 네트워크를 구성할 수 있습니다.
                 </Prose>
 
-                <InfoBox color="purple" title="veth (Virtual Ethernet Pair)">
-                    veth는 항상 쌍(pair)으로 생성되는 가상 네트워크 인터페이스입니다.
-                    한쪽에 들어간 패킷은 반드시 다른 쪽으로 나옵니다.
-                    마치 양 끝이 연결된 가상 이더넷 케이블과 같습니다.
-                    주로 서로 다른 네트워크 네임스페이스를 연결하는 데 사용됩니다.
-                </InfoBox>
+                <CardGrid cols={2}>
+                    <InfoBox color="indigo" title="Network Namespace (netns)">
+                        리눅스 커널이 제공하는 네트워크 격리 기능입니다.
+                        각 네임스페이스는 독립적인 네트워크 스택을 가집니다:
+                        <ul className="list-disc ml-4 mt-1 space-y-0.5">
+                            <li>자체 인터페이스 목록 (lo, eth0 등)</li>
+                            <li>독립된 IP 주소와 라우팅 테이블</li>
+                            <li>별도의 iptables/nftables 규칙</li>
+                            <li>분리된 소켓 테이블</li>
+                        </ul>
+                    </InfoBox>
+                    <InfoBox color="purple" title="veth (Virtual Ethernet Pair)">
+                        항상 쌍(pair)으로 생성되는 가상 네트워크 인터페이스입니다.
+                        한쪽에 들어간 패킷은 반드시 다른 쪽으로 나옵니다.
+                        <ul className="list-disc ml-4 mt-1 space-y-0.5">
+                            <li>가상 이더넷 케이블과 동일한 동작</li>
+                            <li>서로 다른 네임스페이스를 연결</li>
+                            <li>한쪽을 bridge에 연결하여 외부 통신</li>
+                            <li>Docker/K8s의 Pod 네트워크 기반</li>
+                        </ul>
+                    </InfoBox>
+                </CardGrid>
 
                 <CodeBlock code={ipNetnsCode} language="bash" filename="네트워크 네임스페이스 + veth" />
 
-                <InfoBox color="cyan" title="컨테이너 네트워킹 구조">
-                    Docker 컨테이너의 네트워크 구조:
-                    1) 컨테이너마다 고유한 네트워크 네임스페이스 생성,
-                    2) veth 쌍 생성 후 한쪽은 컨테이너 네임스페이스에, 다른 쪽은 호스트에 배치,
-                    3) 호스트 쪽 veth를 docker0 브리지에 연결,
-                    4) 컨테이너 내부에서 eth0(veth)에 IP 할당.
+                <InfoBox color="cyan" title="컨테이너 네트워킹 구조 (Docker 예시)">
+                    <ol className="list-decimal ml-4 space-y-0.5 mt-1">
+                        <li>컨테이너마다 고유한 네트워크 네임스페이스 생성</li>
+                        <li>veth 쌍 생성 후 한쪽은 컨테이너 네임스페이스에, 다른 쪽은 호스트에 배치</li>
+                        <li>호스트 쪽 veth를 docker0 브리지에 연결</li>
+                        <li>컨테이너 내부에서 eth0(veth)에 IP 할당</li>
+                    </ol>
                 </InfoBox>
             </Section>
 
@@ -403,17 +419,32 @@ export default function Topic10Iproute2Admin() {
                     소켓 모니터링, 네임스페이스까지 다루었습니다.
                 </Prose>
 
-                <InfoBox color="gray" title="핵심 정리">
-                    1) ip addr은 scope, primary/secondary, IPv6까지 세밀한 주소 관리를 제공합니다.
-                    2) ip link로 veth, bridge, vlan, bond, vxlan 등 다양한 가상 인터페이스를 생성합니다.
-                    3) ip route 출력의 proto, scope, metric, src 필드를 정확히 해석할 수 있어야 합니다.
-                    4) ip rule은 RPDB 기반 정책 라우팅으로 멀티호밍, VPN split tunneling을 구현합니다.
-                    5) ip neigh로 ARP/NDP 캐시 상태를 관리하고 L2 연결 문제를 진단합니다.
-                    6) tc/qdisc로 HTB 대역폭 제어, netem 시뮬레이션, fq_codel AQM을 설정합니다.
-                    7) tc mirred로 포트 미러링, tc filter로 트래픽 분류를 구현합니다.
-                    8) ss로 소켓 상태를 빠르게 모니터링하고 분석합니다.
-                    9) 네트워크 네임스페이스와 veth는 컨테이너 네트워킹의 기반 기술입니다.
-                </InfoBox>
+                <CardGrid cols={3}>
+                    <InfoBox color="blue" title="ip addr">
+                        scope, primary/secondary, IPv6까지 세밀한 주소 관리
+                    </InfoBox>
+                    <InfoBox color="purple" title="ip link">
+                        veth, bridge, vlan, bond, vxlan 등 가상 인터페이스 생성
+                    </InfoBox>
+                    <InfoBox color="green" title="ip route">
+                        proto, scope, metric, src 필드를 정확히 해석
+                    </InfoBox>
+                    <InfoBox color="amber" title="ip rule">
+                        RPDB 기반 정책 라우팅, 멀티호밍, VPN split tunneling
+                    </InfoBox>
+                    <InfoBox color="cyan" title="ip neigh">
+                        ARP/NDP 캐시 상태 관리, L2 연결 문제 진단
+                    </InfoBox>
+                    <InfoBox color="red" title="tc / qdisc">
+                        HTB 대역폭 제어, netem 시뮬레이션, fq_codel, mirred 미러링
+                    </InfoBox>
+                    <InfoBox color="teal" title="ss">
+                        소켓 상태 빠른 모니터링 및 필터링
+                    </InfoBox>
+                    <InfoBox color="indigo" title="netns + veth">
+                        네트워크 격리와 가상 연결, 컨테이너 네트워킹 기반 기술
+                    </InfoBox>
+                </CardGrid>
 
                 <Alert variant="info" title="다음 토픽:">
                     이어지는 토픽들에서는 Netfilter/iptables를 활용한 패킷 처리와 방화벽,

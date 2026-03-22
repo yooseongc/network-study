@@ -15,8 +15,8 @@ export function themeColors(isDark: boolean) {
         // ── Neutrals ──────────────────────────────────────────────────────
         text: d ? 'oklch(92% 0 0)' : 'oklch(18% 0 0)',
         textMuted: d ? 'oklch(63% 0 0)' : 'oklch(40% 0 0)',
-        textDim: d ? 'oklch(44% 0 0)' : 'oklch(55% 0 0)',
-        border: d ? 'oklch(30% 0 0)' : 'oklch(82% 0 0)',
+        textDim: d ? 'oklch(62% 0 0)' : 'oklch(55% 0 0)',
+        border: d ? 'oklch(48% 0 0)' : 'oklch(82% 0 0)',
         link: d ? 'oklch(32% 0 0)' : 'oklch(80% 0 0)',
         bg: d ? 'oklch(16% 0 0)' : 'oklch(99% 0 0)',
         bgCard: d ? 'oklch(22% 0 0)' : 'oklch(96% 0 0)',

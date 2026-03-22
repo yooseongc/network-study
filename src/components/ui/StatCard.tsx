@@ -73,10 +73,11 @@ const colorMap: Record<StatColor, { border: string; bg: string; title: string; v
 
 export function StatCard({ title, value, desc, color = 'blue', children }: Props) {
     const c = colorMap[color]
+    const valueFont = /[\uAC00-\uD7AF]/.test(value) ? '' : 'font-mono'
     return (
         <div className={`rounded-xl border ${c.border} ${c.bg} p-4 space-y-1.5`}>
             <div className={`text-xs font-semibold uppercase tracking-wide ${c.title}`}>{title}</div>
-            <div className={`text-lg font-bold font-mono ${c.value}`}>{value}</div>
+            <div className={`text-lg font-bold ${valueFont} ${c.value}`}>{value}</div>
             {desc && <div className="text-xs text-gray-600 dark:text-gray-400 leading-relaxed">{desc}</div>}
             {children}
         </div>

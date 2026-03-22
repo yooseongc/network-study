@@ -37,9 +37,10 @@ export function HomeVsEnterprise() {
                 .attr('y1', 20)
                 .attr('x2', dividerX)
                 .attr('y2', height - 20)
-                .attr('stroke', tc.border)
+                .attr('stroke', tc.textMuted)
                 .attr('stroke-dasharray', '6,4')
                 .attr('stroke-width', 1)
+                .attr('opacity', 0.5)
 
             // Section titles
             g.append('text').attr('x', half / 2).attr('y', 30).attr('text-anchor', 'middle')
@@ -105,8 +106,9 @@ export function HomeVsEnterprise() {
                 g.append('line')
                     .attr('x1', s.x).attr('y1', s.y)
                     .attr('x2', t.x).attr('y2', t.y)
-                    .attr('stroke', tc.border)
+                    .attr('stroke', tc.textMuted)
                     .attr('stroke-width', 1.5)
+                    .attr('opacity', 0.7)
             }
 
             // Draw nodes
@@ -144,23 +146,23 @@ export function HomeVsEnterprise() {
             }
 
             // IP annotations
-            const annotStyle = { fill: tc.textDim, fontFamily: MONO, fontSize: '8px' }
+            const annotStyle = { fill: tc.textMuted, fontFamily: MONO, fontSize: '8px' }
 
-            // Home IP annotation
-            g.append('text').attr('x', half / 2 + 50).attr('y', 115)
+            // Home IP annotation — 공유기(y=150) 우측 아래
+            g.append('text').attr('x', half / 2 + 52).attr('y', 155)
                 .attr('fill', annotStyle.fill).attr('font-family', annotStyle.fontFamily).attr('font-size', annotStyle.fontSize)
                 .text('192.168.0.1')
 
-            // Enterprise IP annotations
-            g.append('text').attr('x', cx + 35).attr('y', 128)
+            // Enterprise IP annotations — 각 박스 하단 바깥에 배치
+            g.append('text').attr('x', cx + 40).attr('y', 145)
                 .attr('fill', annotStyle.fill).attr('font-family', annotStyle.fontFamily).attr('font-size', annotStyle.fontSize)
                 .text('211.x.x.x')
 
-            g.append('text').attr('x', cx - ew * 0.28 + 40).attr('y', 315)
+            g.append('text').attr('x', cx - ew * 0.28 + 52).attr('y', 330)
                 .attr('fill', annotStyle.fill).attr('font-family', annotStyle.fontFamily).attr('font-size', annotStyle.fontSize)
                 .text('10.10.x.x')
 
-            g.append('text').attr('x', cx + ew * 0.28 + 40).attr('y', 315)
+            g.append('text').attr('x', cx + ew * 0.28 + 52).attr('y', 330)
                 .attr('fill', annotStyle.fill).attr('font-family', annotStyle.fontFamily).attr('font-size', annotStyle.fontSize)
                 .text('10.20.x.x')
         },

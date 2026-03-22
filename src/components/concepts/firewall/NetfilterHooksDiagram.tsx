@@ -63,20 +63,20 @@ export function NetfilterHooksDiagram() {
                 .attr('font-family', "'Pretendard Variable', Pretendard, sans-serif")
                 .text('패킷이 커널을 통과하는 5개 훅 포인트')
 
-            // "Packet IN" label
+            // Arrow: Packet IN → PREROUTING
             const packetInX = Math.max(40, cx - 200 - boxW / 2 - 70)
+            drawArrow(g, packetInX + 8, 80, cx - 200 - boxW / 2, 80, c.greenStroke)
+
+            // "Packet IN" label — above the arrow to avoid overlap
             g.append('text')
                 .attr('x', packetInX)
-                .attr('y', 85)
+                .attr('y', 65)
                 .attr('text-anchor', 'middle')
                 .attr('font-size', 11)
                 .attr('font-weight', 'bold')
                 .attr('fill', c.greenText)
                 .attr('font-family', "'JetBrains Mono', monospace")
-                .text('Packet IN')
-
-            // Arrow: Packet IN → PREROUTING
-            drawArrow(g, packetInX + 30, 80, cx - 200 - boxW / 2, 80, c.greenStroke)
+                .text('→ Packet IN')
 
             // Draw hook boxes
             hooks.forEach((hook) => {
@@ -170,20 +170,20 @@ export function NetfilterHooksDiagram() {
                 { x: cx + 160, y: 390 - boxH / 2 },
             ], c.greenStroke)
 
-            // "Packet OUT" label
+            // Arrow: POSTROUTING → Packet OUT
             const packetOutX = Math.min(width - 40, cx + 160 + boxW / 2 + 70)
+            drawArrow(g, cx + 160 + boxW / 2, 390, packetOutX - 8, 390, c.redStroke)
+
+            // "Packet OUT" label — below the arrow to avoid overlap
             g.append('text')
                 .attr('x', packetOutX)
-                .attr('y', 395)
+                .attr('y', 415)
                 .attr('text-anchor', 'middle')
                 .attr('font-size', 11)
                 .attr('font-weight', 'bold')
                 .attr('fill', c.redText)
                 .attr('font-family', "'JetBrains Mono', monospace")
-                .text('Packet OUT')
-
-            // Arrow: POSTROUTING → Packet OUT
-            drawArrow(g, cx + 160 + boxW / 2, 390, packetOutX - 30, 390, c.redStroke)
+                .text('Packet OUT →')
         },
         [isDark],
     )

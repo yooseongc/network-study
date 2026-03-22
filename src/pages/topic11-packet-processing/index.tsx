@@ -19,7 +19,6 @@ import {
     portForwardCode,
     fwmarkCode,
     tproxyCode,
-    natTableAscii,
 } from './codeSnippets'
 
 /* ── Inline data ──────────────────────────────────────────────────── */
@@ -122,7 +121,24 @@ export default function Topic11PacketProcessing() {
                     하나의 훅에 여러 테이블의 규칙이 등록될 수 있으며, 우선순위(priority)에 따라 실행 순서가 결정됩니다.
                 </InfoBox>
                 <InfoTable headers={['테이블', '우선순위', '설명']} rows={tableRows} />
-                <CodeBlock code={natTableAscii} language="text" filename="iptables 테이블 구조" />
+
+                <CardGrid cols={4}>
+                    <InfoBox color="gray" title="raw">연결 추적 제외 (NOTRACK). PREROUTING, OUTPUT 체인에 적용.</InfoBox>
+                    <InfoBox color="amber" title="mangle">패킷 헤더 변조 (TTL, TOS, MARK). 모든 체인에 적용.</InfoBox>
+                    <InfoBox color="green" title="nat">주소 변환 (SNAT/DNAT/MASQUERADE). PREROUTING, OUTPUT, POSTROUTING 체인.</InfoBox>
+                    <InfoBox color="blue" title="filter">허용/차단 결정 (기본 테이블). INPUT, FORWARD, OUTPUT 체인.</InfoBox>
+                </CardGrid>
+
+                <InfoBox color="indigo" title="체인 (Chain) — 패킷 경로별 훅 포인트">
+                    <ul className="list-disc ml-4 space-y-0.5 mt-1">
+                        <li><strong>PREROUTING</strong>: 패킷 도착 직후 (라우팅 결정 전)</li>
+                        <li><strong>INPUT</strong>: 로컬 프로세스로 전달 전</li>
+                        <li><strong>FORWARD</strong>: 다른 인터페이스로 전달 시</li>
+                        <li><strong>OUTPUT</strong>: 로컬 프로세스에서 나갈 때</li>
+                        <li><strong>POSTROUTING</strong>: 패킷이 나가기 직전</li>
+                    </ul>
+                </InfoBox>
+
                 <Alert variant="tip" title="핵심:">
                     패킷이 커널을 통과하는 경로를 이해하는 것이 Netfilter를 이해하는 핵심입니다.
                     로컬 프로세스로 향하는 패킷은 PREROUTING → INPUT 경로를,

@@ -191,28 +191,23 @@ export function GslbDiagram() {
                     .attr('font-family', MONO)
                     .text(dc.status)
 
-                // Health check arrow (GSLB → DC), dashed
-                drawArrow(
-                    dc.x + (mid - dc.x) * 0.3,
-                    gslbY + gslbH,
-                    dc.x,
-                    dcY,
-                    i === selectedIdx ? cm.blue.stroke : c.textDim,
-                    i === 1 ? 'health check' : undefined,
-                    true,
-                )
-
-                // Response arrow (GSLB → DC) for selected path
                 if (i === selectedIdx) {
-                    drawArrow(
-                        mid + (dc.x - mid) * 0.3,
-                        gslbY + gslbH,
-                        dc.x,
-                        dcY,
-                        cm.blue.stroke,
-                    )
+                    // Selected path: solid bold arrow
+                    drawArrow(mid, gslbY + gslbH, dc.x, dcY, cm.blue.stroke)
+                } else {
+                    // Health check: dashed thin arrow
+                    drawArrow(mid, gslbY + gslbH, dc.x, dcY, c.textDim, undefined, true)
                 }
             })
+
+            // ── "health check" label near non-selected DC ──
+            g.append('text')
+                .attr('x', dcs[0].x + 10)
+                .attr('y', dcY - 8)
+                .attr('font-size', 8)
+                .attr('fill', c.textDim)
+                .attr('font-family', MONO)
+                .text('health check')
 
             // ── "geo-routing: lowest latency" label on the selected path ──
             const selDc = dcs[selectedIdx]

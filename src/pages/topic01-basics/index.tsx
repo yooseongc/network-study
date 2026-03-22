@@ -380,9 +380,9 @@ export default function Topic01() {
             {/* ── 1.9 MTU의 의미 ──────────────────────────────────── */}
             <Section id="s019" title="1.9  MTU의 의미">
                 <Prose>
-                    MTU(Maximum Transmission Unit)는 네트워크 인터페이스가 한 번에 전송할 수 있는
-                    최대 패킷 크기를 의미합니다. 이더넷의 기본 MTU는 1,500 바이트입니다.
-                    MTU를 초과하는 패킷은 분할(Fragmentation)되거나 폐기됩니다.
+                    MTU(Maximum Transmission Unit)는 L2 프레임이 수용할 수 있는 L3 페이로드의 최대 크기입니다.
+                    이더넷의 기본 MTU는 1,500 바이트이며, 이는 프레임 전체 크기(1518B)가 아닌 페이로드 부분만을 가리킵니다.
+                    MTU를 초과하는 IP 패킷은 분할(Fragmentation)되거나 폐기됩니다.
                 </Prose>
 
                 <CardGrid cols={3}>

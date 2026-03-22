@@ -32,8 +32,8 @@ const CAT_LABEL: Record<string, string> = {
     general: '일반',
 }
 
-// ── 12개 토픽 색상 (hue 균등 분배) ──────────────────────────────────────────
-const TOPIC_HUES = [250, 278, 305, 332, 5, 30, 57, 85, 112, 140, 168, 196]
+// ── 15개 토픽 색상 (hue 균등 분배) ──────────────────────────────────────────
+const TOPIC_HUES = [250, 272, 294, 316, 338, 5, 27, 49, 71, 93, 140, 162, 184, 206, 228]
 
 function topicStroke(idx: number, isDark: boolean): string {
     const h = TOPIC_HUES[idx % TOPIC_HUES.length]

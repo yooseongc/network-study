@@ -269,13 +269,28 @@ export default function Topic13Troubleshooting() {
                         - <strong>방화벽</strong>: DROP(timeout) vs REJECT(RST)
                     </InfoBox>
                 </CardGrid>
-                <InfoBox color="gray" title="장애 분석의 핵심 원칙">
-                    1. 체계적으로 접근한다 (Bottom-Up){'\n'}
-                    2. 한 번에 하나의 변수만 변경한다{'\n'}
-                    3. 여러 관점의 데이터를 교차 확인한다{'\n'}
-                    4. 정상/비정상 구간을 명확히 구분한다{'\n'}
-                    5. 변경 전 상태를 기록하고, 조치 결과를 문서화한다
-                </InfoBox>
+                <CardGrid cols={3}>
+                    <InfoBox color="amber" title="1. 체계적 접근">
+                        Bottom-Up으로 물리→링크→네트워크→전송→응용 순서대로 원인을 좁혀갑니다.
+                        ping 게이트웨이부터 시작하세요.
+                    </InfoBox>
+                    <InfoBox color="purple" title="2. 변수 하나씩">
+                        한 번에 하나의 변수만 변경합니다.
+                        동시에 여러 설정을 바꾸면 원인 특정이 불가능합니다.
+                    </InfoBox>
+                    <InfoBox color="cyan" title="3. 교차 검증">
+                        패킷(tcpdump), 소켓(ss), 라우팅(ip route), 커널 로그(dmesg)를
+                        함께 확인하여 다각도로 원인을 검증합니다.
+                    </InfoBox>
+                    <InfoBox color="red" title="4. 구간 분리">
+                        정상 동작하는 구간과 장애 구간을 명확히 나눕니다.
+                        traceroute로 어디까지 도달하는지 확인하세요.
+                    </InfoBox>
+                    <InfoBox color="indigo" title="5. 기록과 문서화">
+                        변경 전 상태를 기록하고, 조치 내용과 결과를 문서화합니다.
+                        동일 장애 재발 시 빠르게 대응할 수 있습니다.
+                    </InfoBox>
+                </CardGrid>
             </Section>
 
             <TopicNavigation topicId="13-troubleshooting" />
