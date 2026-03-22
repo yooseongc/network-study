@@ -25,6 +25,7 @@
 ## 토픽 개요
 
 ### Topic 01 — 네트워크의 기초와 전체 구조
+
 - **부제**: Network Fundamentals & Architecture
 - **난이도**: 입문
 - **내용**: LAN/WAN, 패킷 교환, 프로토콜, OSI/TCP-IP 모델, 캡슐화, MTU
@@ -34,6 +35,7 @@
   - MTU의 의미와 중요성을 설명할 수 있다
 
 ### Topic 02 — 실제 네트워크 망 구성의 기초
+
 - **부제**: Real-World Network Design
 - **난이도**: 입문
 - **선수 지식**: Topic 01
@@ -44,6 +46,7 @@
   - 보안장비 배치 위치와 역할을 파악한다
 
 ### Topic 03 — 물리 계층과 링크 계층
+
 - **부제**: Physical & Link Layer
 - **난이도**: 입문
 - **선수 지식**: Topic 01
@@ -54,6 +57,7 @@
   - VLAN과 802.1Q 태깅의 원리를 파악한다
 
 ### Topic 04 — IP 주소와 라우팅의 기초
+
 - **부제**: IP Addressing & Routing
 - **난이도**: 입문
 - **선수 지식**: Topic 01, Topic 03
@@ -64,6 +68,7 @@
   - 라우팅 테이블과 longest prefix match를 설명할 수 있다
 
 ### Topic 05 — 전송 계층: TCP와 UDP
+
 - **부제**: Transport Layer: TCP & UDP
 - **난이도**: 중급
 - **선수 지식**: Topic 04
@@ -74,16 +79,21 @@
   - UDP의 특징과 활용 사례를 파악한다
 
 ### Topic 06 — 이름 해석과 주요 응용 프로토콜
+
 - **부제**: DNS, HTTP, TLS & Application Protocols
 - **난이도**: 중급
 - **선수 지식**: Topic 05
-- **내용**: DNS, HTTP/HTTPS, TLS handshake, DHCP, SSH, 프록시
+- **내용**: DNS 서버 종류/보안(DNSSEC, DoH, DoT), HTTP/HTTPS, TLS 1.2/1.3 상세(인증서 체인, mTLS, SNI, OCSP), DHCP, SSH, 네트워크 보안 기초, 프록시
 - **학습 목표**:
-  - DNS 재귀/반복 질의 과정을 이해한다
-  - HTTP/HTTPS 차이와 TLS handshake를 설명할 수 있다
+  - DNS 서버 종류와 재귀/반복 질의 과정을 이해한다
+  - DNSSEC, DoH, DoT 등 DNS 보안 기술을 설명할 수 있다
+  - TLS 1.2/1.3 handshake 차이와 인증서 체인을 이해한다
+  - mTLS와 암호 스위트 구성을 설명할 수 있다
+  - 주요 네트워크 공격 유형과 방어 기술을 파악한다
   - 프록시와 리버스 프록시의 역할을 파악한다
 
 ### Topic 07 — 실제 서비스 망 설계와 트래픽 흐름
+
 - **부제**: Service Network Design & Traffic Flow
 - **난이도**: 중급
 - **선수 지식**: Topic 02, Topic 06
@@ -94,6 +104,7 @@
   - East-West/North-South 트래픽을 구분할 수 있다
 
 ### Topic 08 — 리눅스에서의 네트워크 동작
+
 - **부제**: Linux Network Stack
 - **난이도**: 중급
 - **선수 지식**: Topic 04, Topic 05
@@ -104,6 +115,7 @@
   - iproute2 도구를 활용할 수 있다
 
 ### Topic 09 — 패킷 처리와 방화벽 / NAT / 프록시
+
 - **부제**: Packet Processing, Firewall, NAT & Proxy
 - **난이도**: 심화
 - **선수 지식**: Topic 08
@@ -114,6 +126,7 @@
   - TPROXY와 transparent proxy의 원리를 파악한다
 
 ### Topic 10 — 성능과 트래픽 제어
+
 - **부제**: Performance & Traffic Control
 - **난이도**: 심화
 - **선수 지식**: Topic 08
@@ -124,6 +137,7 @@
   - XDP와 DPDK의 개요와 차이를 파악한다
 
 ### Topic 11 — 네트워크 장애 분석과 관측
+
 - **부제**: Network Troubleshooting & Observability
 - **난이도**: 중급
 - **선수 지식**: Topic 05, Topic 08
@@ -134,6 +148,7 @@
   - 체계적 장애 분석 절차를 설명할 수 있다
 
 ### Topic 12 — 현대 네트워크와 실전 아키텍처
+
 - **부제**: Modern Network Architecture
 - **난이도**: 심화
 - **선수 지식**: Topic 07, Topic 09

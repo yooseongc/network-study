@@ -86,3 +86,186 @@ interface eth0
 # 서버/PC의 기본 게이트웨이 = 10.10.1.1 (가상 IP)
 # Router A 장애 시 → Router B가 자동으로 Master 승격
 `
+
+/* ── 신규 스니펫 (2.4 / 2.9 확장) ──────────────────────────────────── */
+
+export const keepalivedVrrpCode = `# Keepalived VRRP 설정 — /etc/keepalived/keepalived.conf
+#
+# ── Master 노드 ──
+vrrp_instance VI_1 {
+    state MASTER
+    interface eth0
+    virtual_router_id 51
+    priority 200                  # Master: 높은 값
+    advert_int 1                  # Advertisement 간격 (초)
+    authentication {
+        auth_type PASS
+        auth_pass s3cret          # 양쪽 동일해야 함
+    }
+    virtual_ipaddress {
+        10.10.1.1/24 dev eth0     # 가상 IP (VIP)
+    }
+    track_interface {
+        eth0 weight -50           # 인터페이스 down 시 우선순위 -50
+    }
+    track_script {
+        chk_haproxy               # 헬스체크 스크립트 연동
+    }
+}
+
+vrrp_script chk_haproxy {
+    script "/usr/bin/pgrep haproxy"
+    interval 2
+    weight -30                    # 프로세스 없으면 우선순위 -30
+}
+
+# ── Backup 노드 (차이점만) ──
+# state BACKUP
+# priority 100
+`
+
+export const lacpBondingCode = `# Linux NIC Bonding (LACP / 802.3ad) 설정
+#
+# ── /etc/netplan/01-bond.yaml (Ubuntu/Netplan) ──
+network:
+  version: 2
+  ethernets:
+    eth0: {}
+    eth1: {}
+  bonds:
+    bond0:
+      interfaces: [eth0, eth1]
+      parameters:
+        mode: 802.3ad           # LACP (mode 4)
+        lacp-rate: fast         # 1초 간격 LACPDU
+        mii-monitor-interval: 100
+        transmit-hash-policy: layer3+4
+        min-links: 1            # 최소 활성 링크 수
+      addresses:
+        - 10.10.1.10/24
+      routes:
+        - to: default
+          via: 10.10.1.1
+
+# ── Bonding 모드 비교 ──
+# mode 0 (balance-rr)   : 라운드로빈, 스위치 설정 불필요
+# mode 1 (active-backup) : 1개만 활성, 나머지 대기
+# mode 2 (balance-xor)  : 해시 기반 분산
+# mode 4 (802.3ad/LACP) : 스위치와 협상, 가장 권장
+# mode 5 (balance-tlb)  : 송신만 분산
+# mode 6 (balance-alb)  : 송수신 분산, 스위치 설정 불필요
+`
+
+export const ospfBasicCode = `# OSPF 기본 설정 (Cisco IOS 형식)
+#
+# ── Core Router (Area 0 — Backbone) ──
+router ospf 1
+  router-id 1.1.1.1
+  network 10.10.0.0 0.0.255.255 area 0    # 서버망
+  network 10.20.0.0 0.0.255.255 area 0    # 사용자망
+  passive-interface default               # 모든 인터페이스 passive
+  no passive-interface GigabitEthernet0/0  # OSPF 네이버 형성 허용
+  no passive-interface GigabitEthernet0/1
+
+# ── Interface 설정 ──
+interface GigabitEthernet0/0
+  ip address 10.10.1.1 255.255.255.0
+  ip ospf cost 10                          # 낮은 cost = 우선 경로
+  ip ospf hello-interval 10
+  ip ospf dead-interval 40
+
+# ── OSPF 경로 확인 ──
+# show ip ospf neighbor          → 네이버 상태 확인
+# show ip ospf database          → LSDB 확인
+# show ip route ospf             → OSPF 학습 경로
+`
+
+export const switchVerifyCommandsCode = `# ── L2 스위치 확인 명령어 ──
+
+# MAC 주소 테이블 확인
+show mac address-table
+# VLAN  MAC Address       Type     Ports
+# 10    00:1a:2b:3c:4d:5e DYNAMIC  Gi0/1
+# 20    00:1a:2b:3c:4d:5f DYNAMIC  Gi0/2
+
+# STP 상태 확인
+show spanning-tree
+# Root ID    Priority 32768, Address 00:1a:2b:3c:4d:00
+# Root Port  Gi0/24 (cost 4)
+
+# VLAN 정보 확인
+show vlan brief
+# VLAN  Name          Status    Ports
+# 10    SERVERS       active    Gi0/1-12
+# 20    USERS         active    Gi0/13-24
+
+# ── L3 스위치 / 라우터 확인 명령어 ──
+
+# 인터페이스 상태
+show ip interface brief
+# Interface          IP-Address    Status  Protocol
+# Vlan10             10.10.1.1     up      up
+# Vlan20             10.20.1.1     up      up
+# GigabitEthernet0/0 203.0.113.1   up      up
+
+# 라우팅 테이블 확인
+show ip route
+# O    10.10.2.0/24 [110/20] via 10.10.1.2, Vlan10
+# C    10.10.1.0/24 is directly connected, Vlan10
+# S*   0.0.0.0/0 [1/0] via 203.0.113.1
+
+# VRRP 상태 확인
+show vrrp brief
+# Interface  Grp  Pri  State   VR Addr
+# Vlan10     1    200  Master  10.10.1.1
+# Vlan20     2    200  Master  10.20.1.1
+
+# LACP 상태 확인
+show lacp neighbor
+# Port     Partner          Port-Priority  Oper Key
+# Gi0/1    00:1a:2b:3c:00   32768          0x1
+# Gi0/2    00:1a:2b:3c:01   32768          0x1
+`
+
+export const dualIspVrrpDiagramCode = `# ── 사무실 인터넷 접속망 이중화 구성 ──
+#
+#   ISP-A (KT)           ISP-B (SK)
+#     |                     |
+#  [Router-A]           [Router-B]
+#  pri=200               pri=100
+#     |    VRRP VIP:        |
+#     |  203.0.113.1/24     |
+#     +--------+------------+
+#              |
+#        [Core Switch]
+#         LACP bond0
+#        /          \\
+#  [Dist-SW-A]   [Dist-SW-B]     ← MC-LAG / vPC
+#     |    \\     /    |
+#     |     \\   /     |
+#  [Access-SW]   [Access-SW]
+#     |               |
+#   [PC/서버]       [PC/서버]
+#
+# ▸ Router-A 장애 → VRRP failover → Router-B가 Master 승격
+# ▸ ISP-A 장애   → BFD 감지 → 경로 전환 (< 1초)
+# ▸ 링크 장애    → LACP failover → 나머지 링크로 트래픽 유지
+`
+
+export const serverFarmHaDiagramCode = `# ── 서버팜 이중화 구성 (Dual ToR) ──
+#
+#         [Core-SW-A]───────[Core-SW-B]
+#              |     MC-LAG      |
+#         [ToR-SW-A]────────[ToR-SW-B]    ← Top-of-Rack
+#          /  |   \\          /  |   \\
+#        S1   S2   S3      S4   S5   S6   ← 서버 (dual NIC)
+#        (bond0: LACP to ToR-A + ToR-B)
+#
+#         [LB-A]────────────[LB-B]        ← Active-Standby HA
+#          VIP: 10.10.1.100
+#
+# ▸ 서버 NIC: bond0 (LACP) → ToR-A + ToR-B에 각 1포트씩
+# ▸ ToR 스위치: MC-LAG으로 서버의 LACP bond를 양쪽에서 수용
+# ▸ Core-ToR 간: ECMP 또는 MLAG peer-link
+# ▸ LB HA pair: VRRP로 VIP 공유, health check로 서버 상태 감시
+`

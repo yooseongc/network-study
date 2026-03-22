@@ -19,36 +19,82 @@ export function EastWestNorthSouth() {
             const g = svg.append('g')
             const cx = width / 2
 
-            // Title
+            // ── Responsive metrics ──
+            const fontSize = Math.max(7.5, Math.min(11, width / 45))
+            const subFontSize = Math.max(6, fontSize * 0.75)
+            const titleSize = Math.max(10, Math.min(14, width / 35))
+            const padX = Math.max(16, width * 0.05)
+
+            // Rack sizing - responsive
+            const rackW = Math.min(80, (width - 120) / 4)
+            const rackH = Math.max(32, rackW * 0.5)
+            const rackR = Math.min(6, rackH / 5)
+
+            // Border device sizing
+            const borderDevW = Math.min(120, width * 0.25)
+            const borderDevH = Math.max(22, borderDevW * 0.22)
+
+            // Vertical layout
+            const titleY = Math.max(16, height * 0.04)
+            const internetY = titleY + titleSize * 2.2
+            const cloudRx = Math.min(80, width * 0.15)
+            const cloudRy = Math.min(20, height * 0.04)
+
+            const dcTop = internetY + cloudRy + 22
+            const dcBottom = height - 28
+            const dcLeft = padX
+            const dcRight = width - padX
+
+            // Border devices in top part of DC
+            const borderDevStartY = dcTop + 28
+            const borderDevGap = Math.max(28, (dcBottom - dcTop) * 0.1)
+
+            // Rack row at bottom of DC
+            const rackY = dcBottom - rackH * 0.8
+
+            // ── Title ──
             g.append('text')
-                .attr('x', cx).attr('y', 22)
+                .attr('x', cx).attr('y', titleY)
                 .attr('text-anchor', 'middle')
-                .attr('font-size', 13).attr('font-weight', 'bold')
+                .attr('font-size', titleSize).attr('font-weight', 'bold')
                 .attr('fill', tc.text).attr('font-family', FONT)
                 .text('Datacenter Traffic Patterns')
 
-            // Border Router / Internet zone
-            const borderY = 55
-            const dcTop = 100
-            const dcBottom = 380
-            const dcLeft = 40
-            const dcRight = width - 40
+            // ── Marker definitions (single block) ──
+            const defs = svg.append('defs')
+            defs.append('marker')
+                .attr('id', 'ns-arrow')
+                .attr('viewBox', '0 0 10 7').attr('refX', 10).attr('refY', 3.5)
+                .attr('markerWidth', 8).attr('markerHeight', 6).attr('orient', 'auto')
+                .append('polygon').attr('points', '0 0, 10 3.5, 0 7').attr('fill', tc.blueStroke)
 
-            // Internet cloud
+            defs.append('marker')
+                .attr('id', 'ns-arrow-up')
+                .attr('viewBox', '0 0 10 7').attr('refX', 0).attr('refY', 3.5)
+                .attr('markerWidth', 8).attr('markerHeight', 6).attr('orient', 'auto-start-reverse')
+                .append('polygon').attr('points', '0 0, 10 3.5, 0 7').attr('fill', tc.blueStroke)
+
+            defs.append('marker')
+                .attr('id', 'ew-arrow')
+                .attr('viewBox', '0 0 10 7').attr('refX', 10).attr('refY', 3.5)
+                .attr('markerWidth', 8).attr('markerHeight', 6).attr('orient', 'auto')
+                .append('polygon').attr('points', '0 0, 10 3.5, 0 7').attr('fill', tc.amberStroke)
+
+            // ── Internet cloud ──
             g.append('ellipse')
-                .attr('cx', cx).attr('cy', borderY)
-                .attr('rx', 80).attr('ry', 20)
+                .attr('cx', cx).attr('cy', internetY)
+                .attr('rx', cloudRx).attr('ry', cloudRy)
                 .attr('fill', tc.cyanFill).attr('stroke', tc.cyanStroke)
                 .attr('stroke-dasharray', '4,3')
 
             g.append('text')
-                .attr('x', cx).attr('y', borderY + 4)
+                .attr('x', cx).attr('y', internetY + fontSize * 0.35)
                 .attr('text-anchor', 'middle')
-                .attr('font-size', 10).attr('font-weight', 600)
+                .attr('font-size', fontSize).attr('font-weight', 600)
                 .attr('fill', tc.cyanText).attr('font-family', FONT)
                 .text('Internet / Client')
 
-            // Datacenter box
+            // ── Datacenter box ──
             g.append('rect')
                 .attr('x', dcLeft).attr('y', dcTop)
                 .attr('width', dcRight - dcLeft).attr('height', dcBottom - dcTop)
@@ -59,29 +105,28 @@ export function EastWestNorthSouth() {
                 .attr('stroke-dasharray', '6,4')
 
             g.append('text')
-                .attr('x', dcLeft + 12).attr('y', dcTop + 18)
-                .attr('font-size', 10).attr('font-weight', 700)
+                .attr('x', dcLeft + 10).attr('y', dcTop + fontSize + 4)
+                .attr('font-size', fontSize).attr('font-weight', 700)
                 .attr('fill', tc.textMuted).attr('font-family', MONO)
                 .text('Datacenter')
 
-            // Border devices
-            const borderDevY = dcTop + 40
+            // ── Border devices (centered vertically) ──
             const borderDevices = [
-                { label: 'Border Router', x: cx, y: borderDevY },
-                { label: 'Core Firewall', x: cx, y: borderDevY + 45 },
-                { label: 'Core Switch', x: cx, y: borderDevY + 90 },
+                { label: 'Border Router', y: borderDevStartY },
+                { label: 'Core Firewall', y: borderDevStartY + borderDevGap },
+                { label: 'Core Switch', y: borderDevStartY + borderDevGap * 2 },
             ]
 
             borderDevices.forEach(dev => {
-                const devG = g.append('g').attr('transform', `translate(${dev.x},${dev.y})`)
+                const devG = g.append('g').attr('transform', `translate(${cx},${dev.y})`)
                 devG.append('rect')
-                    .attr('x', -60).attr('y', -13)
-                    .attr('width', 120).attr('height', 26)
-                    .attr('rx', 6)
+                    .attr('x', -borderDevW / 2).attr('y', -borderDevH / 2)
+                    .attr('width', borderDevW).attr('height', borderDevH)
+                    .attr('rx', rackR)
                     .attr('fill', tc.amberFill).attr('stroke', tc.amberStroke)
                 devG.append('text')
-                    .attr('text-anchor', 'middle').attr('y', 4)
-                    .attr('font-size', 9).attr('font-weight', 600)
+                    .attr('text-anchor', 'middle').attr('y', fontSize * 0.35)
+                    .attr('font-size', fontSize * 0.85).attr('font-weight', 600)
                     .attr('fill', tc.amberText).attr('font-family', FONT)
                     .text(dev.label)
             })
@@ -89,168 +134,162 @@ export function EastWestNorthSouth() {
             // Connect border devices vertically
             for (let i = 0; i < borderDevices.length - 1; i++) {
                 g.append('line')
-                    .attr('x1', cx).attr('y1', borderDevices[i].y + 13)
-                    .attr('x2', cx).attr('y2', borderDevices[i + 1].y - 13)
+                    .attr('x1', cx).attr('y1', borderDevices[i].y + borderDevH / 2)
+                    .attr('x2', cx).attr('y2', borderDevices[i + 1].y - borderDevH / 2)
                     .attr('stroke', tc.border).attr('stroke-width', 1)
             }
 
             // Connect Internet to Border Router
             g.append('line')
-                .attr('x1', cx).attr('y1', borderY + 20)
-                .attr('x2', cx).attr('y2', borderDevices[0].y - 13)
+                .attr('x1', cx).attr('y1', internetY + cloudRy)
+                .attr('x2', cx).attr('y2', borderDevices[0].y - borderDevH / 2)
                 .attr('stroke', tc.border).attr('stroke-width', 1)
 
-            // Server racks (bottom)
-            const rackY = dcBottom - 60
+            // ── Server racks (evenly spaced) ──
             const racks = [
-                { label: 'Web Tier', sublabel: 'Web 1~3', x: cx - 150, color: 'blue' as const },
-                { label: 'App Tier', sublabel: 'WAS 1~3', x: cx - 50, color: 'indigo' as const },
-                { label: 'Cache', sublabel: 'Redis/Memcached', x: cx + 50, color: 'purple' as const },
-                { label: 'DB Tier', sublabel: 'DB Primary/Replica', x: cx + 150, color: 'green' as const },
+                { label: 'Web Tier', sublabel: 'Web 1~3', color: 'blue' as const },
+                { label: 'App Tier', sublabel: 'WAS 1~3', color: 'indigo' as const },
+                { label: 'Cache', sublabel: 'Redis/Memcached', color: 'purple' as const },
+                { label: 'DB Tier', sublabel: 'DB Primary/Replica', color: 'green' as const },
             ]
+
+            const rackAreaLeft = dcLeft + padX
+            const rackAreaRight = dcRight - padX
+            const rackSpacing = (rackAreaRight - rackAreaLeft - rackW) / (racks.length - 1)
 
             const colorMap = createColorMap(tc, ['blue', 'indigo', 'purple', 'green'])
 
-            racks.forEach(rack => {
+            const rackPositions = racks.map((rack, i) => ({
+                ...rack,
+                x: rackAreaLeft + rackW / 2 + i * rackSpacing,
+            }))
+
+            rackPositions.forEach(rack => {
                 const rc = colorMap[rack.color]
                 const rg = g.append('g').attr('transform', `translate(${rack.x},${rackY})`)
                 rg.append('rect')
-                    .attr('x', -48).attr('y', -20)
-                    .attr('width', 96).attr('height', 40)
-                    .attr('rx', 6)
+                    .attr('x', -rackW / 2).attr('y', -rackH / 2)
+                    .attr('width', rackW).attr('height', rackH)
+                    .attr('rx', rackR)
                     .attr('fill', rc.fill).attr('stroke', rc.stroke).attr('stroke-width', 1.5)
                 rg.append('text')
-                    .attr('text-anchor', 'middle').attr('y', -4)
-                    .attr('font-size', 9).attr('font-weight', 700)
+                    .attr('text-anchor', 'middle').attr('y', -rackH * 0.08)
+                    .attr('font-size', fontSize * 0.85).attr('font-weight', 700)
                     .attr('fill', rc.text).attr('font-family', FONT)
                     .text(rack.label)
                 rg.append('text')
-                    .attr('text-anchor', 'middle').attr('y', 10)
-                    .attr('font-size', 7)
+                    .attr('text-anchor', 'middle').attr('y', rackH * 0.28)
+                    .attr('font-size', subFontSize)
                     .attr('fill', tc.textDim).attr('font-family', MONO)
                     .text(rack.sublabel)
             })
 
             // Connect Core Switch to racks
-            racks.forEach(rack => {
+            const coreSwitchY = borderDevices[2].y
+            rackPositions.forEach(rack => {
                 g.append('line')
-                    .attr('x1', cx).attr('y1', borderDevices[2].y + 13)
-                    .attr('x2', rack.x).attr('y2', rackY - 20)
+                    .attr('x1', cx).attr('y1', coreSwitchY + borderDevH / 2)
+                    .attr('x2', rack.x).attr('y2', rackY - rackH / 2)
                     .attr('stroke', tc.border).attr('stroke-width', 1)
             })
 
             // ── North-South traffic arrows ──
             const showNS = view === 'both' || view === 'ns'
             if (showNS) {
-                // Arrow defs
-                svg.select('defs').remove()
-                const defs = svg.append('defs')
-                defs.append('marker')
-                    .attr('id', 'ns-arrow')
-                    .attr('viewBox', '0 0 10 7').attr('refX', 10).attr('refY', 3.5)
-                    .attr('markerWidth', 8).attr('markerHeight', 6).attr('orient', 'auto')
-                    .append('polygon').attr('points', '0 0, 10 3.5, 0 7').attr('fill', tc.blueStroke)
+                const nsX = dcLeft + 14
 
-                defs.append('marker')
-                    .attr('id', 'ew-arrow')
-                    .attr('viewBox', '0 0 10 7').attr('refX', 10).attr('refY', 3.5)
-                    .attr('markerWidth', 8).attr('markerHeight', 6).attr('orient', 'auto')
-                    .append('polygon').attr('points', '0 0, 10 3.5, 0 7').attr('fill', tc.amberStroke)
-
-                // NS down arrow (left side)
-                const nsX = dcLeft + 18
+                // NS down arrow
                 g.append('line')
-                    .attr('x1', nsX).attr('y1', borderY + 20)
-                    .attr('x2', nsX).attr('y2', rackY - 10)
+                    .attr('x1', nsX).attr('y1', internetY + cloudRy)
+                    .attr('x2', nsX).attr('y2', rackY - rackH / 2 - 4)
                     .attr('stroke', tc.blueStroke).attr('stroke-width', 2.5)
                     .attr('stroke-dasharray', '6,3')
                     .attr('marker-end', 'url(#ns-arrow)')
                     .attr('opacity', 0.8)
 
-                // NS up arrow (slightly right)
+                // NS up arrow
                 g.append('line')
-                    .attr('x1', nsX + 10).attr('y1', rackY - 10)
-                    .attr('x2', nsX + 10).attr('y2', borderY + 20)
+                    .attr('x1', nsX + 10).attr('y1', rackY - rackH / 2 - 4)
+                    .attr('x2', nsX + 10).attr('y2', internetY + cloudRy)
                     .attr('stroke', tc.blueStroke).attr('stroke-width', 2.5)
                     .attr('stroke-dasharray', '6,3')
                     .attr('marker-end', 'url(#ns-arrow)')
                     .attr('opacity', 0.8)
 
-                // NS label
+                // NS rotated label
+                const nsMidY = (internetY + cloudRy + rackY - rackH / 2) / 2
                 g.append('text')
-                    .attr('x', nsX + 5).attr('y', (borderY + 20 + rackY - 10) / 2)
+                    .attr('x', nsX + 5).attr('y', nsMidY)
                     .attr('text-anchor', 'middle')
-                    .attr('font-size', 9).attr('font-weight', 700)
+                    .attr('font-size', fontSize * 0.8).attr('font-weight', 700)
                     .attr('fill', tc.blueText).attr('font-family', MONO)
-                    .attr('transform', `rotate(-90, ${nsX + 5}, ${(borderY + 20 + rackY - 10) / 2})`)
+                    .attr('transform', `rotate(-90, ${nsX + 5}, ${nsMidY})`)
                     .text('North-South (N-S)')
 
-                // NS badge
+                // NS badge - responsive position
+                const badgeW = Math.min(180, width * 0.4)
+                const badgeH = Math.max(18, fontSize * 2)
                 g.append('rect')
-                    .attr('x', 10).attr('y', height - 50)
-                    .attr('width', 180).attr('height', 22)
+                    .attr('x', padX).attr('y', height - badgeH - 6)
+                    .attr('width', badgeW).attr('height', badgeH)
                     .attr('rx', 4)
                     .attr('fill', tc.blueFill).attr('stroke', tc.blueStroke)
 
                 g.append('text')
-                    .attr('x', 100).attr('y', height - 35)
+                    .attr('x', padX + badgeW / 2).attr('y', height - badgeH / 2 - 6 + fontSize * 0.35)
                     .attr('text-anchor', 'middle')
-                    .attr('font-size', 8.5).attr('font-weight', 600)
+                    .attr('font-size', fontSize * 0.8).attr('font-weight', 600)
                     .attr('fill', tc.blueText).attr('font-family', FONT)
-                    .text('N-S: Client - Server (외부-내부)')
+                    .text('N-S: Client ↔ Server')
             }
 
             // ── East-West traffic arrows ──
             const showEW = view === 'both' || view === 'ew'
             if (showEW) {
-                if (!svg.select('defs').node()) {
-                    const defs = svg.append('defs')
-                    defs.append('marker')
-                        .attr('id', 'ew-arrow')
-                        .attr('viewBox', '0 0 10 7').attr('refX', 10).attr('refY', 3.5)
-                        .attr('markerWidth', 8).attr('markerHeight', 6).attr('orient', 'auto')
-                        .append('polygon').attr('points', '0 0, 10 3.5, 0 7').attr('fill', tc.amberStroke)
-                }
-
-                const ewY = rackY + 30
-                // EW arrows between racks
                 const ewPairs = [
-                    { from: racks[0].x, to: racks[1].x, label: 'API Call' },
-                    { from: racks[1].x, to: racks[2].x, label: 'Cache R/W' },
-                    { from: racks[1].x, to: racks[3].x, label: 'DB Query' },
+                    { from: 0, to: 1, label: 'API Call' },
+                    { from: 1, to: 2, label: 'Cache R/W' },
+                    { from: 1, to: 3, label: 'DB Query' },
                 ]
 
                 ewPairs.forEach((pair, i) => {
-                    const y = ewY + i * 14
+                    const fromX = rackPositions[pair.from].x
+                    const toX = rackPositions[pair.to].x
+                    const yOff = rackY + rackH / 2 + 8 + i * (fontSize + 6)
+
                     g.append('line')
-                        .attr('x1', pair.from + 42).attr('y1', rackY + 2 + i * 4)
-                        .attr('x2', pair.to - 42).attr('y2', rackY + 2 + i * 4)
+                        .attr('x1', fromX + rackW / 2 - 4)
+                        .attr('y1', yOff)
+                        .attr('x2', toX - rackW / 2 + 4)
+                        .attr('y2', yOff)
                         .attr('stroke', tc.amberStroke).attr('stroke-width', 2)
                         .attr('stroke-dasharray', '4,3')
                         .attr('marker-end', 'url(#ew-arrow)')
                         .attr('opacity', 0.8)
 
                     g.append('text')
-                        .attr('x', (pair.from + pair.to) / 2).attr('y', y + 22)
+                        .attr('x', (fromX + toX) / 2).attr('y', yOff - 4)
                         .attr('text-anchor', 'middle')
-                        .attr('font-size', 7.5)
+                        .attr('font-size', subFontSize)
                         .attr('fill', tc.amberText).attr('font-family', MONO)
                         .text(pair.label)
                 })
 
-                // EW badge
+                // EW badge - responsive position
+                const badgeW = Math.min(180, width * 0.4)
+                const badgeH = Math.max(18, fontSize * 2)
                 g.append('rect')
-                    .attr('x', width - 200).attr('y', height - 50)
-                    .attr('width', 190).attr('height', 22)
+                    .attr('x', width - padX - badgeW).attr('y', height - badgeH - 6)
+                    .attr('width', badgeW).attr('height', badgeH)
                     .attr('rx', 4)
                     .attr('fill', tc.amberFill).attr('stroke', tc.amberStroke)
 
                 g.append('text')
-                    .attr('x', width - 105).attr('y', height - 35)
+                    .attr('x', width - padX - badgeW / 2).attr('y', height - badgeH / 2 - 6 + fontSize * 0.35)
                     .attr('text-anchor', 'middle')
-                    .attr('font-size', 8.5).attr('font-weight', 600)
+                    .attr('font-size', fontSize * 0.8).attr('font-weight', 600)
                     .attr('fill', tc.amberText).attr('font-family', FONT)
-                    .text('E-W: Server - Server (내부-내부)')
+                    .text('E-W: Server ↔ Server')
             }
         },
         [isDark, view],

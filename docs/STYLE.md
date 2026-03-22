@@ -17,6 +17,7 @@ src/pages/topic{NN}-{slug}/
 ```
 
 **index.tsx 파일 순서:**
+
 ```
 1. import 문 (공통 컴포넌트 + codeSnippets + concepts)
 2. 인라인 데이터 (배열/객체 — steps, rows 등)
@@ -24,7 +25,8 @@ src/pages/topic{NN}-{slug}/
 ```
 
 **추출 규칙:**
-- 코드 문자열 (`const xxxCode = \`...\``) → `codeSnippets.ts`
+
+- 코드 문자열 (`const xxxCode = \`...\``) →`codeSnippets.ts`
 - Mermaid 차트/테이블 데이터 → `chartData.ts`
 - 50줄 이상 D3/React 시각화 → `src/components/concepts/{category}/`
 
@@ -66,6 +68,7 @@ src/pages/topic{NN}-{slug}/
 ```
 
 **규칙:**
+
 - 토픽 번호: `Topic XX` 형식, 파란색 mono, uppercase tracking (인라인 큰 숫자 배지 금지)
 - h1은 페이지당 하나만 존재
 - 부제목(영문)은 `font-mono` + `text-gray-500 dark:text-gray-400` + `text-sm`
@@ -94,6 +97,7 @@ src/pages/topic{NN}-{slug}/
 ### 사용 규칙
 
 **색상 배경 박스 → `InfoBox` 사용:**
+
 ```tsx
 // ❌ 금지: 인라인 다크모드 전용 색상
 <div className="bg-blue-900/20 border-blue-800 text-blue-200">...</div>
@@ -103,21 +107,25 @@ src/pages/topic{NN}-{slug}/
 ```
 
 **수치/성능 카드 → `StatCard` 사용:**
+
 ```tsx
 <StatCard title="syscall 비용" value="~100 ns" color="amber" desc="설명..." />
 ```
 
 **팁/경고 박스 → `Alert` 사용:**
+
 ```tsx
 <Alert variant="tip" title="핵심:">중요한 내용</Alert>
 ```
 
 **하단 네비게이션 → `TopicNavigation` 사용:**
+
 ```tsx
 <TopicNavigation topicId="02-scheduler" />  // 이전/다음 자동 계산
 ```
 
 ### Section 규칙
+
 - 섹션 번호는 title 안에 포함: `"1.1  커널이 하는 일"` (공백 2칸)
 - `id`: `s{NN}{M}` 형식 (예: `s111`, `s123`)
 - `<section>` + `<h2>` 직접 사용 금지 → 반드시 `Section` 컴포넌트 사용
@@ -216,6 +224,7 @@ src/components/concepts/
 ```
 
 **규칙:**
+
 - Section 래퍼(`<Section id=... title=...>`)는 index.tsx에 유지
 - concept 컴포넌트는 순수 시각화만 export
 - codeSnippets를 import하지 않음 (코드는 index.tsx에서 관리)

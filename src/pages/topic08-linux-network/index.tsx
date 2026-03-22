@@ -10,9 +10,14 @@ import { LinuxNetworkStackDiagram } from '../../components/concepts/linux-net/Li
 import { SkbuffDiagram } from '../../components/concepts/linux-net/SkbuffDiagram'
 import {
     ipAddrCode,
+    ipAddrDetailCode,
     ipLinkCode,
+    ipLinkDetailCode,
     ipRouteCode,
+    ipRouteDetailCode,
     ipRuleCode,
+    ipRuleDetailCode,
+    ipNeighCode,
     ssCode,
     ethtoolCode,
     sysctlCode,
@@ -66,6 +71,46 @@ const ssOptionRows = [
     { cells: ['-i', 'TCP 내부 정보 (cwnd, rtt 등)'] },
 ]
 
+const addrScopeRows = [
+    { cells: ['global', '전역 유효 — 어디서든 라우팅 가능한 주소', '일반적인 인터페이스 IP'] },
+    { cells: ['link', '링크 로컬 — 같은 L2 세그먼트 내에서만 유효', 'fe80::/10, 169.254.0.0/16'] },
+    { cells: ['host', '호스트 로컬 — 자기 자신만 접근 가능', '127.0.0.1, ::1'] },
+]
+
+const virtualIfRows = [
+    { cells: ['veth', '쌍으로 생성되는 가상 이더넷 케이블', '네임스페이스 간 연결'] },
+    { cells: ['bridge', '소프트웨어 L2 스위치', '컨테이너/VM 네트워크 허브'] },
+    { cells: ['vlan', '802.1Q VLAN 서브인터페이스', '하나의 NIC에서 VLAN 분리'] },
+    { cells: ['bond', '여러 NIC를 묶어 하나로 사용', '대역폭 합산, 장애 대비'] },
+    { cells: ['macvlan', '하나의 NIC에 여러 MAC 주소 부여', '컨테이너 직접 연결'] },
+    { cells: ['ipvlan', '하나의 NIC에 여러 IP (MAC 공유)', 'MAC 제한 환경'] },
+    { cells: ['vxlan', 'UDP 기반 L2 오버레이 터널', '클라우드/데이터센터 네트워크'] },
+    { cells: ['dummy', '항상 UP 상태인 가상 인터페이스', '테스트, 앵커 IP 할당'] },
+]
+
+const routeTableRows = [
+    { cells: ['local (255)', '로컬 주소/브로드캐스트', '커널이 자동 관리, 최우선 조회'] },
+    { cells: ['main (254)', '일반적인 라우팅 엔트리', 'ip route 기본 테이블'] },
+    { cells: ['default (253)', '기본 테이블', '보통 비어 있음'] },
+    { cells: ['사용자 정의 (1~252)', 'policy routing용 커스텀 테이블', 'ip rule과 조합'] },
+]
+
+const specialRouteRows = [
+    { cells: ['blackhole', '패킷을 조용히 폐기', 'ICMP 응답 없음'] },
+    { cells: ['unreachable', '패킷 폐기 + ICMP Dest Unreachable 응답', '목적지 없음 알림'] },
+    { cells: ['prohibit', '패킷 폐기 + ICMP Admin Prohibited 응답', '정책적 차단 알림'] },
+]
+
+const neighStateRows = [
+    { cells: ['REACHABLE', '최근 통신으로 유효성 확인됨'] },
+    { cells: ['STALE', '일정 시간 미사용, 다음 전송 시 재확인'] },
+    { cells: ['DELAY', 'STALE에서 재확인 대기 중'] },
+    { cells: ['PROBE', '유효성 확인 ARP/NDP 전송 중'] },
+    { cells: ['FAILED', 'ARP/NDP 응답 없음 (도달 불가)'] },
+    { cells: ['INCOMPLETE', 'ARP Request 전송 후 응답 대기'] },
+    { cells: ['PERMANENT', '수동 설정 (static entry)'] },
+]
+
 /* ── Component ────────────────────────────────────────────────────── */
 
 export default function Topic08() {
@@ -95,7 +140,11 @@ export default function Topic08() {
                 items={[
                     'NIC 드라이버와 NAPI 구조를 이해한다',
                     'sk_buff 데이터 구조의 역할을 설명할 수 있다',
-                    'iproute2 도구(ip addr/link/route/rule)를 활용할 수 있다',
+                    'ip addr로 주소 scope, primary/secondary, IPv6를 관리할 수 있다',
+                    'ip link로 가상 인터페이스(veth, bridge, vlan, bond 등)를 생성할 수 있다',
+                    'ip route로 ECMP, blackhole, src 힌트 등 고급 라우팅을 설정할 수 있다',
+                    'ip rule로 RPDB 기반 정책 라우팅을 구성할 수 있다',
+                    'ip neigh로 ARP/NDP 캐시를 관리하고 상태를 이해한다',
                     'ss로 소켓 상태를 관찰하고 분석할 수 있다',
                     'sysctl 네트워크 파라미터를 이해하고 조정할 수 있다',
                     '네트워크 네임스페이스와 veth의 원리를 파악한다',
@@ -257,47 +306,268 @@ export default function Topic08() {
                 </Alert>
             </Section>
 
-            {/* ── 8.5 iproute2 도구 ─────────────────────────── */}
-            <Section id="s085" title="8.5  iproute2 도구">
+            {/* ── 8.5 ip addr — 주소 관리 상세 ─────────────────── */}
+            <Section id="s085" title="8.5  ip addr — 주소 관리 상세">
                 <Prose>
-                    iproute2는 리눅스에서 네트워크 인터페이스, IP 주소, 라우팅, 정책 라우팅 등을
-                    설정하고 조회하는 현대적인 도구 모음입니다. 과거에 사용하던 ifconfig, route,
-                    arp, netstat 등을 대체합니다. 핵심 명령어는 ip이며,
-                    서브커맨드(addr, link, route, rule 등)를 통해 다양한 기능을 제공합니다.
+                    ip addr는 네트워크 인터페이스에 할당된 IP 주소를 관리하는 명령입니다.
+                    ifconfig를 완전히 대체하며, IPv4와 IPv6를 통합적으로 관리합니다.
+                    하나의 인터페이스에 여러 주소를 할당하거나, scope와 label을 지정하여
+                    주소의 용도와 가시성을 세밀하게 제어할 수 있습니다.
                 </Prose>
 
-                <InfoBox color="blue" title="ip addr — IP 주소 관리">
-                    인터페이스에 할당된 IP 주소를 확인하거나 추가/삭제합니다.
-                    하나의 인터페이스에 여러 개의 IP 주소를 할당할 수 있으며(secondary address),
-                    scope(global, link, host)에 따라 주소의 용도가 구분됩니다.
-                </InfoBox>
-                <CodeBlock code={ipAddrCode} language="bash" filename="ip addr" />
+                <CodeBlock code={ipAddrCode} language="bash" filename="ip addr — 기본 사용법" />
 
-                <InfoBox color="green" title="ip link — 인터페이스 관리">
-                    네트워크 인터페이스의 상태(UP/DOWN), MTU, MAC 주소 등을 관리합니다.
-                    가상 인터페이스(veth, bridge, vlan, bond 등)의 생성/삭제도
-                    ip link add/del 명령으로 수행합니다.
+                <InfoBox color="blue" title="Primary vs Secondary 주소">
+                    하나의 인터페이스에 같은 서브넷의 첫 번째 주소가 primary,
+                    이후 추가되는 같은 서브넷의 주소들이 secondary입니다.
+                    primary 주소를 삭제하면 해당 서브넷의 모든 secondary 주소도 함께 삭제됩니다.
+                    서로 다른 서브넷의 주소는 각각 독립적인 primary로 취급됩니다.
+                    서비스 VIP나 failover IP를 추가할 때 이 동작을 이해해야 합니다.
                 </InfoBox>
-                <CodeBlock code={ipLinkCode} language="bash" filename="ip link" />
 
-                <InfoBox color="amber" title="ip route — 라우팅 테이블 관리">
-                    커널 라우팅 테이블을 조회하고 정적 라우트를 추가/삭제합니다.
-                    ip route get은 특정 목적지에 대해 커널이 실제로 선택하는 경로를
-                    보여주므로, 라우팅 문제 디버깅에 매우 유용합니다.
-                </InfoBox>
-                <CodeBlock code={ipRouteCode} language="bash" filename="ip route" />
+                <InfoTable
+                    headers={['scope', '의미', '예시']}
+                    rows={addrScopeRows}
+                />
 
-                <InfoBox color="purple" title="ip rule — 정책 라우팅(Policy Routing)">
-                    일반적인 라우팅은 목적지 IP만으로 경로를 결정하지만,
-                    정책 라우팅을 사용하면 출발지 IP, fwmark, 인터페이스 등
-                    다양한 조건에 따라 서로 다른 라우팅 테이블을 참조할 수 있습니다.
-                    멀티호밍(여러 ISP 연결) 환경에서 필수적입니다.
+                <Prose>
+                    label은 ifconfig 호환을 위한 별칭입니다. eth0:1, eth0:vip 같은 형태로
+                    지정하면, 레거시 도구에서도 해당 주소를 별도 인터페이스처럼 표시합니다.
+                    현대적인 환경에서는 label 없이 여러 주소를 추가하는 것이 일반적이지만,
+                    일부 모니터링 도구나 스크립트가 label에 의존하는 경우가 있습니다.
+                </Prose>
+
+                <InfoBox color="green" title="IPv6 주소 유형">
+                    IPv6에서는 인터페이스가 UP되면 자동으로 link-local 주소(fe80::/10)가 생성됩니다.
+                    SLAAC(Stateless Address Autoconfiguration)이 활성화되면 라우터 광고를 받아
+                    global 주소가 자동 할당됩니다. privacy extension이 켜져 있으면
+                    임의의 temporary 주소도 생성되어, 외부 통신 시 출발지 주소로 사용됩니다.
+                    valid_lft(유효 기간)와 preferred_lft(선호 기간)가 만료되면 주소가 deprecated
+                    또는 삭제됩니다.
                 </InfoBox>
-                <CodeBlock code={ipRuleCode} language="bash" filename="ip rule" />
+
+                <CodeBlock code={ipAddrDetailCode} language="bash" filename="ip addr — 상세 활용" />
+
+                <Alert variant="info" title="실무 팁: ip addr flush">
+                    ip addr flush dev eth0는 해당 인터페이스의 모든 주소를 한 번에 삭제합니다.
+                    네트워크 재설정이나 DHCP 재취득 전에 깨끗한 상태를 만들 때 유용하지만,
+                    원격 접속 중인 서버에서 실행하면 접속이 끊어지므로 주의해야 합니다.
+                </Alert>
             </Section>
 
-            {/* ── 8.6 ss와 소켓 상태 관찰 ───────────────────── */}
-            <Section id="s086" title="8.6  ss와 소켓 상태 관찰">
+            {/* ── 8.6 ip link — 인터페이스 관리 상세 ──────────── */}
+            <Section id="s086" title="8.6  ip link — 인터페이스 관리 상세">
+                <Prose>
+                    ip link는 네트워크 인터페이스의 L2 속성을 관리합니다.
+                    인터페이스의 UP/DOWN 제어, MTU 변경, MAC 주소 설정은 물론,
+                    리눅스가 지원하는 다양한 가상 인터페이스를 생성하고 삭제할 수 있습니다.
+                    컨테이너, 가상화, 오버레이 네트워크의 기반이 되는 핵심 명령입니다.
+                </Prose>
+
+                <CodeBlock code={ipLinkCode} language="bash" filename="ip link — 기본 사용법" />
+
+                <InfoBox color="amber" title="MTU 변경과 Jumbo Frame">
+                    기본 MTU는 1500 바이트이지만, 데이터센터 내부 통신에서는 9000 바이트의
+                    Jumbo Frame을 사용하여 CPU 오버헤드를 줄이고 처리량을 높입니다.
+                    MTU 변경은 경로상의 모든 장비(스위치, 라우터, NIC)에서 일관되게 설정해야 합니다.
+                    VXLAN이나 GRE 같은 터널링을 사용하면 오버헤드만큼 내부 MTU가 줄어들므로
+                    (VXLAN: 50바이트) 이를 감안한 설정이 필요합니다.
+                </InfoBox>
+
+                <InfoTable
+                    headers={['유형', '설명', '주요 용도']}
+                    rows={virtualIfRows}
+                />
+
+                <CodeBlock code={ipLinkDetailCode} language="bash" filename="ip link — 가상 인터페이스와 상세 설정" />
+
+                <InfoBox color="purple" title="프로미스큐어스 모드 (Promiscuous Mode)">
+                    일반적으로 NIC는 자신의 MAC 주소나 브로드캐스트 주소가 아닌 프레임을 폐기합니다.
+                    프로미스큐어스 모드를 켜면 모든 프레임을 수신하여 커널로 전달합니다.
+                    패킷 캡처(tcpdump, Wireshark), 브리지, IDS/IPS에서 필요합니다.
+                    브리지에 포트를 추가하면 해당 인터페이스는 자동으로 프로미스큐어스 모드가 됩니다.
+                </InfoBox>
+
+                <Prose>
+                    txqueuelen은 네트워크 드라이버가 사용하는 전송 큐의 최대 길이입니다.
+                    기본값은 보통 1000이며, 고속 네트워크에서 burst 트래픽이 많을 때
+                    값을 늘리면 패킷 드롭을 줄일 수 있습니다.
+                    반대로 가상 인터페이스(veth, tun 등)는 기본값이 500~1000으로 설정되며,
+                    레이턴시가 중요한 환경에서는 줄이는 것이 유리할 수 있습니다.
+                </Prose>
+
+                <Alert variant="info" title="실무 예시: bridge 기반 컨테이너 네트워크">
+                    Docker의 기본 네트워크 드라이버(bridge)는 docker0 브리지를 만들고,
+                    각 컨테이너마다 veth 쌍을 생성하여 한쪽을 컨테이너 네임스페이스에,
+                    다른 쪽을 docker0 브리지에 연결합니다. 이 구조를 ip link 명령으로
+                    수동 구성하면 컨테이너 네트워킹의 원리를 깊이 이해할 수 있습니다.
+                </Alert>
+            </Section>
+
+            {/* ── 8.7 ip route — 라우팅 테이블 상세 ───────────── */}
+            <Section id="s087" title="8.7  ip route — 라우팅 테이블 상세">
+                <Prose>
+                    ip route는 커널 라우팅 테이블을 관리합니다. 리눅스는 여러 개의 라우팅 테이블을
+                    지원하며, 각 테이블에 독립적인 라우트를 설정할 수 있습니다.
+                    ip rule(정책 라우팅)과 조합하면 출발지, fwmark, 인터페이스 등 다양한 조건에 따라
+                    서로 다른 라우팅 테이블을 참조하는 고급 라우팅이 가능합니다.
+                </Prose>
+
+                <CodeBlock code={ipRouteCode} language="bash" filename="ip route — 기본 사용법" />
+
+                <InfoTable
+                    headers={['테이블 (ID)', '용도', '비고']}
+                    rows={routeTableRows}
+                />
+
+                <InfoBox color="blue" title="metric과 우선순위">
+                    동일 목적지에 여러 경로가 있을 때 metric 값이 낮은 경로가 우선됩니다.
+                    DHCP 클라이언트는 보통 인터페이스마다 다른 metric을 설정하여
+                    유선(metric 100)이 무선(metric 600)보다 우선되도록 합니다.
+                    metric이 동일하면 더 구체적인(긴 prefix) 경로가 우선됩니다(longest prefix match).
+                </InfoBox>
+
+                <Prose>
+                    nexthop은 패킷을 전달할 다음 홉 게이트웨이를 지정합니다.
+                    via는 게이트웨이 IP를, dev는 출력 인터페이스를 명시합니다.
+                    directly connected 네트워크(같은 서브넷)의 경우 via 없이 dev만 지정하며,
+                    커널이 자동으로 이런 경로를 proto kernel scope link로 추가합니다.
+                </Prose>
+
+                <InfoBox color="green" title="src 힌트 (Source Address Selection)">
+                    라우트에 src를 지정하면, 해당 경로로 나가는 패킷의 출발지 IP를 지정할 수 있습니다.
+                    인터페이스에 여러 IP가 할당된 경우, 어떤 주소를 출발지로 사용할지 결정하는 데 중요합니다.
+                    src는 &quot;힌트&quot;이며, 소켓이 이미 bind()한 주소가 있으면 그 주소가 우선합니다.
+                    ip route get 명령의 출력에서 src 필드로 실제 선택된 출발지 주소를 확인할 수 있습니다.
+                </InfoBox>
+
+                <InfoTable
+                    headers={['유형', '동작', 'ICMP 응답']}
+                    rows={specialRouteRows}
+                />
+
+                <InfoBox color="amber" title="ECMP (Equal-Cost Multi-Path)">
+                    ECMP는 동일 비용의 경로가 여러 개일 때 트래픽을 분산하는 기능입니다.
+                    nexthop을 여러 개 지정하고 weight로 비율을 조정할 수 있습니다.
+                    리눅스 커널은 기본적으로 흐름(flow) 단위(출발지/목적지 IP+포트 해시)로 분산하여,
+                    같은 TCP 연결의 패킷이 항상 같은 경로를 따르도록 합니다.
+                    이 해시 알고리즘은 sysctl net.ipv4.fib_multipath_hash_policy로 제어합니다.
+                </InfoBox>
+
+                <CodeBlock code={ipRouteDetailCode} language="bash" filename="ip route — 상세 활용" />
+
+                <Alert variant="info" title="디버깅 필수 도구: ip route get">
+                    ip route get [목적지]는 커널이 실제로 선택하는 경로를 보여줍니다.
+                    ip rule, 여러 라우팅 테이블, src 선택까지 모두 반영된 최종 결과를 출력하므로,
+                    라우팅 문제 디버깅 시 가장 먼저 사용해야 하는 명령입니다.
+                    from [출발지] 옵션을 추가하면 policy routing 규칙까지 검증할 수 있습니다.
+                </Alert>
+            </Section>
+
+            {/* ── 8.8 ip rule — 정책 라우팅 상세 ─────────────── */}
+            <Section id="s088" title="8.8  ip rule — 정책 라우팅 상세">
+                <Prose>
+                    일반적인 라우팅은 목적지 IP(destination)만으로 경로를 결정합니다.
+                    그러나 실제 운영 환경에서는 같은 목적지라도 출발지 IP, 패킷의 마크(fwmark),
+                    수신 인터페이스 등에 따라 다른 경로를 사용해야 하는 경우가 빈번합니다.
+                    ip rule은 이러한 정책 기반 라우팅(Policy Routing)을 구현하는 도구입니다.
+                </Prose>
+
+                <CodeBlock code={ipRuleCode} language="bash" filename="ip rule — 기본 사용법" />
+
+                <InfoBox color="purple" title="RPDB (Routing Policy Database) 구조">
+                    커널은 패킷의 라우팅을 결정할 때 RPDB의 rule을 priority(숫자가 작을수록 높은 우선순위)
+                    순서대로 순회합니다. 각 rule은 조건(from, to, fwmark, iif, oif)과
+                    동작(lookup 테이블, unreachable, blackhole 등)으로 구성됩니다.
+                    조건에 매칭되면 해당 rule이 가리키는 라우팅 테이블에서 경로를 조회하고,
+                    경로가 있으면 그것을 사용합니다. 경로가 없으면 다음 rule로 넘어갑니다.
+                </InfoBox>
+
+                <Prose>
+                    기본 RPDB에는 세 개의 rule이 있습니다:
+                    priority 0의 &quot;from all lookup local&quot;은 자기 자신의 주소인지 확인하고,
+                    priority 32766의 &quot;from all lookup main&quot;은 일반 라우팅 테이블을 조회하며,
+                    priority 32767의 &quot;from all lookup default&quot;는 기본 테이블(보통 비어 있음)을 조회합니다.
+                    사용자 정의 rule은 보통 1~32765 사이의 priority를 지정합니다.
+                </Prose>
+
+                <InfoBox color="green" title="조건(selector) 종류">
+                    from: 출발지 IP/서브넷으로 매칭합니다.
+                    to: 목적지 IP/서브넷으로 매칭합니다.
+                    fwmark: iptables/nftables의 MARK 타겟으로 설정한 패킷 마크로 매칭합니다.
+                    iif: 패킷이 들어온 수신 인터페이스로 매칭합니다.
+                    oif: locally generated 패킷의 송신 인터페이스로 매칭합니다.
+                    이 조건들은 조합하여 사용할 수 있습니다.
+                </InfoBox>
+
+                <CodeBlock code={ipRuleDetailCode} language="bash" filename="ip rule — 상세 활용" />
+
+                <InfoBox color="amber" title="실무: VPN Split Tunneling">
+                    VPN split tunneling은 특정 대역의 트래픽만 VPN 터널을 통해 보내고,
+                    나머지는 일반 인터넷 경로를 사용하는 구성입니다.
+                    ip rule로 VPN 대역(to 10.0.0.0/8)에 대한 rule을 추가하고,
+                    해당 rule이 참조하는 테이블에 VPN 터널 인터페이스(tun0) 경로를 설정합니다.
+                    main 테이블의 기본 게이트웨이는 일반 ISP를 가리키므로,
+                    VPN 대역 외의 트래픽은 자연스럽게 일반 인터넷으로 나갑니다.
+                </InfoBox>
+
+                <Alert variant="info" title="fwmark 활용과 iptables 연동:">
+                    fwmark 기반 라우팅은 L4 정보(포트, 프로토콜)에 따라 라우팅을 분기할 때 핵심입니다.
+                    iptables -t mangle로 패킷에 마크를 설정하고, ip rule에서 해당 마크를 조건으로
+                    별도 라우팅 테이블을 참조합니다. TPROXY, 특정 서비스의 트래픽 분리,
+                    사용자별 라우팅 등 다양한 시나리오에서 활용됩니다.
+                </Alert>
+            </Section>
+
+            {/* ── 8.9 ip neigh — ARP/NDP 관리 ───────────────── */}
+            <Section id="s089" title="8.9  ip neigh — ARP/NDP 관리">
+                <Prose>
+                    ip neigh(neighbor)는 ARP(IPv4) 및 NDP(IPv6 Neighbor Discovery Protocol)
+                    캐시를 관리하는 명령입니다. 커널은 같은 L2 네트워크의 다른 호스트에
+                    패킷을 보낼 때 IP 주소에 대응하는 MAC 주소를 알아야 하며,
+                    이 매핑 정보가 neighbor 캐시(ARP 테이블)에 저장됩니다.
+                </Prose>
+
+                <InfoTable
+                    headers={['상태', '의미']}
+                    rows={neighStateRows}
+                />
+
+                <CodeBlock code={ipNeighCode} language="bash" filename="ip neigh — ARP/NDP 캐시 관리" />
+
+                <InfoBox color="cyan" title="ARP 캐시 생명주기">
+                    새로운 이웃이 발견되면 INCOMPLETE 상태에서 ARP Request를 보내고,
+                    응답을 받으면 REACHABLE이 됩니다. 일정 시간(기본 30초) 동안 통신이 없으면
+                    STALE로 전환되며, 이 상태에서 패킷을 보내려 하면 DELAY를 거쳐 PROBE 상태로
+                    전환되어 ARP 재확인을 시도합니다. 응답이 없으면 FAILED가 됩니다.
+                    이 타이밍은 sysctl의 net.ipv4.neigh.*.base_reachable_time_ms 등으로 조정합니다.
+                </InfoBox>
+
+                <Prose>
+                    Static ARP entry(PERMANENT 상태)는 ARP 스푸핑 방어에 유용하지만,
+                    네트워크 장비 교체 시 수동 업데이트가 필요합니다.
+                    데이터센터 환경에서는 게이트웨이의 MAC 주소를 static으로 설정하여
+                    ARP 스푸핑 공격으로부터 기본 경로를 보호하는 경우가 있습니다.
+                </Prose>
+
+                <InfoBox color="green" title="IPv6 NDP (Neighbor Discovery Protocol)">
+                    IPv6는 ARP 대신 NDP를 사용합니다. NDP는 ICMPv6 기반으로 동작하며,
+                    Neighbor Solicitation(NS)과 Neighbor Advertisement(NA) 메시지를 교환합니다.
+                    ARP가 브로드캐스트를 사용하는 것과 달리, NDP는 멀티캐스트(Solicited-Node)를
+                    사용하여 네트워크 부하를 줄입니다.
+                    ip -6 neigh 명령으로 IPv6 neighbor 캐시를 확인할 수 있습니다.
+                </InfoBox>
+
+                <Alert variant="info" title="문제 진단:">
+                    통신 장애 시 ip neigh show에서 FAILED 상태의 엔트리가 있다면
+                    L2 연결(케이블, 스위치, VLAN), 대상 호스트의 상태(다운, 방화벽),
+                    또는 IP 충돌 등을 의심해야 합니다.
+                    ip neigh flush dev eth0로 캐시를 초기화하고 다시 시도해 볼 수 있습니다.
+                </Alert>
+            </Section>
+
+            {/* ── 8.10 ss와 소켓 상태 관찰 ──────────────────── */}
+            <Section id="s0810" title="8.10  ss와 소켓 상태 관찰">
                 <Prose>
                     ss(socket statistics)는 netstat를 대체하는 현대적인 소켓 모니터링 도구입니다.
                     커널의 netlink 인터페이스를 직접 사용하여 /proc/net/tcp를 파싱하는 netstat보다
@@ -333,47 +603,8 @@ export default function Topic08() {
                 <CodeBlock code={tcpdumpCode} language="bash" filename="tcpdump (패킷 캡처)" />
             </Section>
 
-            {/* ── 8.7 라우팅 테이블과 policy routing ─────────── */}
-            <Section id="s087" title="8.7  라우팅 테이블과 Policy Routing">
-                <Prose>
-                    리눅스는 기본적으로 세 개의 라우팅 테이블을 가지고 있습니다:
-                    local(우선순위 0), main(우선순위 32766), default(우선순위 32767).
-                    일반적인 ip route 명령은 main 테이블을 조작하며,
-                    local 테이블에는 자기 자신에게 할당된 주소와 브로드캐스트 주소 등이 자동 등록됩니다.
-                </Prose>
-
-                <InfoBox color="green" title="RPDB (Routing Policy Database)">
-                    ip rule 명령으로 관리하는 것이 RPDB(라우팅 정책 데이터베이스)입니다.
-                    커널은 패킷의 라우팅 결정 시 RPDB의 rule을 우선순위(priority) 순서대로 검사하여,
-                    조건에 맞는 rule이 가리키는 라우팅 테이블에서 경로를 조회합니다.
-                    이것이 Policy Routing(정책 기반 라우팅)의 핵심 메커니즘입니다.
-                </InfoBox>
-
-                <Prose>
-                    Policy Routing이 필요한 대표적인 시나리오는 멀티호밍(Multi-homing)입니다.
-                    서버에 두 개의 ISP가 연결되어 있을 때, 출발지 주소에 따라
-                    서로 다른 기본 게이트웨이를 사용해야 합니다.
-                    ISP-A에서 들어온 패킷의 응답은 ISP-A로 나가야 하고,
-                    ISP-B에서 들어온 패킷의 응답은 ISP-B로 나가야 합니다.
-                    이를 위해 출발지 기반 rule을 설정하고 각각 별도의 라우팅 테이블을 참조하게 합니다.
-                </Prose>
-
-                <InfoBox color="amber" title="fwmark 기반 라우팅">
-                    iptables/nftables의 MARK 타겟으로 패킷에 마크를 설정하고,
-                    ip rule에서 fwmark 조건으로 특정 라우팅 테이블을 사용할 수 있습니다.
-                    이 방식은 VPN 터널링, 트래픽 분리, TPROXY 등에서 널리 사용됩니다.
-                    예: 특정 사용자의 트래픽만 VPN 터널을 통해 보내기.
-                </InfoBox>
-
-                <Alert variant="info" title="디버깅 팁:">
-                    라우팅 문제가 의심될 때는 ip route get [목적지] from [출발지] 명령을 사용하세요.
-                    커널이 실제로 어떤 rule을 매칭하고, 어떤 라우팅 테이블의 어떤 경로를 선택하는지
-                    한 번에 확인할 수 있습니다.
-                </Alert>
-            </Section>
-
-            {/* ── 8.8 sysctl 네트워크 파라미터 ──────────────── */}
-            <Section id="s088" title="8.8  sysctl 네트워크 파라미터">
+            {/* ── 8.11 sysctl 네트워크 파라미터 ─────────────── */}
+            <Section id="s0811" title="8.11  sysctl 네트워크 파라미터">
                 <Prose>
                     sysctl은 커널 파라미터를 런타임에 조회하고 변경하는 도구입니다.
                     네트워크와 관련된 파라미터는 net.ipv4.*, net.ipv6.*, net.core.* 아래에
@@ -410,8 +641,8 @@ export default function Topic08() {
                 </Alert>
             </Section>
 
-            {/* ── 8.9 네트워크 네임스페이스와 veth ──────────── */}
-            <Section id="s089" title="8.9  네트워크 네임스페이스와 veth">
+            {/* ── 8.12 네트워크 네임스페이스와 veth ─────────── */}
+            <Section id="s0812" title="8.12  네트워크 네임스페이스와 veth">
                 <Prose>
                     네트워크 네임스페이스(Network Namespace)는 리눅스 커널이 제공하는
                     네트워크 격리 기능입니다. 각 네임스페이스는 독립적인 네트워크 스택을 가집니다:
@@ -454,8 +685,8 @@ export default function Topic08() {
                 </Alert>
             </Section>
 
-            {/* ── 8.10 요약 ─────────────────────────────────── */}
-            <Section id="s0810" title="8.10  요약">
+            {/* ── 8.13 요약 ────────────────────────────────── */}
+            <Section id="s0813" title="8.13  요약">
                 <Prose>
                     이 토픽에서는 리눅스 커널 네트워크 스택의 전체 구조를 학습했습니다.
                     NIC 하드웨어에서 소켓 API까지의 패킷 흐름, NAPI 기반의 효율적인 수신 처리,
@@ -466,9 +697,13 @@ export default function Topic08() {
                     1) 리눅스 네트워크 스택은 User Space &rarr; System Call &rarr; Socket &rarr; Transport &rarr; IP &rarr; Netfilter &rarr; Driver &rarr; NIC의 계층 구조입니다.
                     2) NAPI는 인터럽트와 폴링의 하이브리드 모델로, 고속 패킷 처리를 효율화합니다.
                     3) sk_buff(skb)는 head/data/tail/end 포인터로 제로카피 패킷 처리를 구현합니다.
-                    4) iproute2(ip addr/link/route/rule)와 ss는 네트워크 설정과 모니터링의 표준 도구입니다.
-                    5) sysctl로 ip_forward, rp_filter, TCP 버퍼 등 핵심 파라미터를 제어합니다.
-                    6) 네트워크 네임스페이스와 veth는 컨테이너 네트워킹의 기반 기술입니다.
+                    4) ip addr은 scope, primary/secondary, IPv6까지 세밀한 주소 관리를 제공합니다.
+                    5) ip link로 veth, bridge, vlan, bond, vxlan 등 다양한 가상 인터페이스를 생성합니다.
+                    6) ip route는 ECMP, blackhole, src 힌트 등 고급 라우팅 기능을 제공합니다.
+                    7) ip rule은 RPDB 기반 정책 라우팅으로 멀티호밍, VPN split tunneling을 구현합니다.
+                    8) ip neigh로 ARP/NDP 캐시 상태를 관리하고 L2 연결 문제를 진단합니다.
+                    9) ss와 sysctl로 소켓 상태 모니터링과 커널 파라미터 튜닝을 수행합니다.
+                    10) 네트워크 네임스페이스와 veth는 컨테이너 네트워킹의 기반 기술입니다.
                 </InfoBox>
 
                 <Alert variant="info" title="다음 토픽:">
