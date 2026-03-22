@@ -1,14 +1,12 @@
-import { useCallback, useMemo, useState } from 'react'
+import { useState, useCallback, useMemo, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import * as d3 from 'd3'
 import { networkTopics } from '../../data/networkTopics'
 import { glossary } from '../../data/glossary'
-import type { GlossaryCategory } from '../../data/glossary'
 import { useIsDark } from '../../hooks/useIsDark'
 import { D3Container } from '../../components/viz/D3Container'
 
-/* ── colour maps ─────────────────────────────────────────── */
-
+// ── 카테고리 메타데이터 ─────────────────────────────────────────────────────
 const CAT_COLOR: Record<string, string> = {
     fundamentals: '#3b82f6',
     link: '#a855f7',
@@ -34,392 +32,386 @@ const CAT_LABEL: Record<string, string> = {
     general: '일반',
 }
 
+// ── 12개 토픽 색상 (hue 균등 분배) ──────────────────────────────────────────
 const TOPIC_HUES = [250, 278, 305, 332, 5, 30, 57, 85, 112, 140, 168, 196]
 
-/* ── data types ──────────────────────────────────────────── */
+function topicStroke(idx: number, isDark: boolean): string {
+    const h = TOPIC_HUES[idx % TOPIC_HUES.length]
+    return isDark ? `oklch(62% 0.18 ${h})` : `oklch(45% 0.18 ${h})`
+}
+function topicFill(idx: number, isDark: boolean): string {
+    const h = TOPIC_HUES[idx % TOPIC_HUES.length]
+    return isDark ? `oklch(22% 0.08 ${h})` : `oklch(93% 0.04 ${h})`
+}
 
-interface TopicNode extends d3.SimulationNodeDatum {
+// ── GraphNode / GraphLink 타입 ────────────────────────────────────────────
+interface GraphNode extends d3.SimulationNodeDatum {
     id: string
-    kind: 'topic'
-    number: number
-    title: string
+    type: 'topic' | 'glossary'
+    label: string
+    category?: string
+    topicIndex?: number
     route: string
-    hue: number
+    r: number
 }
-
-interface GlossaryNode extends d3.SimulationNodeDatum {
-    id: string
-    kind: 'glossary'
-    term: string
-    category: GlossaryCategory
-    definition: string
-}
-
-type GraphNode = TopicNode | GlossaryNode
-
 interface GraphLink extends d3.SimulationLinkDatum<GraphNode> {
-    type: 'topic-topic' | 'glossary-topic'
+    kind: 'sharedTag' | 'topicRef'
 }
 
-/* ── helpers ─────────────────────────────────────────────── */
-
-function buildGraph(showTopics: boolean, showGlossary: boolean, catFilter: Set<string>) {
+// ── 그래프 데이터 빌드 ───────────────────────────────────────────────────────
+function buildData(
+    showTopics: boolean,
+    showGlossary: boolean,
+    activeCategory: string | null,
+): { nodes: GraphNode[]; links: GraphLink[] } {
     const nodes: GraphNode[] = []
     const links: GraphLink[] = []
-    const nodeSet = new Set<string>()
 
     if (showTopics) {
-        for (const t of networkTopics) {
-            const idx = t.number - 1
+        networkTopics.forEach((t, i) => {
             nodes.push({
-                id: t.id,
-                kind: 'topic',
-                number: t.number,
-                title: t.title,
+                id: `topic:${t.id}`,
+                type: 'topic',
+                label: `${String(t.number).padStart(2, '0')}. ${t.title}`,
+                topicIndex: i,
                 route: t.route,
-                hue: TOPIC_HUES[idx] ?? 0,
+                r: 32,
             })
-            nodeSet.add(t.id)
-        }
+        })
+    }
 
-        // topic-topic links via shared tags
-        const tagMap = new Map<string, string[]>()
-        for (const t of networkTopics) {
-            for (const tag of t.tags) {
-                const arr = tagMap.get(tag) ?? []
-                arr.push(t.id)
-                tagMap.set(tag, arr)
-            }
-        }
-        const seen = new Set<string>()
-        for (const ids of tagMap.values()) {
-            for (let i = 0; i < ids.length; i++) {
-                for (let j = i + 1; j < ids.length; j++) {
-                    const key = `${ids[i]}||${ids[j]}`
-                    if (!seen.has(key)) {
-                        seen.add(key)
-                        links.push({ source: ids[i], target: ids[j], type: 'topic-topic' })
-                    }
+    const filteredGlossary = glossary.filter((g) => (activeCategory ? g.category === activeCategory : true))
+    if (showGlossary) {
+        filteredGlossary.forEach((g) => {
+            nodes.push({
+                id: `glossary:${g.id}`,
+                type: 'glossary',
+                label: g.term,
+                category: g.category,
+                route: `/glossary#${g.id}`,
+                r: 12,
+            })
+        })
+    }
+
+    const nodeIds = new Set(nodes.map((n) => n.id))
+
+    // 토픽-토픽: 공통 태그
+    if (showTopics) {
+        for (let i = 0; i < networkTopics.length; i++) {
+            for (let j = i + 1; j < networkTopics.length; j++) {
+                const shared = networkTopics[i].tags.filter((t) => networkTopics[j].tags.includes(t))
+                if (shared.length > 0) {
+                    links.push({
+                        source: `topic:${networkTopics[i].id}`,
+                        target: `topic:${networkTopics[j].id}`,
+                        kind: 'sharedTag',
+                    })
                 }
             }
         }
     }
 
-    if (showGlossary) {
-        for (const g of glossary) {
-            if (!catFilter.has(g.category)) continue
-            nodes.push({
-                id: `g:${g.id}`,
-                kind: 'glossary',
-                term: g.term,
-                category: g.category,
-                definition: g.definition,
-            })
-            nodeSet.add(`g:${g.id}`)
-            if (showTopics) {
-                for (const ref of g.topicRef) {
-                    if (nodeSet.has(ref)) {
-                        links.push({ source: `g:${g.id}`, target: ref, type: 'glossary-topic' })
-                    }
+    // 용어-토픽: topicRef
+    if (showTopics && showGlossary) {
+        filteredGlossary.forEach((g) => {
+            for (const ref of g.topicRef) {
+                const src = `glossary:${g.id}`
+                const tgt = `topic:${ref}`
+                if (nodeIds.has(src) && nodeIds.has(tgt)) {
+                    links.push({ source: src, target: tgt, kind: 'topicRef' })
                 }
             }
-        }
+        })
     }
 
     return { nodes, links }
 }
 
-/* ── component ───────────────────────────────────────────── */
+// ── D3 렌더 함수 ─────────────────────────────────────────────────────────────
+function renderGraph(
+    svg: d3.Selection<SVGSVGElement, unknown, null, undefined>,
+    width: number,
+    height: number,
+    nodes: GraphNode[],
+    links: GraphLink[],
+    isDark: boolean,
+    onNavigate: (href: string) => void,
+    tooltipEl: HTMLDivElement | null,
+) {
+    const g = svg.append('g')
 
+    const edgeColor = isDark ? 'oklch(55% 0 0)' : 'oklch(55% 0 0)'
+    const edgeColorDash = isDark ? 'oklch(50% 0.06 250)' : 'oklch(55% 0.06 250)'
+    const FONT = "'Pretendard Variable', Pretendard, sans-serif"
+    const MONO = "'JetBrains Mono', monospace"
+
+    // 링크
+    const linkSel = g
+        .append('g')
+        .selectAll<SVGLineElement, GraphLink>('line')
+        .data(links)
+        .join('line')
+        .attr('stroke', (d) => (d.kind === 'sharedTag' ? edgeColor : edgeColorDash))
+        .attr('stroke-width', (d) => (d.kind === 'sharedTag' ? 2.5 : 1.5))
+        .attr('stroke-dasharray', (d) => (d.kind === 'topicRef' ? '6,4' : 'none'))
+        .attr('opacity', (d) => (d.kind === 'sharedTag' ? 0.7 : 0.5))
+
+    // 노드 그룹
+    const nodeSel = g
+        .append('g')
+        .selectAll<SVGGElement, GraphNode>('g')
+        .data(nodes)
+        .join('g')
+        .style('cursor', 'pointer')
+        .on('click', (event, d) => {
+            event.stopPropagation()
+            onNavigate(d.route)
+        })
+        .on('mouseenter', (event, d) => {
+            if (!tooltipEl) return
+            tooltipEl.style.display = 'block'
+            tooltipEl.style.left = `${event.offsetX + 14}px`
+            tooltipEl.style.top = `${event.offsetY - 14}px`
+            tooltipEl.textContent = d.label
+        })
+        .on('mousemove', (event) => {
+            if (!tooltipEl) return
+            tooltipEl.style.left = `${event.offsetX + 14}px`
+            tooltipEl.style.top = `${event.offsetY - 14}px`
+        })
+        .on('mouseleave', () => {
+            if (tooltipEl) tooltipEl.style.display = 'none'
+        })
+
+    // 원
+    nodeSel
+        .append('circle')
+        .attr('r', (d) => d.r)
+        .attr('fill', (d) => {
+            if (d.type === 'topic') return topicFill(d.topicIndex!, isDark)
+            const base = CAT_COLOR[d.category ?? 'general']
+            return base + (isDark ? '28' : '20')
+        })
+        .attr('stroke', (d) => {
+            if (d.type === 'topic') return topicStroke(d.topicIndex!, isDark)
+            return CAT_COLOR[d.category ?? 'general']
+        })
+        .attr('stroke-width', (d) => (d.type === 'topic' ? 2.5 : 1.5))
+
+    // 토픽 번호 레이블 (원 안)
+    nodeSel
+        .filter((d) => d.type === 'topic')
+        .append('text')
+        .attr('text-anchor', 'middle')
+        .attr('dominant-baseline', 'middle')
+        .attr('fill', (d) => topicStroke(d.topicIndex!, isDark))
+        .attr('font-size', '13px')
+        .attr('font-family', MONO)
+        .attr('font-weight', 'bold')
+        .attr('pointer-events', 'none')
+        .text((d) => String((d.topicIndex ?? 0) + 1).padStart(2, '0'))
+
+    // 토픽 타이틀 레이블 (원 아래, 상시 표시)
+    nodeSel
+        .filter((d) => d.type === 'topic')
+        .append('text')
+        .attr('text-anchor', 'middle')
+        .attr('y', (d) => d.r + 14)
+        .attr('fill', (d) => topicStroke(d.topicIndex!, isDark))
+        .attr('font-size', '10px')
+        .attr('font-family', FONT)
+        .attr('pointer-events', 'none')
+        .text((d) => {
+            const title = d.label.replace(/^\d+\.\s*/, '')
+            return title.length > 14 ? title.slice(0, 13) + '…' : title
+        })
+
+    // 용어 텍스트 레이블 (원 우측, 상시 표시)
+    nodeSel
+        .filter((d) => d.type === 'glossary')
+        .append('text')
+        .attr('x', (d) => d.r + 5)
+        .attr('y', 1)
+        .attr('dominant-baseline', 'middle')
+        .attr('fill', (d) => CAT_COLOR[d.category ?? 'general'])
+        .attr('font-size', '9px')
+        .attr('font-family', FONT)
+        .attr('pointer-events', 'none')
+        .text((d) => d.label)
+
+    // 초기 위치를 중심 근처에 원형 배치
+    const cx = width / 2
+    const cy = height / 2
+    nodes.forEach((n, i) => {
+        const angle = (i / nodes.length) * 2 * Math.PI
+        const radius = n.type === 'topic' ? 120 : 200 + Math.random() * 80
+        n.x = cx + Math.cos(angle) * radius
+        n.y = cy + Math.sin(angle) * radius
+    })
+
+    // Force 시뮬레이션
+    const sim = d3
+        .forceSimulation<GraphNode>(nodes)
+        .alpha(0.5)
+        .alphaDecay(0.03)
+        .force(
+            'link',
+            d3
+                .forceLink<GraphNode, GraphLink>(links)
+                .id((d) => d.id)
+                .distance((d) => (d.kind === 'sharedTag' ? 220 : 110))
+                .strength((d) => (d.kind === 'sharedTag' ? 0.15 : 0.35)),
+        )
+        .force(
+            'charge',
+            d3.forceManyBody<GraphNode>().strength((d) => (d.type === 'topic' ? -600 : -80)),
+        )
+        .force('x', d3.forceX(cx).strength(0.08))
+        .force('y', d3.forceY(cy).strength(0.08))
+        .force(
+            'collision',
+            d3.forceCollide<GraphNode>((d) => (d.type === 'topic' ? d.r + 25 : d.r + 28)),
+        )
+        .on('tick', () => {
+            linkSel
+                .attr('x1', (d) => (d.source as GraphNode).x ?? 0)
+                .attr('y1', (d) => (d.source as GraphNode).y ?? 0)
+                .attr('x2', (d) => (d.target as GraphNode).x ?? 0)
+                .attr('y2', (d) => (d.target as GraphNode).y ?? 0)
+            nodeSel.attr('transform', (d) => `translate(${d.x ?? 0},${d.y ?? 0})`)
+        })
+
+    // 드래그
+    nodeSel.call(
+        d3
+            .drag<SVGGElement, GraphNode>()
+            .on('start', (event, d) => {
+                if (!event.active) sim.alphaTarget(0.3).restart()
+                d.fx = d.x
+                d.fy = d.y
+            })
+            .on('drag', (event, d) => {
+                d.fx = event.x
+                d.fy = event.y
+            })
+            .on('end', (event, d) => {
+                if (!event.active) sim.alphaTarget(0)
+                d.fx = null
+                d.fy = null
+            }),
+    )
+}
+
+// ── 메인 컴포넌트 ─────────────────────────────────────────────────────────────
 export default function Graph() {
-    const isDark = useIsDark()
     const navigate = useNavigate()
+    const isDark = useIsDark()
+    const tooltipRef = useRef<HTMLDivElement>(null)
 
     const [showTopics, setShowTopics] = useState(true)
     const [showGlossary, setShowGlossary] = useState(true)
-    const allCats = useMemo(() => Object.keys(CAT_COLOR), [])
-    const [catFilter, setCatFilter] = useState<Set<string>>(() => new Set(allCats))
+    const [activeCategory, setActiveCategory] = useState<string | null>(null)
 
-    const toggleCat = useCallback((cat: string) => {
-        setCatFilter((prev) => {
-            const next = new Set(prev)
-            if (next.has(cat)) next.delete(cat)
-            else next.add(cat)
-            return next
-        })
-    }, [])
-
-    const graph = useMemo(
-        () => buildGraph(showTopics, showGlossary, catFilter),
-        [showTopics, showGlossary, catFilter],
+    const { nodes, links } = useMemo(
+        () => buildData(showTopics, showGlossary, activeCategory),
+        [showTopics, showGlossary, activeCategory],
     )
 
-    const renderGraph = useCallback(
-        (svg: d3.Selection<SVGSVGElement, unknown, null, undefined>, width: number, height: number) => {
-            if (graph.nodes.length === 0) return
-
-            const g = svg.append('g')
-
-            // deep-clone to avoid mutating cached graph
-            const nodes: GraphNode[] = graph.nodes.map((n) => ({ ...n }))
-            const links: GraphLink[] = graph.links.map((l) => ({
-                ...l,
-                source: typeof l.source === 'string' ? l.source : (l.source as GraphNode).id,
-                target: typeof l.target === 'string' ? l.target : (l.target as GraphNode).id,
-            }))
-
-            const sim = d3
-                .forceSimulation<GraphNode>(nodes)
-                .force(
-                    'link',
-                    d3
-                        .forceLink<GraphNode, GraphLink>(links)
-                        .id((d) => d.id)
-                        .distance((l) => (l.type === 'topic-topic' ? 160 : 90)),
-                )
-                .force('charge', d3.forceManyBody().strength(-300))
-                .force('center', d3.forceCenter(width / 2, height / 2))
-                .force(
-                    'collision',
-                    d3.forceCollide<GraphNode>().radius((d) => (d.kind === 'topic' ? 32 : 14)),
-                )
-
-            // tooltip
-            const tooltip = d3
-                .select('body')
-                .append('div')
-                .attr('class', 'graph-tooltip')
-                .style('position', 'absolute')
-                .style('pointer-events', 'none')
-                .style('padding', '8px 12px')
-                .style('border-radius', '8px')
-                .style('font-size', '12px')
-                .style('line-height', '1.5')
-                .style('max-width', '260px')
-                .style('z-index', '9999')
-                .style('opacity', 0)
-                .style('background', isDark ? '#1f2937' : '#fff')
-                .style('color', isDark ? '#e5e7eb' : '#1f2937')
-                .style('border', `1px solid ${isDark ? '#374151' : '#e5e7eb'}`)
-                .style('box-shadow', '0 4px 12px rgba(0,0,0,0.15)')
-
-            // links
-            const link = g
-                .append('g')
-                .selectAll<SVGLineElement, GraphLink>('line')
-                .data(links)
-                .join('line')
-                .attr('stroke', isDark ? '#4b5563' : '#d1d5db')
-                .attr('stroke-width', (d) => (d.type === 'topic-topic' ? 2 : 1))
-                .attr('stroke-dasharray', (d) => (d.type === 'glossary-topic' ? '4 3' : 'none'))
-                .attr('stroke-opacity', 0.6)
-
-            // node groups
-            const node = g
-                .append('g')
-                .selectAll<SVGGElement, GraphNode>('g')
-                .data(nodes)
-                .join('g')
-                .style('cursor', 'pointer')
-                .on('mouseover', (_event, d) => {
-                    let html = ''
-                    if (d.kind === 'topic') {
-                        html = `<strong>${d.number}. ${d.title}</strong>`
-                    } else {
-                        html = `<strong>${d.term}</strong><br/><span style="color:${CAT_COLOR[d.category]}">${CAT_LABEL[d.category]}</span><br/>${d.definition}`
-                    }
-                    tooltip.html(html).style('opacity', 1)
-                })
-                .on('mousemove', (event) => {
-                    tooltip
-                        .style('left', `${event.pageX + 14}px`)
-                        .style('top', `${event.pageY - 10}px`)
-                })
-                .on('mouseout', () => {
-                    tooltip.style('opacity', 0)
-                })
-                .on('click', (_event, d) => {
-                    if (d.kind === 'topic') {
-                        navigate(d.route)
-                    }
-                })
-
-            // topic circles
-            node.filter((d) => d.kind === 'topic')
-                .append('circle')
-                .attr('r', 26)
-                .attr('fill', (d) => {
-                    const t = d as TopicNode
-                    return `hsl(${t.hue}, 65%, ${isDark ? 35 : 55}%)`
-                })
-                .attr('stroke', (d) => {
-                    const t = d as TopicNode
-                    return `hsl(${t.hue}, 70%, ${isDark ? 55 : 40}%)`
-                })
-                .attr('stroke-width', 2.5)
-
-            node.filter((d) => d.kind === 'topic')
-                .append('text')
-                .text((d) => String((d as TopicNode).number))
-                .attr('text-anchor', 'middle')
-                .attr('dominant-baseline', 'central')
-                .attr('fill', '#fff')
-                .attr('font-size', '13px')
-                .attr('font-weight', '700')
-
-            // glossary circles
-            node.filter((d) => d.kind === 'glossary')
-                .append('circle')
-                .attr('r', 10)
-                .attr('fill', (d) => CAT_COLOR[(d as GlossaryNode).category] ?? '#999')
-                .attr('fill-opacity', isDark ? 0.7 : 0.85)
-                .attr('stroke', (d) => CAT_COLOR[(d as GlossaryNode).category] ?? '#999')
-                .attr('stroke-width', 1.5)
-                .attr('stroke-opacity', 0.5)
-
-            node.filter((d) => d.kind === 'glossary')
-                .append('text')
-                .text((d) => (d as GlossaryNode).term.slice(0, 4))
-                .attr('text-anchor', 'middle')
-                .attr('dominant-baseline', 'central')
-                .attr('fill', '#fff')
-                .attr('font-size', '7px')
-                .attr('font-weight', '600')
-
-            // drag behaviour
-            const drag = d3
-                .drag<SVGGElement, GraphNode>()
-                .on('start', (event, d) => {
-                    if (!event.active) sim.alphaTarget(0.3).restart()
-                    d.fx = d.x
-                    d.fy = d.y
-                })
-                .on('drag', (event, d) => {
-                    d.fx = event.x
-                    d.fy = event.y
-                })
-                .on('end', (event, d) => {
-                    if (!event.active) sim.alphaTarget(0)
-                    d.fx = null
-                    d.fy = null
-                })
-
-            node.call(drag)
-
-            // tick
-            sim.on('tick', () => {
-                link.attr('x1', (d) => (d.source as GraphNode).x ?? 0)
-                    .attr('y1', (d) => (d.source as GraphNode).y ?? 0)
-                    .attr('x2', (d) => (d.target as GraphNode).x ?? 0)
-                    .attr('y2', (d) => (d.target as GraphNode).y ?? 0)
-
-                node.attr('transform', (d) => `translate(${d.x ?? 0},${d.y ?? 0})`)
-            })
-
-            // cleanup tooltip on unmount
-            return () => {
-                tooltip.remove()
-                sim.stop()
-            }
+    const renderFn = useCallback(
+        (svg: d3.Selection<SVGSVGElement, unknown, null, undefined>, w: number, h: number) => {
+            renderGraph(svg, w, h, nodes, links, isDark, (href) => navigate(href), tooltipRef.current)
         },
-        [graph, isDark, navigate],
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+        [nodes, links, isDark],
     )
+
+    const btnBase = 'text-xs px-2.5 py-1 rounded-full border transition-colors'
+    const btnActive = 'bg-blue-600 text-white border-blue-600'
+    const btnInactive =
+        'border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-400 hover:border-blue-400 dark:hover:border-blue-600'
 
     return (
-        <div className="max-w-6xl mx-auto px-6 py-10 space-y-6">
-            {/* header */}
-            <header className="space-y-3">
+        <div className="max-w-6xl mx-auto px-6 py-10">
+            {/* Header */}
+            <header className="space-y-2 mb-8">
+                <p className="text-xs font-mono text-blue-500 dark:text-blue-400 uppercase tracking-widest">
+                    개념 지도
+                </p>
                 <h1 className="text-3xl font-bold text-gray-900 dark:text-white">네트워크 개념 그래프</h1>
-                <p className="text-gray-500 dark:text-gray-400 text-sm">
-                    12개 토픽과 용어 사이의 관계를 힘-방향 그래프로 탐색합니다. 노드를 드래그하거나
-                    클릭하여 이동할 수 있습니다.
+                <p className="text-sm text-gray-500 dark:text-gray-400 leading-relaxed">
+                    토픽과 용어 간의 연결 관계를 시각화합니다. 실선은 공통 태그를 가진 토픽 연결, 점선은 용어의 토픽
+                    참조입니다. 노드를 클릭하면 해당 페이지로 이동합니다.
                 </p>
             </header>
 
-            {/* filters */}
-            <div className="flex flex-wrap items-center gap-2">
+            {/* 필터 */}
+            <div className="flex flex-wrap gap-2 mb-3">
                 <button
                     onClick={() => setShowTopics((v) => !v)}
-                    className={`px-3 py-1.5 rounded-lg text-xs font-medium border transition-colors ${
-                        showTopics
-                            ? 'bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900 border-gray-900 dark:border-gray-100'
-                            : 'bg-transparent text-gray-500 dark:text-gray-400 border-gray-300 dark:border-gray-600'
-                    }`}
+                    className={`${btnBase} ${showTopics ? btnActive : btnInactive}`}
                 >
-                    토픽
+                    토픽 ({networkTopics.length})
                 </button>
                 <button
                     onClick={() => setShowGlossary((v) => !v)}
-                    className={`px-3 py-1.5 rounded-lg text-xs font-medium border transition-colors ${
-                        showGlossary
-                            ? 'bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900 border-gray-900 dark:border-gray-100'
-                            : 'bg-transparent text-gray-500 dark:text-gray-400 border-gray-300 dark:border-gray-600'
-                    }`}
+                    className={`${btnBase} ${showGlossary ? btnActive : btnInactive}`}
                 >
-                    용어
+                    용어 ({glossary.length})
                 </button>
-
-                <span className="w-px h-5 bg-gray-300 dark:bg-gray-600 mx-1" />
-
-                {allCats.map((cat) => (
+                <span className="text-xs text-gray-300 dark:text-gray-700 self-center">│</span>
+                {Object.keys(CAT_LABEL).map((cat) => (
                     <button
                         key={cat}
-                        onClick={() => toggleCat(cat)}
-                        className={`px-2.5 py-1 rounded-md text-xs font-medium border transition-colors ${
-                            catFilter.has(cat)
-                                ? 'border-current'
-                                : 'opacity-30 border-gray-300 dark:border-gray-600'
+                        onClick={() => setActiveCategory(activeCategory === cat ? null : cat)}
+                        className={`${btnBase} ${
+                            activeCategory === cat ? 'text-white border-transparent' : btnInactive
                         }`}
-                        style={{ color: CAT_COLOR[cat] }}
+                        style={
+                            activeCategory === cat
+                                ? { backgroundColor: CAT_COLOR[cat], borderColor: CAT_COLOR[cat] }
+                                : undefined
+                        }
                     >
                         {CAT_LABEL[cat]}
                     </button>
                 ))}
             </div>
+            <p className="text-xs text-gray-400 dark:text-gray-600 mb-3">
+                {nodes.length}개 노드 · {links.length}개 연결
+                {activeCategory && ` · 카테고리: ${CAT_LABEL[activeCategory]}`}
+            </p>
 
-            {/* graph */}
-            <div className="rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 overflow-hidden">
-                <D3Container
-                    renderFn={renderGraph}
-                    deps={[graph, isDark]}
-                    height={560}
-                    zoomable
+            {/* 그래프 */}
+            <div className="relative rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-950 overflow-hidden">
+                <D3Container renderFn={renderFn} deps={[nodes, links, isDark]} height={800} zoomable />
+                {/* 툴팁 */}
+                <div
+                    ref={tooltipRef}
+                    style={{ display: 'none', position: 'absolute', pointerEvents: 'none' }}
+                    className="z-10 px-2 py-1 text-xs rounded shadow-lg bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900 max-w-[200px]"
                 />
             </div>
 
-            {/* legend */}
-            <div className="rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800/50 p-4 space-y-3">
-                <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-300">범례</h3>
-                <div className="flex flex-wrap gap-x-6 gap-y-2 text-xs text-gray-500 dark:text-gray-400">
-                    <span className="flex items-center gap-1.5">
-                        <span className="inline-block w-5 h-5 rounded-full bg-indigo-500 border-2 border-indigo-400 text-white text-[9px] font-bold flex items-center justify-center leading-none">
-                            N
-                        </span>
-                        토픽 (번호)
-                    </span>
-                    <span className="flex items-center gap-1.5">
-                        <span className="inline-block w-3 h-3 rounded-full bg-gray-400" />
-                        용어
-                    </span>
-                    <span className="flex items-center gap-1.5">
-                        <span className="inline-block w-5 border-t-2 border-gray-400" />
-                        공유 태그 (토픽 간)
-                    </span>
-                    <span className="flex items-center gap-1.5">
-                        <span className="inline-block w-5 border-t border-dashed border-gray-400" />
-                        참조 (용어 → 토픽)
-                    </span>
+            {/* 범례 */}
+            <div className="mt-4 flex flex-wrap gap-4 text-xs text-gray-500 dark:text-gray-400">
+                <div className="flex items-center gap-1.5">
+                    <div className="w-6 h-0.5 bg-gray-400" />
+                    <span>공통 태그 (토픽-토픽)</span>
                 </div>
-                <div className="flex flex-wrap gap-x-4 gap-y-1.5 text-xs">
-                    {allCats.map((cat) => (
-                        <span key={cat} className="flex items-center gap-1.5 text-gray-500 dark:text-gray-400">
-                            <span
-                                className="inline-block w-2.5 h-2.5 rounded-full"
-                                style={{ background: CAT_COLOR[cat] }}
-                            />
-                            {CAT_LABEL[cat]}
-                        </span>
-                    ))}
+                <div className="flex items-center gap-1.5">
+                    <div className="w-6 h-0.5 border-t border-dashed border-gray-400" />
+                    <span>토픽 참조 (용어→토픽)</span>
+                </div>
+                <div className="flex items-center gap-1.5">
+                    <div className="w-4 h-4 rounded-full border-2 border-blue-500 bg-blue-50 dark:bg-blue-950 flex items-center justify-center">
+                        <span className="text-[7px] font-mono font-bold text-blue-500">01</span>
+                    </div>
+                    <span>토픽 노드</span>
+                </div>
+                <div className="flex items-center gap-1.5">
+                    <div className="w-3 h-3 rounded-full" style={{ backgroundColor: CAT_COLOR.network }} />
+                    <span>용어 노드 (카테고리 색상)</span>
                 </div>
             </div>
         </div>
