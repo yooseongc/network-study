@@ -4,19 +4,19 @@
 
 | 경로 | 페이지 | 상태 |
 |------|--------|------|
-| `/` | Home — 전체 토픽 목록 | draft |
-| `/topic/01-basics` | Topic 01 — 네트워크의 기초와 전체 구조 | draft |
-| `/topic/02-network-design` | Topic 02 — 실제 네트워크 망 구성의 기초 | draft |
-| `/topic/03-link-layer` | Topic 03 — 물리 계층과 링크 계층 | draft |
-| `/topic/04-ip-routing` | Topic 04 — IP 주소와 라우팅의 기초 | draft |
-| `/topic/05-transport` | Topic 05 — 전송 계층: TCP와 UDP | draft |
-| `/topic/06-application` | Topic 06 — 이름 해석과 주요 응용 프로토콜 | draft |
-| `/topic/07-service-flow` | Topic 07 — 실제 서비스 망 설계와 트래픽 흐름 | draft |
-| `/topic/08-linux-network` | Topic 08 — 리눅스에서의 네트워크 동작 | draft |
-| `/topic/09-packet-processing` | Topic 09 — 패킷 처리와 방화벽 / NAT / 프록시 | draft |
-| `/topic/10-performance` | Topic 10 — 성능과 트래픽 제어 | draft |
-| `/topic/11-troubleshooting` | Topic 11 — 네트워크 장애 분석과 관측 | draft |
-| `/topic/12-modern-architecture` | Topic 12 — 현대 네트워크와 실전 아키텍처 | draft |
+| `/` | Home — 전체 토픽 목록 | done |
+| `/topic/01-basics` | Topic 01 — 네트워크의 기초와 전체 구조 | done |
+| `/topic/02-network-design` | Topic 02 — 실제 네트워크 망 구성의 기초 | done |
+| `/topic/03-link-layer` | Topic 03 — 물리 계층과 링크 계층 | done |
+| `/topic/04-ip-routing` | Topic 04 — IP 주소와 라우팅의 기초 | done |
+| `/topic/05-transport` | Topic 05 — 전송 계층: TCP와 UDP | done |
+| `/topic/06-application` | Topic 06 — 이름 해석과 주요 응용 프로토콜 | done |
+| `/topic/07-service-flow` | Topic 07 — 실제 서비스 망 설계와 트래픽 흐름 | done |
+| `/topic/08-linux-network` | Topic 08 — 리눅스에서의 네트워크 동작 | done |
+| `/topic/09-packet-processing` | Topic 09 — 패킷 처리와 방화벽 / NAT / 프록시 | done |
+| `/topic/10-performance` | Topic 10 — 성능과 트래픽 제어 | done |
+| `/topic/11-troubleshooting` | Topic 11 — 네트워크 장애 분석과 관측 | done |
+| `/topic/12-modern-architecture` | Topic 12 — 현대 네트워크와 실전 아키텍처 | done |
 | `/glossary` | 용어 사전 | draft |
 | `/graph` | 개념 지도 | draft |
 
