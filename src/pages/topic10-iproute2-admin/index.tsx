@@ -7,6 +7,7 @@ import { Alert } from '../../components/ui/Alert'
 import { LearningCard } from '../../components/ui/LearningCard'
 import { TopicNavigation } from '../../components/ui/TopicNavigation'
 import { CodeBlock } from '../../components/viz/CodeBlock'
+import { T } from '../../components/ui/GlossaryTooltip'
 import { IprouteFlowDiagram } from '../../components/concepts/linux-net/IprouteFlowDiagram'
 import {
     ipAddrCode,
@@ -208,7 +209,7 @@ export default function Topic10Iproute2Admin() {
                     일반적인 라우팅은 목적지 IP(destination)만으로 경로를 결정합니다.
                     그러나 실제 운영 환경에서는 같은 목적지라도 출발지 IP, 패킷의 마크(fwmark),
                     수신 인터페이스 등에 따라 다른 경로를 사용해야 하는 경우가 빈번합니다.
-                    ip rule은 이러한 정책 기반 라우팅(Policy Routing)을 구현하는 도구입니다.
+                    <T id="ip-rule">ip rule</T>은 이러한 정책 기반 라우팅(Policy Routing)을 구현하는 도구입니다.
                 </Prose>
 
                 <CodeBlock code={ipRuleCode} language="bash" filename="ip rule — 기본 사용법" />
@@ -292,7 +293,7 @@ export default function Topic10Iproute2Admin() {
             {/* ── 10.7 tc/qdisc 상세 사용법 ───────────────────── */}
             <Section id="s107" title="10.7  tc/qdisc 상세 사용법">
                 <Prose>
-                    tc(traffic control)는 리눅스 커널의 패킷 스케줄링과 트래픽 제어를 관리하는 도구입니다.
+                    <T id="tc-qdisc">tc</T>(traffic control)는 리눅스 커널의 패킷 스케줄링과 트래픽 제어를 관리하는 도구입니다.
                     qdisc(Queueing Discipline)를 설정하여 대역폭 제한, 지연 시뮬레이션,
                     공정 큐잉, 포트 미러링 등 다양한 트래픽 제어를 구현할 수 있습니다.
                 </Prose>
@@ -372,7 +373,7 @@ export default function Topic10Iproute2Admin() {
             {/* ── 10.9 네트워크 네임스페이스와 veth ─────────── */}
             <Section id="s109" title="10.9  네트워크 네임스페이스와 veth">
                 <Prose>
-                    네트워크 네임스페이스와 veth는 컨테이너 네트워킹의 기반 기술입니다.
+                    <T id="netns">네트워크 네임스페이스</T>와 veth는 컨테이너 네트워킹의 기반 기술입니다.
                     이 두 가지를 조합하면 하나의 호스트에서 완전히 격리된 가상 네트워크를 구성할 수 있습니다.
                 </Prose>
 
@@ -424,7 +425,7 @@ export default function Topic10Iproute2Admin() {
                         scope, primary/secondary, IPv6까지 세밀한 주소 관리
                     </InfoBox>
                     <InfoBox color="purple" title="ip link">
-                        veth, bridge, vlan, bond, vxlan 등 가상 인터페이스 생성
+                        veth, bridge, vlan, bond, <T id="vxlan">vxlan</T> 등 가상 인터페이스 생성
                     </InfoBox>
                     <InfoBox color="green" title="ip route">
                         proto, scope, metric, src 필드를 정확히 해석

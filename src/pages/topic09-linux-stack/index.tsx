@@ -7,6 +7,7 @@ import { Alert } from '../../components/ui/Alert'
 import { LearningCard } from '../../components/ui/LearningCard'
 import { TopicNavigation } from '../../components/ui/TopicNavigation'
 import { CodeBlock } from '../../components/viz/CodeBlock'
+import { T } from '../../components/ui/GlossaryTooltip'
 import { LinuxNetworkStackDiagram } from '../../components/concepts/linux-net/LinuxNetworkStackDiagram'
 import { SkbuffDiagram } from '../../components/concepts/linux-net/SkbuffDiagram'
 import {
@@ -106,7 +107,7 @@ export default function Topic09LinuxStack() {
                 <Prose>
                     송신(TX) 경로: 애플리케이션이 send()를 호출하면 커널은 소켓 버퍼에 데이터를 복사하고,
                     TCP/UDP 계층에서 세그먼트/데이터그램을 생성합니다. IP 계층에서 라우팅 결정과
-                    IP 헤더 추가가 이루어지고, Netfilter 훅(OUTPUT, POSTROUTING)을 거친 뒤
+                    IP 헤더 추가가 이루어지고, <T id="netfilter">Netfilter</T> 훅(OUTPUT, POSTROUTING)을 거친 뒤
                     이웃 서브시스템(ARP)을 통해 L2 주소를 해석합니다. 최종적으로 qdisc(큐잉 디시플린)을
                     거쳐 NIC 드라이버의 TX 링 버퍼에 패킷이 들어갑니다.
                 </Prose>
@@ -119,7 +120,7 @@ export default function Topic09LinuxStack() {
                 </Prose>
 
                 <Alert variant="info" title="핵심 개념:">
-                    리눅스 네트워크 스택의 모든 패킷은 sk_buff(skb) 구조체로 표현됩니다.
+                    리눅스 네트워크 스택의 모든 패킷은 <T id="sk-buff">sk_buff</T>(skb) 구조체로 표현됩니다.
                     skb는 패킷 데이터뿐 아니라 메타데이터(도착 인터페이스, 프로토콜, 타임스탬프 등)를
                     함께 관리하는 커널의 핵심 데이터 구조입니다.
                 </Alert>
@@ -163,7 +164,7 @@ export default function Topic09LinuxStack() {
             {/* ── 9.3 NAPI와 패킷 수신 경로 ─────────────────── */}
             <Section id="s093" title="9.3  NAPI와 패킷 수신 경로">
                 <Prose>
-                    NAPI(New API)는 리눅스 커널의 패킷 수신 처리 프레임워크입니다.
+                    <T id="napi">NAPI</T>(New API)는 리눅스 커널의 패킷 수신 처리 프레임워크입니다.
                     인터럽트 기반 처리와 폴링(polling) 기반 처리를 결합한 하이브리드 모델로,
                     패킷이 적을 때는 인터럽트로 즉시 반응하고, 패킷이 많을 때는
                     인터럽트를 비활성화한 뒤 폴링 방식으로 배치 처리합니다.
@@ -243,7 +244,7 @@ export default function Topic09LinuxStack() {
             {/* ── 9.5 sysctl 네트워크 파라미터 ─────────────── */}
             <Section id="s095" title="9.5  sysctl 네트워크 파라미터">
                 <Prose>
-                    sysctl은 커널 파라미터를 런타임에 조회하고 변경하는 도구입니다.
+                    <T id="sysctl">sysctl</T>은 커널 파라미터를 런타임에 조회하고 변경하는 도구입니다.
                     네트워크와 관련된 파라미터는 net.ipv4.*, net.ipv6.*, net.core.* 아래에
                     위치하며, 서버의 네트워크 성능과 보안에 직접적인 영향을 미칩니다.
                 </Prose>

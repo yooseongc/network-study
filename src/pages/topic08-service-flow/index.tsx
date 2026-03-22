@@ -8,6 +8,7 @@ import { Alert } from '../../components/ui/Alert'
 import { LearningCard } from '../../components/ui/LearningCard'
 import { TopicNavigation } from '../../components/ui/TopicNavigation'
 import { CodeBlock } from '../../components/viz/CodeBlock'
+import { T } from '../../components/ui/GlossaryTooltip'
 import { TrafficFlowDiagram } from '../../components/concepts/service/TrafficFlowDiagram'
 import { EastWestNorthSouth } from '../../components/concepts/service/EastWestNorthSouth'
 import {
@@ -187,7 +188,7 @@ export default function Topic08ServiceFlow() {
             {/* ── 8.4 ─────────────────────────────────────────────── */}
             <Section id="s084" title="8.4  DMZ와 공개 서비스망">
                 <Prose>
-                    DMZ(Demilitarized Zone)는 외부 인터넷과 내부 네트워크 사이에 위치한
+                    <T id="dmz">DMZ</T>(Demilitarized Zone)는 외부 인터넷과 내부 네트워크 사이에 위치한
                     완충 영역입니다. 외부에 공개해야 하는 서비스를 DMZ에 배치하여
                     내부 네트워크를 보호합니다.
                 </Prose>
@@ -251,7 +252,7 @@ export default function Topic08ServiceFlow() {
             {/* ── 8.6 ─────────────────────────────────────────────── */}
             <Section id="s086" title="8.6  NAT 적용 위치와 동작">
                 <Prose>
-                    NAT(Network Address Translation)는 IP 주소를 변환하는 기술로,
+                    <T id="nat">NAT</T>(Network Address Translation)는 IP 주소를 변환하는 기술로,
                     사설 IP와 공인 IP 간의 변환에 핵심 역할을 합니다.
                     실제 서비스 망에서 NAT는 여러 위치에서 다양한 목적으로 사용됩니다.
                 </Prose>
@@ -263,7 +264,7 @@ export default function Topic08ServiceFlow() {
                 <InfoBox color="purple" title="NAT가 적용되는 위치">
                     <ul className="list-disc list-inside space-y-1 text-sm">
                         <li><strong>인터넷 경계 (Border):</strong> SNAT/Masquerade로 내부 IP를 공인 IP로 변환</li>
-                        <li><strong>로드 밸런서:</strong> DNAT로 VIP를 실제 서버 IP로 변환</li>
+                        <li><strong><T id="load-balancer">로드 밸런서</T>:</strong> DNAT로 VIP를 실제 서버 IP로 변환</li>
                         <li><strong>VPN Gateway:</strong> 터널 종단점에서 NAT 적용</li>
                         <li><strong>컨테이너 환경:</strong> Docker bridge 네트워크의 Masquerade</li>
                     </ul>

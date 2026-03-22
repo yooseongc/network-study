@@ -8,6 +8,7 @@ import { Alert } from '../../components/ui/Alert'
 import { LearningCard } from '../../components/ui/LearningCard'
 import { TopicNavigation } from '../../components/ui/TopicNavigation'
 import { CodeBlock } from '../../components/viz/CodeBlock'
+import { T } from '../../components/ui/GlossaryTooltip'
 import { TcpHandshakeDiagram } from '../../components/concepts/transport/TcpHandshakeDiagram'
 import { CongestionControlViz } from '../../components/concepts/transport/CongestionControlViz'
 import {
@@ -161,8 +162,8 @@ export default function Topic05() {
             {/* ── 5.2 TCP vs UDP 비교 ─────────────────────────── */}
             <Section id="s052" title="5.2  TCP vs UDP 비교">
                 <Prose>
-                    전송 계층에는 크게 두 가지 프로토콜이 있습니다. TCP(Transmission Control Protocol)는
-                    신뢰성 있는 데이터 전달을 보장하고, UDP(User Datagram Protocol)는 최소한의 오버헤드로
+                    전송 계층에는 크게 두 가지 프로토콜이 있습니다. <T id="tcp">TCP</T>(Transmission Control Protocol)는
+                    신뢰성 있는 데이터 전달을 보장하고, <T id="udp">UDP</T>(User Datagram Protocol)는 최소한의 오버헤드로
                     빠른 전송을 제공합니다. 애플리케이션의 요구 사항에 따라 적절한 프로토콜을 선택합니다.
                 </Prose>
 
@@ -188,7 +189,7 @@ export default function Topic05() {
             {/* ── 5.3 TCP 3-way Handshake ─────────────────────── */}
             <Section id="s053" title="5.3  TCP 3-way Handshake">
                 <Prose>
-                    TCP 연결은 3단계의 핸드셰이크를 통해 수립됩니다. 이 과정에서 양측은 초기 시퀀스 번호(ISN)를
+                    TCP 연결은 <T id="three-way-handshake">3단계의 핸드셰이크</T>를 통해 수립됩니다. 이 과정에서 양측은 초기 시퀀스 번호(ISN)를
                     교환하고, 상대방의 수신 능력을 확인합니다. 보안을 위해 ISN은 예측 불가능한 값으로 설정됩니다.
                 </Prose>
 
@@ -541,7 +542,7 @@ export default function Topic05() {
             {/* ── 5.10 QUIC 프로토콜 ──────────────────────────── */}
             <Section id="s0510" title="5.10  QUIC 프로토콜">
                 <Prose>
-                    QUIC(Quick UDP Internet Connections)은 Google이 개발하고 IETF가 표준화한 전송 계층
+                    <T id="quic">QUIC</T>(Quick UDP Internet Connections)은 Google이 개발하고 IETF가 표준화한 전송 계층
                     프로토콜입니다. UDP 위에 구현되어 TCP+TLS의 기능을 통합하면서도, TCP의 근본적인
                     한계를 해결합니다. HTTP/3의 전송 계층으로 채택되었습니다.
                 </Prose>

@@ -9,6 +9,7 @@ import { Alert } from '../../components/ui/Alert'
 import { LearningCard } from '../../components/ui/LearningCard'
 import { TopicNavigation } from '../../components/ui/TopicNavigation'
 import { CodeBlock } from '../../components/viz/CodeBlock'
+import { T } from '../../components/ui/GlossaryTooltip'
 import { DnsResolutionDiagram } from '../../components/concepts/application/DnsResolutionDiagram'
 import {
     digCode,
@@ -96,7 +97,7 @@ export default function Topic06Dns() {
             {/* ── 6.1 DNS의 역할과 구조 ──────────────────────────── */}
             <Section id="s061" title="6.1  DNS의 역할과 구조">
                 <Prose>
-                    DNS(Domain Name System)는 사람이 읽을 수 있는 도메인 이름(예:{' '}
+                    <T id="dns">DNS</T>(Domain Name System)는 사람이 읽을 수 있는 도메인 이름(예:{' '}
                     <InlineCode>www.example.com</InlineCode>)을
                     컴퓨터가 사용하는 IP 주소로 변환하는 분산 계층형 데이터베이스입니다.
                     인터넷의 전화번호부 역할을 하며, 거의 모든 인터넷 통신의 첫 단계입니다.
@@ -224,7 +225,7 @@ export default function Topic06Dns() {
             {/* ── 6.4 DNSSEC ──────────────────────────────────────── */}
             <Section id="s064" title="6.4  DNSSEC">
                 <Prose>
-                    DNSSEC(DNS Security Extensions)은 DNS 응답의 무결성과 출처를 검증하는 보안 확장입니다.
+                    <T id="dnssec">DNSSEC</T>(DNS Security Extensions)은 DNS 응답의 무결성과 출처를 검증하는 보안 확장입니다.
                     디지털 서명을 통해 DNS 응답이 변조되지 않았음을 증명하며,
                     Root Zone에서 최종 도메인까지 이어지는 신뢰 체인(Chain of Trust)을 형성합니다.
                     단, DNSSEC은 기밀성(암호화)은 제공하지 않습니다.

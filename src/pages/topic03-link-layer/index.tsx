@@ -9,6 +9,7 @@ import { Alert } from '../../components/ui/Alert'
 import { LearningCard } from '../../components/ui/LearningCard'
 import { TopicNavigation } from '../../components/ui/TopicNavigation'
 import { CodeBlock } from '../../components/viz/CodeBlock'
+import { T } from '../../components/ui/GlossaryTooltip'
 import { EthernetFrameDiagram } from '../../components/concepts/link/EthernetFrameDiagram'
 import { ArpFlowDiagram } from '../../components/concepts/link/ArpFlowDiagram'
 import {
@@ -150,7 +151,7 @@ export default function Topic03() {
             <Section id="s032" title="3.2  NIC(Network Interface Card)의 역할">
                 <Prose>
                     NIC는 컴퓨터를 네트워크에 연결하는 하드웨어 장치입니다. 물리 계층에서 전기/광 신호를
-                    디지털 데이터로 변환하고, 링크 계층에서 프레임의 송수신과 MAC 주소 기반 필터링을 수행합니다.
+                    디지털 데이터로 변환하고, 링크 계층에서 프레임의 송수신과 <T id="mac-address">MAC 주소</T> 기반 필터링을 수행합니다.
                 </Prose>
 
                 <InfoTable
@@ -298,7 +299,7 @@ export default function Topic03() {
             {/* ── 3.6 ARP 동작 과정 ── */}
             <Section id="s036" title="3.6  ARP 동작 과정">
                 <Prose>
-                    ARP(Address Resolution Protocol)는 IP 주소로부터 MAC 주소를 알아내는 프로토콜입니다.
+                    <T id="arp">ARP</T>(Address Resolution Protocol)는 IP 주소로부터 MAC 주소를 알아내는 프로토콜입니다.
                     L3(IP)에서 통신하려면 실제로 프레임을 보내야 하므로 목적지의 MAC 주소가 필요합니다.
                     ARP는 브로드캐스트를 사용하여 같은 네트워크 내의 호스트에게 MAC 주소를 질의합니다.
                 </Prose>
@@ -344,7 +345,7 @@ export default function Topic03() {
                         목적지 포트로만 프레임을 전달합니다.
                     </InfoBox>
                     <InfoBox color="amber" title="브로드캐스트">
-                        같은 VLAN(브로드캐스트 도메인) 내 모든 호스트에게 전달됩니다.
+                        같은 <T id="vlan">VLAN</T>(브로드캐스트 도메인) 내 모든 호스트에게 전달됩니다.
                         과도한 브로드캐스트는 네트워크 성능 저하를 유발합니다.
                     </InfoBox>
                     <InfoBox color="purple" title="멀티캐스트">
@@ -426,7 +427,7 @@ export default function Topic03() {
                 />
 
                 <Alert variant="info" title="VLAN의 한계와 오버레이 기술">
-                    QinQ로도 부족한 대규모 데이터센터에서는 VXLAN(Virtual Extensible LAN)을 사용합니다.
+                    QinQ로도 부족한 대규모 데이터센터에서는 <T id="vxlan">VXLAN</T>(Virtual Extensible LAN)을 사용합니다.
                     VXLAN은 L2 프레임을 UDP로 캡슐화하여 L3 네트워크 위에 가상 L2 네트워크를 만들며,
                     24비트 VNI로 약 1,600만 개의 세그먼트를 지원합니다.
                     자세한 내용은 Topic 15 (클라우드·컨테이너 네트워크)에서 다룹니다.
@@ -438,7 +439,7 @@ export default function Topic03() {
                 <Prose>
                     NIC bonding(Linux) 또는 teaming은 여러 물리 NIC를 하나의 논리 인터페이스로 묶어
                     대역폭을 확장하거나 장애 시 자동 전환(failover)을 제공하는 기술입니다.
-                    LACP(Link Aggregation Control Protocol, IEEE 802.3ad)는 스위치와 서버 간에
+                    <T id="lacp">LACP</T>(Link Aggregation Control Protocol, IEEE 802.3ad)는 스위치와 서버 간에
                     동적으로 링크 집합을 구성하는 표준 프로토콜입니다.
                 </Prose>
 

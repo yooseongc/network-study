@@ -9,6 +9,7 @@ import { Alert } from '../../components/ui/Alert'
 import { LearningCard } from '../../components/ui/LearningCard'
 import { TopicNavigation } from '../../components/ui/TopicNavigation'
 import { CodeBlock } from '../../components/viz/CodeBlock'
+import { T } from '../../components/ui/GlossaryTooltip'
 import { NetfilterHooksDiagram } from '../../components/concepts/firewall/NetfilterHooksDiagram'
 import {
     iptablesListCode,
@@ -108,7 +109,7 @@ export default function Topic11PacketProcessing() {
             {/* ── 11.1 ──────────────────────────────────────────────── */}
             <Section id="s111" title="11.1  Netfilter 구조">
                 <Prose>
-                    Netfilter는 리눅스 커널의 네트워크 스택 안에 삽입된 패킷 처리 프레임워크입니다.
+                    <T id="netfilter">Netfilter</T>는 리눅스 커널의 네트워크 스택 안에 삽입된 패킷 처리 프레임워크입니다.
                     커널이 패킷을 처리하는 경로 위에 5개의 <InlineCode>hook point</InlineCode>를
                     정의하고, 각 훅에 등록된 콜백 함수(모듈)가 순서대로 패킷을 검사하거나 변조합니다.
                     iptables, nftables, conntrack 등은 모두 이 Netfilter 훅 위에서 동작하는 모듈입니다.
@@ -178,7 +179,7 @@ export default function Topic11PacketProcessing() {
             {/* ── 11.3 ──────────────────────────────────────────────── */}
             <Section id="s113" title="11.3  conntrack과 stateful 방화벽">
                 <Prose>
-                    conntrack(Connection Tracking)은 Netfilter의 핵심 모듈로, 커널이 처리하는
+                    <T id="conntrack">conntrack</T>(Connection Tracking)은 Netfilter의 핵심 모듈로, 커널이 처리하는
                     모든 네트워크 연결의 상태를 추적합니다. 각 패킷이 어떤 연결에 속하는지 판별하여
                     NEW, ESTABLISHED, RELATED, INVALID 중 하나의 상태를 부여합니다.
                     이를 기반으로 stateful 방화벽을 구현할 수 있습니다.
@@ -203,7 +204,7 @@ export default function Topic11PacketProcessing() {
             {/* ── 11.4 ──────────────────────────────────────────────── */}
             <Section id="s114" title="11.4  SNAT / DNAT / MASQUERADE">
                 <Prose>
-                    NAT(Network Address Translation)는 패킷의 출발지 또는 목적지 주소를 변환하는 기술입니다.
+                    <T id="nat">NAT</T>(Network Address Translation)는 패킷의 출발지 또는 목적지 주소를 변환하는 기술입니다.
                     리눅스에서는 Netfilter의 nat 테이블을 통해 구현되며, conntrack과 함께 동작하여
                     변환된 주소의 역변환(reverse translation)을 자동으로 처리합니다.
                 </Prose>

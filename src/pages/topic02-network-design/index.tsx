@@ -8,6 +8,7 @@ import { Alert } from '../../components/ui/Alert'
 import { LearningCard } from '../../components/ui/LearningCard'
 import { TopicNavigation } from '../../components/ui/TopicNavigation'
 import { CodeBlock } from '../../components/viz/CodeBlock'
+import { T } from '../../components/ui/GlossaryTooltip'
 import { HomeVsEnterprise } from '../../components/concepts/topology/HomeVsEnterprise'
 import { NetworkTiersDiagram } from '../../components/concepts/topology/NetworkTiersDiagram'
 import { DevicePlacementDiagram } from '../../components/concepts/topology/DevicePlacementDiagram'
@@ -181,7 +182,7 @@ export default function Topic02() {
             {/* ── 2.3 ────────────────────────────────────────────── */}
             <Section id="s023" title="2.3  공인 IP와 사설 IP">
                 <Prose>
-                    IPv4 주소는 약 43억 개로 제한되어 있습니다. NAT를 통해 하나의 공인 IP를 여러 장비가 공유합니다.
+                    IPv4 주소는 약 43억 개로 제한되어 있습니다. <T id="nat">NAT</T>를 통해 하나의 공인 IP를 여러 장비가 공유합니다.
                 </Prose>
                 <CodeBlock code={privateIpRangesCode} language="bash" filename="RFC 1918 사설 IP 대역" />
                 <CardGrid cols={2}>
@@ -199,7 +200,7 @@ export default function Topic02() {
             <Section id="s024map" title="이중화 네트워크 장비 배치도">
                 <Prose>
                     아래 다이어그램은 기업 네트워크의 이중화 구성 예시입니다.
-                    각 계층에서 장비를 2대씩 배치하고, VRRP/MC-LAG/LACP 등으로 이중화합니다.
+                    각 계층에서 장비를 2대씩 배치하고, <T id="vrrp">VRRP</T>/<T id="mc-lag">MC-LAG</T>/<T id="lacp">LACP</T> 등으로 이중화합니다.
                     버튼을 눌러 장비 유형별로 하이라이트할 수 있습니다.
                 </Prose>
                 <DevicePlacementDiagram />
@@ -225,7 +226,7 @@ export default function Topic02() {
             <Section id="s025" title="2.5  L3 스위치">
                 <Prose>
                     L3 스위치는 ASIC 칩을 사용하여 하드웨어 수준에서 와이어스피드 라우팅을 수행합니다.
-                    기업 내부에서 VLAN 간 라우팅(Inter-VLAN Routing)을 담당하며,
+                    기업 내부에서 <T id="vlan">VLAN</T> 간 라우팅(Inter-VLAN Routing)을 담당하며,
                     DHCP relay, ACL(TCAM 기반 고속 처리) 등을 제공합니다.
                 </Prose>
                 <InfoTable headers={['항목', 'L3 스위치', '라우터']} rows={l3SwitchVsRouterRows} />
@@ -239,7 +240,7 @@ export default function Topic02() {
             <Section id="s026" title="2.6  라우터 / 백본 라우터">
                 <Prose>
                     백본 라우터는 ISP 코어나 대규모 기업의 WAN 경계에서 대용량 패킷을 처리합니다.
-                    BGP로 ISP 간 경로를 교환하고, OSPF/IS-IS로 내부 경로를 관리합니다.
+                    <T id="bgp">BGP</T>로 ISP 간 경로를 교환하고, <T id="ospf">OSPF</T>/IS-IS로 내부 경로를 관리합니다.
                     라인 카드(Line Card) 구조로 인터페이스를 모듈식으로 확장할 수 있으며,
                     단일 섀시에서 수 Tbps의 처리 능력을 제공합니다.
                 </Prose>
@@ -272,7 +273,7 @@ export default function Topic02() {
             {/* ── 2.8 L4/L7 로드밸런서 ──────────────────────────── */}
             <Section id="s028" title="2.8  L4 / L7 로드밸런서">
                 <Prose>
-                    로드밸런서는 클라이언트 요청을 여러 백엔드 서버에 분산합니다.
+                    <T id="load-balancer">로드밸런서</T>는 클라이언트 요청을 여러 백엔드 서버에 분산합니다.
                 </Prose>
                 <InfoTable headers={['유형', '분산 기준', '특징', '비고']} rows={lbCompareRows} />
                 <CardGrid cols={2}>
@@ -365,7 +366,7 @@ export default function Topic02() {
             {/* ── 2.11 DMZ ──────────────────────────────────────── */}
             <Section id="s0211" title="2.11  DMZ의 개념과 목적">
                 <Prose>
-                    DMZ(Demilitarized Zone)는 외부 인터넷과 내부 네트워크 사이에 위치한 완충 구역입니다.
+                    <T id="dmz">DMZ</T>(Demilitarized Zone)는 외부 인터넷과 내부 네트워크 사이에 위치한 완충 구역입니다.
                 </Prose>
                 <CardGrid cols={3}>
                     <StatCard title="외부 구간" value="Internet" color="red" desc="통제 불가능한 영역" />
@@ -380,7 +381,7 @@ export default function Topic02() {
             {/* ── 2.12 보안장비 배치 ─────────────────────────────── */}
             <Section id="s0212" title="2.12  보안장비 배치">
                 <Prose>
-                    방화벽, IPS, WAF, 프록시 등의 보안장비는 네트워크의 특정 위치에 전략적으로 배치됩니다.
+                    방화벽, <T id="ips">IPS</T>, <T id="waf">WAF</T>, 프록시 등의 보안장비는 네트워크의 특정 위치에 전략적으로 배치됩니다.
                 </Prose>
                 <InfoTable headers={['장비', '배치 위치', '주요 역할', '비고']} rows={securityDeviceRows} />
                 <CodeBlock code={firewallRuleExample} language="bash" filename="방화벽 정책 예시 (iptables)" />

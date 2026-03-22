@@ -8,6 +8,7 @@ import { Alert } from '../../components/ui/Alert'
 import { LearningCard } from '../../components/ui/LearningCard'
 import { TopicNavigation } from '../../components/ui/TopicNavigation'
 import { CodeBlock } from '../../components/viz/CodeBlock'
+import { T } from '../../components/ui/GlossaryTooltip'
 import { L4vsL7Diagram } from '../../components/concepts/modern/L4vsL7Diagram'
 import { GslbDiagram } from '../../components/concepts/modern/GslbDiagram'
 import { nginxLbCode, nginxReverseProxyCode, haproxyHealthCode, gslbDnsCode } from './codeSnippets'
@@ -82,7 +83,7 @@ export default function Topic14LoadBalancing() {
             {/* ── 14.1 ────────────────────────────────────────────── */}
             <Section id="s141" title="14.1  로드밸런서 기본 구조">
                 <Prose>
-                    로드밸런서(Load Balancer)는 클라이언트의 요청을 여러 백엔드 서버에 분배하여
+                    <T id="load-balancer">로드밸런서</T>(Load Balancer)는 클라이언트의 요청을 여러 백엔드 서버에 분배하여
                     가용성과 확장성을 확보하는 네트워크 장치입니다.
                 </Prose>
                 <InfoBox color="blue" title="로드밸런서의 핵심 역할">
@@ -149,12 +150,12 @@ export default function Topic14LoadBalancing() {
             {/* ── 14.4 ────────────────────────────────────────────── */}
             <Section id="s144" title="14.4  CDN의 원리">
                 <Prose>
-                    CDN(Content Delivery Network)은 전 세계에 분산된 Edge 서버를 통해
+                    <T id="cdn">CDN</T>(Content Delivery Network)은 전 세계에 분산된 Edge 서버를 통해
                     사용자와 가장 가까운 위치에서 콘텐츠를 제공합니다.
                 </Prose>
                 <InfoBox color="green" title="CDN 핵심 동작 방식">
                     <div className="space-y-2">
-                        <div><strong>1. DNS 기반 라우팅</strong> -- Anycast 또는 GeoDNS로 최적의 Edge 선택</div>
+                        <div><strong>1. DNS 기반 라우팅</strong> -- <T id="anycast">Anycast</T> 또는 GeoDNS로 최적의 Edge 선택</div>
                         <div><strong>2. Edge Caching</strong> -- Cache-Control, ETag 등에 따라 캐시 정책 결정</div>
                         <div><strong>3. Origin Pull</strong> -- Cache Miss 시 Origin에서 가져와 캐싱</div>
                     </div>
@@ -172,7 +173,7 @@ export default function Topic14LoadBalancing() {
             {/* ── 14.5 GSLB (NEW) ─────────────────────────────────── */}
             <Section id="s145" title="14.5  GSLB (Global Server Load Balancing)">
                 <Prose>
-                    GSLB(Global Server Load Balancing)는 DNS를 기반으로 여러 지역의 데이터센터나
+                    <T id="gslb">GSLB</T>(Global Server Load Balancing)는 DNS를 기반으로 여러 지역의 데이터센터나
                     클라우드 리전에 트래픽을 분산하는 글로벌 로드밸런싱 기술입니다.
                     일반 로드밸런서가 단일 사이트 내에서 서버 간 분산을 담당한다면,
                     GSLB는 사이트(리전) 간 분산을 담당합니다.

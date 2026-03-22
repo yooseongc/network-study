@@ -9,6 +9,7 @@ import { Alert } from '../../components/ui/Alert'
 import { LearningCard } from '../../components/ui/LearningCard'
 import { TopicNavigation } from '../../components/ui/TopicNavigation'
 import { CodeBlock } from '../../components/viz/CodeBlock'
+import { T } from '../../components/ui/GlossaryTooltip'
 import { RssRpsDiagram } from '../../components/concepts/performance/RssRpsDiagram'
 import {
     ethtoolOffloadCode,
@@ -235,7 +236,7 @@ export default function Topic12Performance() {
             {/* ── 12.7 ────────────────────────────────────────────── */}
             <Section id="s127" title="12.7  qdisc와 tc">
                 <Prose>
-                    리눅스의 트래픽 제어(Traffic Control)는 qdisc(queuing discipline)를 기반으로 합니다.
+                    리눅스의 트래픽 제어(Traffic Control)는 <T id="tc-qdisc">qdisc</T>(queuing discipline)를 기반으로 합니다.
                     <InlineCode>tc</InlineCode> 명령으로 qdisc, class, filter를 설정하여
                     대역폭 제한, 우선순위 지정, 트래픽 쉐이핑이 가능합니다.
                 </Prose>
@@ -258,7 +259,7 @@ export default function Topic12Performance() {
             {/* ── 12.8 QoS (NEW) ──────────────────────────────────── */}
             <Section id="s128" title="12.8  QoS (Quality of Service)">
                 <Prose>
-                    QoS(Quality of Service)는 네트워크 트래픽에 우선순위를 부여하여
+                    <T id="qos">QoS</T>(Quality of Service)는 네트워크 트래픽에 우선순위를 부여하여
                     중요한 애플리케이션의 성능을 보장하는 기술입니다.
                     DiffServ 모델에서는 패킷의 DSCP(Differentiated Services Code Point) 필드로
                     트래픽 클래스를 구분하고, 각 홉에서 해당 클래스에 맞는 큐잉/스케줄링 처리를 적용합니다.
@@ -332,12 +333,12 @@ export default function Topic12Performance() {
                 </Prose>
                 <InfoTable headers={['기법', '동작 위치', '패킷 처리 범위', '성능', '주요 용도']} rows={highPerfCompareRows} />
                 <InfoBox color="green" title="XDP (eXpress Data Path)">
-                    XDP는 NIC 드라이버 레벨에서 eBPF 프로그램을 실행하여 패킷을 처리합니다.
+                    <T id="xdp">XDP</T>는 NIC 드라이버 레벨에서 eBPF 프로그램을 실행하여 패킷을 처리합니다.
                     sk_buff 할당 전에 동작하므로 메모리 할당 오버헤드가 없습니다.
                 </InfoBox>
                 <CodeBlock code={xdpCode} language="c" filename="XDP 프로그램 예제" />
                 <InfoBox color="red" title="DPDK (Data Plane Development Kit)">
-                    DPDK는 커널을 완전히 우회하는 유저 공간 패킷 처리 프레임워크입니다.
+                    <T id="dpdk">DPDK</T>는 커널을 완전히 우회하는 유저 공간 패킷 처리 프레임워크입니다.
                     단일 코어에서 수십 Mpps 처리가 가능합니다.
                 </InfoBox>
                 <CodeBlock code={busyPollingCode} language="bash" filename="busy polling 설정" />

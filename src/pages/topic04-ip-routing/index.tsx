@@ -10,6 +10,7 @@ import { LearningCard } from '../../components/ui/LearningCard'
 import { TopicNavigation } from '../../components/ui/TopicNavigation'
 import { RfcRef } from '../../components/ui/RfcRef'
 import { CodeBlock } from '../../components/viz/CodeBlock'
+import { T } from '../../components/ui/GlossaryTooltip'
 import { SubnetDiagram } from '../../components/concepts/routing/SubnetDiagram'
 import { RoutingTableViz } from '../../components/concepts/routing/RoutingTableViz'
 import {
@@ -151,9 +152,9 @@ export default function Topic04() {
             {/* ── 4.2 서브넷 마스크와 CIDR ──────────────────────── */}
             <Section id="s042" title="4.2  서브넷 마스크와 CIDR">
                 <Prose>
-                    서브넷 마스크(Subnet Mask)는 IP 주소에서 네트워크 부분과 호스트 부분의
+                    <T id="subnet">서브넷</T> 마스크(Subnet Mask)는 IP 주소에서 네트워크 부분과 호스트 부분의
                     경계를 정의합니다. IP 주소와 서브넷 마스크를 AND 연산하면 네트워크 주소를
-                    구할 수 있습니다. CIDR(Classless Inter-Domain Routing)은 클래스에 구애받지
+                    구할 수 있습니다. <T id="cidr">CIDR</T>(Classless Inter-Domain Routing)은 클래스에 구애받지
                     않고 프리픽스 길이로 네트워크를 유연하게 분할합니다.
                 </Prose>
 
@@ -297,7 +298,7 @@ export default function Topic04() {
             {/* ── 4.6 라우팅 테이블 ────────────────────────────── */}
             <Section id="s046" title="4.6  라우팅 테이블">
                 <Prose>
-                    라우팅 테이블은 라우터(또는 호스트)가 패킷을 어디로 보낼지 결정하는 &quot;지도&quot;입니다.
+                    <T id="routing-table">라우팅 테이블</T>은 라우터(또는 호스트)가 패킷을 어디로 보낼지 결정하는 &quot;지도&quot;입니다.
                     각 엔트리는 목적지 네트워크, 넥스트 홉(게이트웨이), 출력 인터페이스, 메트릭 등의
                     정보를 포함합니다.
                 </Prose>
@@ -384,8 +385,8 @@ export default function Topic04() {
                 />
 
                 <Alert variant="info" title="IGP vs EGP:">
-                    IGP(Interior Gateway Protocol)는 하나의 AS(자율 시스템) 내부에서 사용하고 (OSPF, RIP),
-                    EGP(Exterior Gateway Protocol)는 AS 간에 사용합니다 (BGP).
+                    IGP(Interior Gateway Protocol)는 하나의 AS(자율 시스템) 내부에서 사용하고 (<T id="ospf">OSPF</T>, RIP),
+                    EGP(Exterior Gateway Protocol)는 AS 간에 사용합니다 (<T id="bgp">BGP</T>).
                     인터넷은 수만 개의 AS가 BGP로 연결된 거대한 네트워크입니다.
                 </Alert>
 

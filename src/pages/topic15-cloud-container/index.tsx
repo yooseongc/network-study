@@ -8,6 +8,7 @@ import { Alert } from '../../components/ui/Alert'
 import { LearningCard } from '../../components/ui/LearningCard'
 import { TopicNavigation } from '../../components/ui/TopicNavigation'
 import { CodeBlock } from '../../components/viz/CodeBlock'
+import { T } from '../../components/ui/GlossaryTooltip'
 import { wireguardCode, dockerNetworkCode, kubectlNetworkCode, istioSidecarCode } from './codeSnippets'
 
 /* ── Inline data ──────────────────────────────────────────────────── */
@@ -109,7 +110,7 @@ export default function Topic15CloudContainer() {
                 </InfoBox>
                 <CodeBlock language="ini" filename="WireGuard 설정" code={wireguardCode} />
                 <InfoBox color="orange" title="VXLAN -- 데이터센터 오버레이">
-                    VXLAN은 L2 프레임을 UDP(포트 4789)로 캡슐화하여 L3 네트워크 위에 가상 L2 세그먼트를 구성합니다.
+                    <T id="vxlan">VXLAN</T>은 L2 프레임을 UDP(포트 4789)로 캡슐화하여 L3 네트워크 위에 가상 L2 세그먼트를 구성합니다.
                     24비트 VNI로 최대 1,600만 개의 가상 네트워크를 지원합니다.
                 </InfoBox>
             </Section>
@@ -172,7 +173,7 @@ export default function Topic15CloudContainer() {
             {/* ── 15.4 ────────────────────────────────────────────── */}
             <Section id="s154" title="15.4  서비스 메시">
                 <Prose>
-                    서비스 메시(Service Mesh)는 마이크로서비스 간 네트워크 통신을
+                    <T id="service-mesh">서비스 메시</T>(Service Mesh)는 마이크로서비스 간 네트워크 통신을
                     인프라 레벨에서 투명하게 관리하는 전용 레이어입니다.
                 </Prose>
                 <InfoBox color="purple" title="서비스 메시의 구성 요소">
@@ -200,7 +201,7 @@ export default function Topic15CloudContainer() {
             <Section id="s155" title="15.5  Zero Trust 네트워크">
                 <Prose>
                     전통적인 네트워크 보안은 내부/외부 경계를 기준으로 &quot;내부는 신뢰&quot;하는 모델이었습니다.
-                    Zero Trust는 이 경계를 없애고 &quot;누구도 기본적으로 신뢰하지 않는다&quot;는 원칙에 기반합니다.
+                    <T id="zero-trust">Zero Trust</T>는 이 경계를 없애고 &quot;누구도 기본적으로 신뢰하지 않는다&quot;는 원칙에 기반합니다.
                 </Prose>
                 <InfoTable headers={['항목', '내용']} rows={zeroTrustRows} />
                 <InfoBox color="red" title="전통 모델 vs Zero Trust">
@@ -236,7 +237,7 @@ export default function Topic15CloudContainer() {
                     <ul className="space-y-1 list-disc list-inside">
                         <li><strong>VPN/터널링</strong>은 IPsec(사이트 간), WireGuard(현대적 원격 접속), VXLAN(DC 오버레이)으로 구분됩니다</li>
                         <li><strong>클라우드 네트워크</strong>는 VPC, Subnet, Security Group으로 격리와 접근 제어를 구현합니다</li>
-                        <li><strong>컨테이너 네트워크</strong>는 네임스페이스 기반 격리 위에 CNI 플러그인으로 Pod 간 통신을 구현합니다</li>
+                        <li><strong>컨테이너 네트워크</strong>는 네임스페이스 기반 격리 위에 <T id="cni">CNI</T> 플러그인으로 Pod 간 통신을 구현합니다</li>
                         <li><strong>서비스 메시</strong>는 사이드카 프록시로 mTLS, 트래픽 제어, 관측성을 투명하게 제공합니다</li>
                         <li><strong>Zero Trust</strong>는 네트워크 경계를 없애고, 모든 요청을 인증/검증하는 보안 모델입니다</li>
                     </ul>

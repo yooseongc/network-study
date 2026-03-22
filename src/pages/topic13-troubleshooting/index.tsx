@@ -9,6 +9,7 @@ import { Alert } from '../../components/ui/Alert'
 import { LearningCard } from '../../components/ui/LearningCard'
 import { TopicNavigation } from '../../components/ui/TopicNavigation'
 import { CodeBlock } from '../../components/viz/CodeBlock'
+import { T } from '../../components/ui/GlossaryTooltip'
 import { TroubleshootFlowDiagram } from '../../components/concepts/troubleshoot/TroubleshootFlowDiagram'
 import {
     pingCode, tracerouteCode, mtrCode, tcpdumpBasicCode, tcpdumpFlagCode,
@@ -183,7 +184,7 @@ export default function Topic13Troubleshooting() {
 
             <Section id="s135" title="13.5  TCP 플래그 읽기">
                 <Prose>
-                    tcpdump 출력에서 TCP 플래그를 읽는 것은 장애 분석의 핵심 기술입니다.
+                    <T id="tcpdump">tcpdump</T> 출력에서 <T id="tcp">TCP</T> 플래그를 읽는 것은 장애 분석의 핵심 기술입니다.
                 </Prose>
                 <InfoTable headers={['플래그', 'tcpdump 표기', '의미', '사용 맥락']} rows={tcpFlagRows} />
                 <CodeBlock code={tcpdumpFlagCode} language="bash" filename="TCP 플래그 캡처와 해석" />
@@ -195,7 +196,7 @@ export default function Topic13Troubleshooting() {
 
             <Section id="s136" title="13.6  DNS 장애 분석">
                 <Prose>
-                    &quot;사이트 접속이 안 된다&quot;는 신고의 상당수가 DNS 문제입니다.
+                    &quot;사이트 접속이 안 된다&quot;는 신고의 상당수가 <T id="dns">DNS</T> 문제입니다.
                 </Prose>
                 <InfoTable headers={['응답 코드', '의미', '주요 원인']} rows={dnsFailureRows} />
                 <CodeBlock code={dnsDebugCode} language="bash" filename="DNS 장애 진단 명령어" />
@@ -218,7 +219,7 @@ export default function Topic13Troubleshooting() {
 
             <Section id="s138" title="13.8  MTU / PMTU 문제">
                 <Prose>
-                    MTU(Maximum Transmission Unit)는 한 번에 전송할 수 있는 최대 패킷 크기입니다.
+                    <T id="mtu">MTU</T>(Maximum Transmission Unit)는 한 번에 전송할 수 있는 최대 패킷 크기입니다.
                 </Prose>
                 <CodeBlock code={mtuDebugCode} language="bash" filename="MTU / PMTU 진단" />
                 <InfoTable headers={['환경', 'MTU 값', '설명']} rows={mtuScenarioRows} />

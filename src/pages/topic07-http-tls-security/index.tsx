@@ -9,6 +9,7 @@ import { Alert } from '../../components/ui/Alert'
 import { LearningCard } from '../../components/ui/LearningCard'
 import { TopicNavigation } from '../../components/ui/TopicNavigation'
 import { CodeBlock } from '../../components/viz/CodeBlock'
+import { T } from '../../components/ui/GlossaryTooltip'
 import { TlsHandshakeDiagram } from '../../components/concepts/application/TlsHandshakeDiagram'
 import {
     curlCode,
@@ -195,7 +196,7 @@ export default function Topic07HttpTlsSecurity() {
 
                 <Alert variant="tip" title="HTTP/2 vs HTTP/3:">
                     HTTP/2는 단일 TCP 연결 위에 여러 스트림을 다중화(Multiplexing)합니다.
-                    HTTP/3는 TCP 대신 QUIC(UDP 기반)을 사용하여 Head-of-Line Blocking 문제를
+                    <T id="http3">HTTP/3</T>는 TCP 대신 QUIC(UDP 기반)을 사용하여 Head-of-Line Blocking 문제를
                     해결하고, 0-RTT 연결 재수립을 지원합니다.
                 </Alert>
 
@@ -205,7 +206,7 @@ export default function Topic07HttpTlsSecurity() {
             {/* ── 7.2 HTTPS와 TLS 상세 ────────────────────────────── */}
             <Section id="s072" title="7.2  HTTPS와 TLS 상세">
                 <Prose>
-                    HTTPS는 HTTP에 TLS(Transport Layer Security) 암호화를 추가한 것입니다.
+                    HTTPS는 HTTP에 <T id="tls">TLS</T>(Transport Layer Security) 암호화를 추가한 것입니다.
                     TLS는 데이터의 기밀성(도청 방지), 무결성(변조 방지), 인증(신원 확인)을
                     보장합니다. 현대 웹에서는 HTTPS가 사실상 필수이며, 브라우저는 HTTP 사이트에
                     보안 경고를 표시합니다.
@@ -296,11 +297,11 @@ export default function Topic07HttpTlsSecurity() {
                     <InfoBox color="cyan" title="SNI (Server Name Indication)">
                         <p>TLS ClientHello에 요청 도메인을 포함하는 확장 필드</p>
                         <p>하나의 IP에서 여러 도메인의 인증서를 제공 가능 (가상 호스팅)</p>
-                        <p className="mt-1">SNI 없이는 IP당 하나의 인증서만 사용 가능했음</p>
+                        <p className="mt-1"><T id="sni">SNI</T> 없이는 IP당 하나의 인증서만 사용 가능했음</p>
                         <p>ECH(Encrypted Client Hello)로 SNI 암호화 진행 중</p>
                     </InfoBox>
                     <InfoBox color="rose" title="OCSP Stapling">
-                        <p>서버가 CA의 OCSP 응답을 미리 받아서 TLS handshake 시 제공</p>
+                        <p>서버가 CA의 <T id="ocsp">OCSP</T> 응답을 미리 받아서 TLS handshake 시 제공</p>
                         <p>클라이언트가 별도로 CA에 인증서 폐지 여부를 확인할 필요 없음</p>
                         <p className="mt-1">성능 향상 + 프라이버시 보호 (CA가 방문 사이트를 알 수 없음)</p>
                     </InfoBox>
@@ -484,8 +485,8 @@ export default function Topic07HttpTlsSecurity() {
                 </CardGrid>
 
                 <Alert variant="info" title="심층 방어 (Defense in Depth):">
-                    단일 보안 기술에 의존하지 않고, 네트워크 경계(방화벽), 호스트(IDS/IPS),
-                    애플리케이션(WAF), 데이터(암호화) 등 여러 계층에 보안을 적용합니다.
+                    단일 보안 기술에 의존하지 않고, 네트워크 경계(방화벽), 호스트(<T id="ids">IDS</T>/<T id="ips">IPS</T>),
+                    애플리케이션(<T id="waf">WAF</T>), 데이터(암호화) 등 여러 계층에 보안을 적용합니다.
                 </Alert>
             </Section>
 
@@ -507,7 +508,7 @@ export default function Topic07HttpTlsSecurity() {
                     <InfoBox color="green" title="리버스 프록시 (Reverse Proxy)">
                         <p className="font-mono">Client → [Reverse Proxy] → Backend Server(s)</p>
                         <p className="mt-1">서버 측에 위치하며 서버를 대리합니다.</p>
-                        <p><strong>용도:</strong> 로드 밸런싱, SSL 종단, 캐싱, DDoS 방어</p>
+                        <p><strong>용도:</strong> 로드 밸런싱, SSL 종단, 캐싱, <T id="ddos">DDoS</T> 방어</p>
                     </InfoBox>
                 </CardGrid>
 

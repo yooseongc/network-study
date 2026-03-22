@@ -8,6 +8,7 @@ import { Alert } from '../../components/ui/Alert'
 import { LearningCard } from '../../components/ui/LearningCard'
 import { TopicNavigation } from '../../components/ui/TopicNavigation'
 import { CodeBlock } from '../../components/viz/CodeBlock'
+import { T } from '../../components/ui/GlossaryTooltip'
 import { OsiTcpIpCompare } from '../../components/concepts/basics/OsiTcpIpCompare'
 import { EncapsulationDiagram } from '../../components/concepts/basics/EncapsulationDiagram'
 import {
@@ -233,8 +234,8 @@ export default function Topic01() {
                 </CardGrid>
 
                 <Alert variant="info" title="대표적 프로토콜:">
-                    HTTP(웹), TCP(신뢰성 있는 전송), IP(경로 지정), DNS(이름 해석),
-                    DHCP(자동 IP 할당), ARP(MAC 주소 탐색) 등이 있습니다.
+                    HTTP(웹), <T id="tcp">TCP</T>(신뢰성 있는 전송), IP(경로 지정), <T id="dns">DNS</T>(이름 해석),
+                    DHCP(자동 IP 할당), <T id="arp">ARP</T>(MAC 주소 탐색) 등이 있습니다.
                     각 프로토콜은 네트워크의 특정 계층에서 특정 역할을 수행합니다.
                 </Alert>
 
@@ -276,7 +277,7 @@ export default function Topic01() {
                     </InfoBox>
                     <InfoBox color="amber" title="재사용성 (Reusability)">
                         같은 계층의 프로토콜을 여러 상위 프로토콜이 재사용합니다.
-                        IP 위에서 TCP도, UDP도, ICMP도 동작할 수 있습니다.
+                        IP 위에서 TCP도, <T id="udp">UDP</T>도, ICMP도 동작할 수 있습니다.
                     </InfoBox>
                 </CardGrid>
 
@@ -290,7 +291,7 @@ export default function Topic01() {
             {/* ── 1.6 OSI 7계층과 TCP/IP 모델 ─────────────────────── */}
             <Section id="s016" title="1.6  OSI 7계층과 TCP/IP 모델 비교">
                 <Prose>
-                    네트워크 계층 모델에는 대표적으로 두 가지가 있습니다: OSI 7계층 모델과 TCP/IP 4계층 모델입니다.
+                    네트워크 계층 모델에는 대표적으로 두 가지가 있습니다: <T id="osi">OSI 7계층 모델</T>과 <T id="tcp-ip">TCP/IP 4계층 모델</T>입니다.
                     OSI 모델은 국제표준화기구(ISO)가 만든 이론적 참조 모델이고,
                     TCP/IP 모델은 실제 인터넷에서 사용하는 실용적 모델입니다.
                 </Prose>
@@ -380,7 +381,7 @@ export default function Topic01() {
             {/* ── 1.9 MTU의 의미 ──────────────────────────────────── */}
             <Section id="s019" title="1.9  MTU의 의미">
                 <Prose>
-                    MTU(Maximum Transmission Unit)는 L2 프레임이 수용할 수 있는 L3 페이로드의 최대 크기입니다.
+                    <T id="mtu">MTU</T>(Maximum Transmission Unit)는 L2 프레임이 수용할 수 있는 L3 페이로드의 최대 크기입니다.
                     이더넷의 기본 MTU는 1,500 바이트이며, 이는 프레임 전체 크기(1518B)가 아닌 페이로드 부분만을 가리킵니다.
                     MTU를 초과하는 IP 패킷은 분할(Fragmentation)되거나 폐기됩니다.
                 </Prose>
@@ -394,7 +395,7 @@ export default function Topic01() {
                 <InfoBox color="orange" title="MTU와 MSS의 관계">
                     MSS(Maximum Segment Size)는 TCP 세그먼트의 최대 데이터 크기입니다.
                     일반적으로 MSS = MTU - IP 헤더(20B) - TCP 헤더(20B) = 1,460 바이트입니다.
-                    TCP 연결 시 3-way handshake에서 양쪽이 MSS 값을 교환합니다.
+                    TCP 연결 시 <T id="three-way-handshake">3-way handshake</T>에서 양쪽이 MSS 값을 교환합니다.
                 </InfoBox>
 
                 <Prose>

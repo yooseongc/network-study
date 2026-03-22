@@ -331,6 +331,28 @@
 
 ---
 
+## GlossaryTooltip 적용: Topic 02~15 (2026-03-22)
+
+### 완료 항목
+
+- [x] Topic 02: DMZ, NAT, VRRP, LACP, MC-LAG, VLAN, BGP, OSPF, IPS, WAF, 로드밸런서 (11개 용어)
+- [x] Topic 03: MAC 주소, ARP, VLAN, VXLAN, LACP (5개 용어)
+- [x] Topic 04: 서브넷, CIDR, 라우팅 테이블, OSPF, BGP (5개 용어)
+- [x] Topic 05: TCP, UDP, 3-way Handshake, QUIC (4개 용어)
+- [x] Topic 06: DNS, DNSSEC (2개 용어)
+- [x] Topic 07: TLS, HTTP/3, SNI, OCSP, IDS, IPS, WAF, DDoS (8개 용어)
+- [x] Topic 08: DMZ, NAT, 로드 밸런서 (3개 용어)
+- [x] Topic 09: Netfilter, sk_buff, NAPI, sysctl (4개 용어)
+- [x] Topic 10: ip rule, tc/qdisc, 네트워크 네임스페이스, vxlan (4개 용어)
+- [x] Topic 11: Netfilter, conntrack, NAT (3개 용어)
+- [x] Topic 12: tc/qdisc, QoS, XDP, DPDK (4개 용어)
+- [x] Topic 13: tcpdump, TCP, DNS, MTU (4개 용어)
+- [x] Topic 14: 로드밸런서, CDN, Anycast, GSLB (4개 용어)
+- [x] Topic 15: VXLAN, 서비스 메시, Zero Trust, CNI (4개 용어)
+- [x] TypeScript 타입 체크 (`pnpm tsc --noEmit`) 통과
+
+---
+
 ## 마일스톤
 
 | 마일스톤 | 목표 | 상태 |
