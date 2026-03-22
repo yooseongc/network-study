@@ -1,3 +1,4 @@
+import { InlineCode } from '../../components/ui/InlineCode'
 import { Section } from '../../components/ui/Section'
 import { Prose } from '../../components/ui/Prose'
 import { InfoTable } from '../../components/ui/InfoTable'
@@ -193,9 +194,9 @@ export default function Topic10() {
                 <CodeBlock code={ethtoolStatsCode} language="bash" filename="ethtool -S / -g 확인" />
 
                 <Alert variant="info" title="softnet_stat 읽는 법">
-                    <code className="bg-gray-100 dark:bg-gray-800 text-blue-600 dark:text-blue-300 px-1.5 py-0.5 rounded text-xs font-mono">/proc/net/softnet_stat</code>의
+                    <InlineCode>/proc/net/softnet_stat</InlineCode>의
                     각 행은 CPU별 통계입니다. 두 번째 열(dropped)이 증가하면 softirq budget 초과로
-                    패킷이 유실되고 있다는 의미이며, <code className="bg-gray-100 dark:bg-gray-800 text-blue-600 dark:text-blue-300 px-1.5 py-0.5 rounded text-xs font-mono">net.core.netdev_budget</code>을
+                    패킷이 유실되고 있다는 의미이며, <InlineCode>net.core.netdev_budget</InlineCode>을
                     늘려야 합니다.
                 </Alert>
             </Section>
@@ -315,7 +316,7 @@ export default function Topic10() {
                 />
 
                 <Alert variant="tip" title="irqbalance vs 수동 설정">
-                    일반 서버에서는 <code className="bg-gray-100 dark:bg-gray-800 text-blue-600 dark:text-blue-300 px-1.5 py-0.5 rounded text-xs font-mono">irqbalance</code> 데몬이
+                    일반 서버에서는 <InlineCode>irqbalance</InlineCode> 데몬이
                     자동으로 IRQ를 분산합니다. 하지만 고성능 네트워크 환경(10G+)에서는
                     irqbalance를 끄고 수동으로 IRQ를 NIC NUMA 노드의 CPU에 1:1 매핑하는 것이 효과적입니다.
                 </Alert>
@@ -327,7 +328,7 @@ export default function Topic10() {
                     리눅스의 트래픽 제어(Traffic Control)는 qdisc(queuing discipline)를 기반으로 합니다.
                     모든 네트워크 인터페이스에는 egress qdisc가 연결되어 있으며,
                     패킷이 NIC로 전달되기 전에 qdisc를 통과합니다.
-                    <code className="bg-gray-100 dark:bg-gray-800 text-blue-600 dark:text-blue-300 px-1.5 py-0.5 rounded text-xs font-mono">tc</code> 명령으로
+                    <InlineCode>tc</InlineCode> 명령으로
                     qdisc, class, filter를 설정하여 대역폭 제한, 우선순위 지정, 트래픽 쉐이핑이 가능합니다.
                 </Prose>
 
@@ -355,7 +356,7 @@ export default function Topic10() {
                 <CodeBlock code={tcNetemCode} language="bash" filename="netem / tbf 예제" />
 
                 <Alert variant="info" title="tc와 eBPF">
-                    tc의 <code className="bg-gray-100 dark:bg-gray-800 text-blue-600 dark:text-blue-300 px-1.5 py-0.5 rounded text-xs font-mono">clsact</code> qdisc에
+                    tc의 <InlineCode>clsact</InlineCode> qdisc에
                     BPF 프로그램을 부착하면 ingress/egress 경로에서 프로그래머블한 패킷 처리가 가능합니다.
                     Cilium 같은 컨테이너 네트워킹 솔루션이 이 방식을 사용합니다.
                 </Alert>
@@ -412,7 +413,7 @@ export default function Topic10() {
                 <Alert variant="tip" title="busy polling">
                     XDP와 DPDK 모두 busy polling(폴링 기반 패킷 수신)을 활용합니다.
                     인터럽트 대신 CPU가 지속적으로 NIC 큐를 확인하여 인터럽트 오버헤드를 제거합니다.
-                    일반 소켓에서도 <code className="bg-gray-100 dark:bg-gray-800 text-blue-600 dark:text-blue-300 px-1.5 py-0.5 rounded text-xs font-mono">SO_BUSY_POLL</code>
+                    일반 소켓에서도 <InlineCode>SO_BUSY_POLL</InlineCode>
                     옵션으로 제한적 busy polling이 가능합니다.
                 </Alert>
 

@@ -1,8 +1,8 @@
 import { useCallback } from 'react'
 import * as d3 from 'd3'
 import { D3Container } from '../../viz/D3Container'
-import { useTheme } from '../../../hooks/useTheme'
-import { themeColors } from '../../../lib/colors'
+import { useIsDark } from '../../../hooks/useIsDark'
+import { themeColors, createColorMap } from '../../../lib/colors'
 
 interface NodeDef {
     id: string
@@ -22,8 +22,7 @@ const FONT = "'Pretendard Variable', Pretendard, sans-serif"
 const MONO = "'JetBrains Mono', monospace"
 
 export function HomeVsEnterprise() {
-    const { theme } = useTheme()
-    const isDark = theme === 'dark'
+    const isDark = useIsDark()
 
     const renderFn = useCallback(
         (svg: d3.Selection<SVGSVGElement, unknown, null, undefined>, width: number, height: number) => {
@@ -92,17 +91,8 @@ export function HomeVsEnterprise() {
                 { source: 'e-dist2', target: 'e-usr' },
             ]
 
-            const colorLookup = (c: string) => {
-                switch (c) {
-                    case 'blue': return { fill: tc.blueFill, stroke: tc.blueStroke, text: tc.blueText }
-                    case 'green': return { fill: tc.greenFill, stroke: tc.greenStroke, text: tc.greenText }
-                    case 'amber': return { fill: tc.amberFill, stroke: tc.amberStroke, text: tc.amberText }
-                    case 'red': return { fill: tc.redFill, stroke: tc.redStroke, text: tc.redText }
-                    case 'purple': return { fill: tc.purpleFill, stroke: tc.purpleStroke, text: tc.purpleText }
-                    case 'cyan': return { fill: tc.cyanFill, stroke: tc.cyanStroke, text: tc.cyanText }
-                    default: return { fill: tc.blueFill, stroke: tc.blueStroke, text: tc.blueText }
-                }
-            }
+            const _colorMap = createColorMap(tc, ['blue', 'green', 'amber', 'red', 'purple', 'cyan'])
+            const colorLookup = (c: string) => _colorMap[c] || _colorMap.blue
 
             const allNodes = [...homeNodes, ...entNodes]
             const allLinks = [...homeLinks, ...entLinks]
@@ -129,7 +119,8 @@ export function HomeVsEnterprise() {
                         .attr('points', '0,-22 30,0 0,22 -30,0')
                         .attr('fill', c.fill).attr('stroke', c.stroke).attr('stroke-width', 1.5)
                 } else {
-                    const w = 72, h = 32
+                    const hasKorean = /[\uAC00-\uD7AF]/.test(node.label)
+                    const w = hasKorean ? 92 : 72, h = 32
                     ng.append('rect')
                         .attr('x', -w / 2).attr('y', -h / 2)
                         .attr('width', w).attr('height', h)
@@ -139,13 +130,14 @@ export function HomeVsEnterprise() {
 
                 const lines = node.label.split('\n')
                 lines.forEach((line, i) => {
+                    const hasKorean = /[\uAC00-\uD7AF]/.test(line)
                     ng.append('text')
                         .attr('x', 0)
                         .attr('y', lines.length === 1 ? 4 : -4 + i * 13)
                         .attr('text-anchor', 'middle')
                         .attr('fill', c.text)
                         .attr('font-family', FONT)
-                        .attr('font-size', 9)
+                        .attr('font-size', hasKorean ? 8 : 9)
                         .attr('font-weight', 600)
                         .text(line)
                 })

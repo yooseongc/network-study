@@ -69,7 +69,8 @@ function Arrow({
                 x={midX}
                 y={y - 10}
                 textAnchor="middle"
-                className="text-xs font-bold font-mono fill-gray-800 dark:fill-gray-100"
+                className="text-xs font-bold fill-gray-800 dark:fill-gray-100"
+                style={{ fontFamily: "'JetBrains Mono', monospace" }}
             >
                 {label}
             </text>
@@ -77,7 +78,8 @@ function Arrow({
                 x={midX}
                 y={y + 16}
                 textAnchor="middle"
-                className="text-[10px] font-mono fill-gray-500 dark:fill-gray-400"
+                className="text-[10px] fill-gray-500 dark:fill-gray-400"
+                style={{ fontFamily: "'JetBrains Mono', monospace" }}
             >
                 {sublabel}
             </text>
@@ -101,11 +103,12 @@ function StateLabel({
             x={x}
             y={y}
             textAnchor="middle"
-            className={`text-[10px] font-mono transition-opacity duration-300 ${
+            className={`text-[10px] transition-opacity duration-300 ${
                 active
                     ? 'fill-emerald-600 dark:fill-emerald-400 font-bold'
                     : 'fill-gray-400 dark:fill-gray-600'
             }`}
+            style={{ fontFamily: "'JetBrains Mono', monospace" }}
         >
             {text}
         </text>
@@ -125,6 +128,7 @@ function renderStep(step: number) {
                 y={18}
                 textAnchor="middle"
                 className="text-sm font-bold fill-blue-600 dark:fill-blue-400"
+                style={{ fontFamily: "'Pretendard Variable', Pretendard, sans-serif" }}
             >
                 Client
             </text>
@@ -133,6 +137,7 @@ function renderStep(step: number) {
                 y={18}
                 textAnchor="middle"
                 className="text-sm font-bold fill-purple-600 dark:fill-purple-400"
+                style={{ fontFamily: "'Pretendard Variable', Pretendard, sans-serif" }}
             >
                 Server
             </text>

@@ -1,11 +1,8 @@
 import { useCallback, useState } from 'react'
 import { D3Container } from '../../viz/D3Container'
-import { themeColors } from '../../../lib/colors'
+import { themeColors, createColorMap } from '../../../lib/colors'
+import { useIsDark } from '../../../hooks/useIsDark'
 import * as d3 from 'd3'
-
-function useIsDark() {
-    return document.documentElement.classList.contains('dark')
-}
 
 interface TlsMessage {
     from: 'client' | 'server'
@@ -110,12 +107,7 @@ export function TlsHandshakeDiagram() {
                 .attr('stroke-dasharray', '4 3')
 
             // Messages
-            const colorMap = {
-                blue: { fill: c.blueFill, stroke: c.blueStroke, text: c.blueText },
-                green: { fill: c.greenFill, stroke: c.greenStroke, text: c.greenText },
-                purple: { fill: c.purpleFill, stroke: c.purpleStroke, text: c.purpleText },
-                amber: { fill: c.amberFill, stroke: c.amberStroke, text: c.amberText },
-            }
+            const colorMap = createColorMap(c, ['blue', 'green', 'purple', 'amber'])
 
             messages.forEach((msg, i) => {
                 const y = timelineTop + (i + 0.5) * msgGap
@@ -190,11 +182,12 @@ export function TlsHandshakeDiagram() {
             else if (step === 3) explanation = '양방향 암호화 통신이 시작됩니다. TLS 1.3은 1-RTT로 handshake를 완료합니다!'
             else if (step === 4) explanation = 'TLS 1.3 handshake 완료! 이전 버전(1.2) 대비 1 RTT 줄어든 빠른 연결 수립.'
 
+            const explFontSize = explanation.length > 40 ? 9 : 11
             g.append('text')
                 .attr('x', width / 2)
                 .attr('y', botY)
                 .attr('text-anchor', 'middle')
-                .attr('font-size', 11)
+                .attr('font-size', explFontSize)
                 .attr('fill', step === 4 ? c.greenText : c.textMuted)
                 .attr('font-weight', step === 4 ? 'bold' : 'normal')
                 .attr('font-family', "'Pretendard Variable', Pretendard, sans-serif")

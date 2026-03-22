@@ -1,8 +1,8 @@
 import { useCallback, useState } from 'react'
 import * as d3 from 'd3'
 import { D3Container } from '../../viz/D3Container'
-import { useTheme } from '../../../hooks/useTheme'
-import { themeColors } from '../../../lib/colors'
+import { useIsDark } from '../../../hooks/useIsDark'
+import { themeColors, createColorMap } from '../../../lib/colors'
 
 const FONT = "'Pretendard Variable', Pretendard, sans-serif"
 const MONO = "'JetBrains Mono', monospace"
@@ -10,8 +10,7 @@ const MONO = "'JetBrains Mono', monospace"
 type ViewMode = 'both' | 'ns' | 'ew'
 
 export function EastWestNorthSouth() {
-    const { theme } = useTheme()
-    const isDark = theme === 'dark'
+    const isDark = useIsDark()
     const [view, setView] = useState<ViewMode>('both')
 
     const renderFn = useCallback(
@@ -76,8 +75,8 @@ export function EastWestNorthSouth() {
             borderDevices.forEach(dev => {
                 const devG = g.append('g').attr('transform', `translate(${dev.x},${dev.y})`)
                 devG.append('rect')
-                    .attr('x', -55).attr('y', -13)
-                    .attr('width', 110).attr('height', 26)
+                    .attr('x', -60).attr('y', -13)
+                    .attr('width', 120).attr('height', 26)
                     .attr('rx', 6)
                     .attr('fill', tc.amberFill).attr('stroke', tc.amberStroke)
                 devG.append('text')
@@ -110,19 +109,14 @@ export function EastWestNorthSouth() {
                 { label: 'DB Tier', sublabel: 'DB Primary/Replica', x: cx + 150, color: 'green' as const },
             ]
 
-            const colorMap: Record<string, { fill: string; stroke: string; text: string }> = {
-                blue: { fill: tc.blueFill, stroke: tc.blueStroke, text: tc.blueText },
-                indigo: { fill: tc.indigoFill, stroke: tc.indigoStroke, text: tc.indigoText },
-                purple: { fill: tc.purpleFill, stroke: tc.purpleStroke, text: tc.purpleText },
-                green: { fill: tc.greenFill, stroke: tc.greenStroke, text: tc.greenText },
-            }
+            const colorMap = createColorMap(tc, ['blue', 'indigo', 'purple', 'green'])
 
             racks.forEach(rack => {
                 const rc = colorMap[rack.color]
                 const rg = g.append('g').attr('transform', `translate(${rack.x},${rackY})`)
                 rg.append('rect')
-                    .attr('x', -42).attr('y', -20)
-                    .attr('width', 84).attr('height', 40)
+                    .attr('x', -48).attr('y', -20)
+                    .attr('width', 96).attr('height', 40)
                     .attr('rx', 6)
                     .attr('fill', rc.fill).attr('stroke', rc.stroke).attr('stroke-width', 1.5)
                 rg.append('text')
@@ -132,7 +126,7 @@ export function EastWestNorthSouth() {
                     .text(rack.label)
                 rg.append('text')
                     .attr('text-anchor', 'middle').attr('y', 10)
-                    .attr('font-size', 7.5)
+                    .attr('font-size', 7)
                     .attr('fill', tc.textDim).attr('font-family', MONO)
                     .text(rack.sublabel)
             })

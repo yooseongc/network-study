@@ -4,40 +4,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 import { Link } from 'react-router-dom'
-import { glossary, type GlossaryTerm } from '../../data/glossary'
-
-const CATEGORY_LABEL: Record<GlossaryTerm['category'], string> = {
-    fundamentals: '기초',
-    link: '링크 계층',
-    network: '네트워크',
-    transport: '전송 계층',
-    application: '응용 계층',
-    security: '보안',
-    linux: '리눅스',
-    performance: '성능',
-    design: '설계',
-    general: '일반',
-}
-
-const CATEGORY_COLOR: Record<GlossaryTerm['category'], string> = {
-    fundamentals:
-        'text-blue-600   dark:text-blue-400   bg-blue-50   dark:bg-blue-950/50   border-blue-200   dark:border-blue-800',
-    link: 'text-purple-600 dark:text-purple-400 bg-purple-50 dark:bg-purple-950/50 border-purple-200 dark:border-purple-800',
-    network:
-        'text-green-600  dark:text-green-400  bg-green-50  dark:bg-green-950/50  border-green-200  dark:border-green-800',
-    transport:
-        'text-orange-600 dark:text-orange-400 bg-orange-50 dark:bg-orange-950/50 border-orange-200 dark:border-orange-800',
-    application:
-        'text-cyan-600   dark:text-cyan-400   bg-cyan-50   dark:bg-cyan-950/50   border-cyan-200   dark:border-cyan-800',
-    security:
-        'text-red-600    dark:text-red-400    bg-red-50    dark:bg-red-950/50    border-red-200    dark:border-red-800',
-    linux: 'text-yellow-600 dark:text-yellow-400 bg-yellow-50 dark:bg-yellow-950/50 border-yellow-200 dark:border-yellow-800',
-    performance:
-        'text-rose-600   dark:text-rose-400   bg-rose-50   dark:bg-rose-950/50   border-rose-200   dark:border-rose-800',
-    design: 'text-indigo-600 dark:text-indigo-400 bg-indigo-50 dark:bg-indigo-950/50 border-indigo-200 dark:border-indigo-800',
-    general:
-        'text-gray-600   dark:text-gray-400   bg-gray-50   dark:bg-gray-800      border-gray-200   dark:border-gray-700',
-}
+import { glossary, CATEGORY_LABEL, CATEGORY_COLOR } from '../../data/glossary'
 
 const glossaryMap = new Map(glossary.map((g) => [g.id, g]))
 

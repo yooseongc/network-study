@@ -1,3 +1,4 @@
+import { CardGrid } from '../../components/ui/CardGrid'
 import { Section } from '../../components/ui/Section'
 import { Prose } from '../../components/ui/Prose'
 import { InfoTable } from '../../components/ui/InfoTable'
@@ -170,10 +171,10 @@ export default function Topic12() {
                     rows={l4vsL7Rows}
                 />
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <CardGrid cols={2}>
                     <StatCard title="L4 처리량" value="~10M PPS" color="blue" desc="패킷 레벨 포워딩으로 초당 수백만 패킷 처리 (IPVS, DPDK 기반)" />
                     <StatCard title="L7 지연 추가" value="~1-5 ms" color="green" desc="TLS 종료 + HTTP 파싱 + 프록시 연결에 따른 추가 지연" />
-                </div>
+                </CardGrid>
 
                 <InfoBox color="purple" title="L4 + L7 조합 아키텍처">
                     대규모 서비스에서는 L4와 L7을 함께 사용합니다.
@@ -245,11 +246,11 @@ export default function Topic12() {
                     </div>
                 </InfoBox>
 
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                <CardGrid cols={3}>
                     <StatCard title="Cache Hit Ratio" value="~95%+" color="green" desc="효율적인 CDN은 대부분의 요청을 Edge에서 처리" />
                     <StatCard title="지연 시간 개선" value="~50-200ms" color="cyan" desc="Origin 직접 접속 대비 지연 감소 (지역에 따라 다름)" />
                     <StatCard title="글로벌 POP" value="200+" color="amber" desc="주요 CDN 업체의 전 세계 Edge 서버 위치 수" />
-                </div>
+                </CardGrid>
 
                 <InfoBox color="blue" title="CDN이 처리하는 콘텐츠 유형">
                     <ul className="space-y-1 list-disc list-inside">
@@ -327,7 +328,7 @@ export default function Topic12() {
                     </ul>
                 </InfoBox>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <CardGrid cols={2}>
                     <InfoBox color="green" title="Security Group (상태 기반)">
                         인스턴스 레벨에서 동작하며, Allow 규칙만 정의합니다.
                         인바운드 트래픽을 허용하면 응답 트래픽은 자동 허용됩니다 (Stateful).
@@ -338,7 +339,7 @@ export default function Topic12() {
                         규칙 번호 순서로 평가되며, 인바운드/아웃바운드를 각각 정의해야 합니다 (Stateless).
                         서브넷의 2차 방어선으로 활용합니다.
                     </InfoBox>
-                </div>
+                </CardGrid>
 
                 <Alert variant="info" title="VPC Peering vs Transit Gateway">
                     VPC Peering은 두 VPC 간 1:1 연결이며, Transit Gateway는 허브-스포크 모델로
@@ -408,11 +409,11 @@ export default function Topic12() {
                     </div>
                 </InfoBox>
 
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                <CardGrid cols={3}>
                     <StatCard title="mTLS" value="자동 암호화" color="purple" desc="서비스 간 통신을 자동으로 상호 TLS 인증" />
                     <StatCard title="트래픽 제어" value="카나리 배포" color="cyan" desc="가중치 기반 트래픽 분할 (v1: 90%, v2: 10%)" />
                     <StatCard title="관측성" value="분산 추적" color="amber" desc="Jaeger, Zipkin 연동으로 요청 추적" />
-                </div>
+                </CardGrid>
 
                 <CodeBlock language="yaml" filename="Istio VirtualService + DestinationRule" code={istioSidecarCode} />
 
@@ -476,11 +477,11 @@ export default function Topic12() {
                     Health Check, Failover, 다중화를 통해 가용성을 확보합니다.
                 </Prose>
 
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                <CardGrid cols={3}>
                     <StatCard title="99.9% (Three 9s)" value="~8.7시간/년" color="amber" desc="연간 허용 다운타임" />
                     <StatCard title="99.99% (Four 9s)" value="~52분/년" color="green" desc="고가용성 서비스 목표" />
                     <StatCard title="99.999% (Five 9s)" value="~5분/년" color="blue" desc="통신/금융 수준 가용성" />
-                </div>
+                </CardGrid>
 
                 <InfoTable
                     headers={['전략', '설명', '대표 구현']}

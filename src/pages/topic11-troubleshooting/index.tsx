@@ -1,3 +1,5 @@
+import { CardGrid } from '../../components/ui/CardGrid'
+import { InlineCode } from '../../components/ui/InlineCode'
 import { Section } from '../../components/ui/Section'
 import { Prose } from '../../components/ui/Prose'
 import { InfoTable } from '../../components/ui/InfoTable'
@@ -162,16 +164,16 @@ export default function Topic11() {
             {/* ── 11.2 ping과 ICMP ───────────────────────────────── */}
             <Section id="s112" title="11.2  ping과 ICMP">
                 <Prose>
-                    <code className="bg-gray-100 dark:bg-gray-800 text-blue-600 dark:text-blue-300 px-1.5 py-0.5 rounded text-xs font-mono">ping</code>은
+                    <InlineCode>ping</InlineCode>은
                     가장 기본적인 네트워크 진단 도구입니다. ICMP Echo Request를 보내고 Echo Reply를 받아
                     대상까지의 도달성(reachability)과 왕복 시간(RTT)을 확인합니다.
                 </Prose>
 
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                <CardGrid cols={3}>
                     <StatCard title="RTT (Round Trip Time)" value="< 1ms" color="green" desc="같은 LAN 내" />
                     <StatCard title="RTT" value="1~50ms" color="amber" desc="같은 도시/국가 내" />
                     <StatCard title="RTT" value="100~300ms" color="red" desc="대륙 간 (한국↔미국)" />
-                </div>
+                </CardGrid>
 
                 <CodeBlock code={pingCode} language="bash" filename="ping 사용법" />
 
@@ -205,7 +207,7 @@ export default function Topic11() {
             {/* ── 11.3 traceroute와 mtr ──────────────────────────── */}
             <Section id="s113" title="11.3  traceroute와 mtr">
                 <Prose>
-                    <code className="bg-gray-100 dark:bg-gray-800 text-blue-600 dark:text-blue-300 px-1.5 py-0.5 rounded text-xs font-mono">traceroute</code>는
+                    <InlineCode>traceroute</InlineCode>는
                     TTL을 1부터 증가시키며 패킷을 보내, 경로 상의 각 라우터(홉)를 식별합니다.
                     각 홉에서 반환하는 ICMP Time Exceeded 메시지를 이용하여 경로를 추적합니다.
                 </Prose>
@@ -220,7 +222,7 @@ export default function Topic11() {
                 <CodeBlock code={tracerouteCode} language="bash" filename="traceroute 사용법" />
 
                 <Prose>
-                    <code className="bg-gray-100 dark:bg-gray-800 text-blue-600 dark:text-blue-300 px-1.5 py-0.5 rounded text-xs font-mono">mtr</code>은
+                    <InlineCode>mtr</InlineCode>은
                     ping과 traceroute를 결합한 도구입니다. 지속적으로 패킷을 보내며 각 홉의
                     패킷 유실률(Loss%), 지터(StDev), 평균 RTT를 실시간으로 보여줍니다.
                     간헐적인 네트워크 문제를 진단할 때 특히 유용합니다.
@@ -238,7 +240,7 @@ export default function Topic11() {
             {/* ── 11.4 tcpdump 기초 ──────────────────────────────── */}
             <Section id="s114" title="11.4  tcpdump 기초">
                 <Prose>
-                    <code className="bg-gray-100 dark:bg-gray-800 text-blue-600 dark:text-blue-300 px-1.5 py-0.5 rounded text-xs font-mono">tcpdump</code>는
+                    <InlineCode>tcpdump</InlineCode>는
                     리눅스에서 가장 많이 사용되는 패킷 캡처 도구입니다.
                     네트워크 인터페이스를 흐르는 패킷을 실시간으로 캡처하여
                     프로토콜, 주소, 포트, 플래그 등을 확인할 수 있습니다.
@@ -268,7 +270,7 @@ export default function Topic11() {
 
                 <Alert variant="tip" title="실무 팁:">
                     프로덕션 서버에서 tcpdump를 사용할 때는 반드시{' '}
-                    <code className="bg-gray-100 dark:bg-gray-800 text-blue-600 dark:text-blue-300 px-1.5 py-0.5 rounded text-xs font-mono">-c</code> 옵션으로
+                    <InlineCode>-c</InlineCode> 옵션으로
                     패킷 수를 제한하고, 구체적인 필터를 지정하세요. 무제한 캡처는 디스크와 CPU 자원을 소모합니다.
                 </Alert>
             </Section>
@@ -375,12 +377,12 @@ export default function Topic11() {
 
                 <CodeBlock code={tcpDebugCode} language="bash" filename="TCP 연결 장애 진단" />
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <CardGrid cols={2}>
                     <StatCard title="TCP 기본 재전송 횟수" value="6회" color="amber"
                         desc="net.ipv4.tcp_syn_retries (SYN 재전송)" />
                     <StatCard title="재전송 간격" value="1s → 2s → 4s" color="red"
                         desc="지수적 백오프 (exponential backoff)" />
-                </div>
+                </CardGrid>
 
                 <InfoBox color="orange" title="timeout vs RST 구분">
                     timeout(SYN 보냈는데 아무 응답 없음)은 패킷이 어딘가에서 DROP되었음을 의미합니다.
@@ -465,7 +467,7 @@ export default function Topic11() {
                     5. 조치 사항과 재발 방지 대책을 기록합니다
                 </InfoBox>
 
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                <CardGrid cols={3}>
                     <InfoBox color="blue" title="NAT 문제 패턴">
                         - conntrack table full 로그{'\n'}
                         - 간헐적 연결 실패{'\n'}
@@ -484,7 +486,7 @@ export default function Topic11() {
                         - 잘못된 기본 게이트웨이{'\n'}
                         - Policy routing 충돌
                     </InfoBox>
-                </div>
+                </CardGrid>
 
                 <Alert variant="info" title="핵심:">
                     커널 로그(dmesg)와 애플리케이션 로그를 연결하는 것이 중요합니다.
@@ -496,7 +498,7 @@ export default function Topic11() {
 
             {/* ── 11.10 요약 ─────────────────────────────────────── */}
             <Section id="s1110" title="11.10  요약">
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <CardGrid cols={2}>
                     <InfoBox color="blue" title="진단 도구">
                         - <strong>ping</strong>: ICMP 기반 도달성 확인{'\n'}
                         - <strong>traceroute/mtr</strong>: 경로 추적, 구간별 유실/지연{'\n'}
@@ -511,7 +513,7 @@ export default function Topic11() {
                         - <strong>방화벽</strong>: DROP(timeout) vs REJECT(RST){'\n'}
                         - <strong>NAT</strong>: conntrack full, 간헐적 실패
                     </InfoBox>
-                </div>
+                </CardGrid>
 
                 <InfoBox color="gray" title="장애 분석의 핵심 원칙">
                     1. 체계적으로 접근한다 (Bottom-Up 계층별 확인){'\n'}

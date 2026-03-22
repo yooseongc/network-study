@@ -62,3 +62,17 @@ export function themeColors(isDark: boolean) {
         cyanText: d ? 'oklch(78% 0.14 200)' : 'oklch(36% 0.18 200)',
     }
 }
+
+type ColorKey = 'blue' | 'indigo' | 'purple' | 'pink' | 'red' | 'amber' | 'green' | 'cyan'
+
+export function createColorMap(colors: ReturnType<typeof themeColors>, keys: ColorKey[]) {
+    const map: Record<string, { fill: string; stroke: string; text: string }> = {}
+    for (const key of keys) {
+        map[key] = {
+            fill: colors[`${key}Fill` as keyof ReturnType<typeof themeColors>] as string,
+            stroke: colors[`${key}Stroke` as keyof ReturnType<typeof themeColors>] as string,
+            text: colors[`${key}Text` as keyof ReturnType<typeof themeColors>] as string,
+        }
+    }
+    return map
+}

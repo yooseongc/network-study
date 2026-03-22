@@ -1,7 +1,6 @@
-import { useContext } from 'react'
 import { D3Container } from '../../viz/D3Container'
-import { ThemeContext } from '../../../contexts/ThemeContextDef'
-import { themeColors } from '../../../lib/colors'
+import { themeColors, createColorMap } from '../../../lib/colors'
+import { useIsDark } from '../../../hooks/useIsDark'
 import * as d3 from 'd3'
 
 const fields = [
@@ -18,8 +17,7 @@ const proportions = [7, 1, 6, 6, 2, 46, 4]
 const total = proportions.reduce((a, b) => a + b, 0)
 
 export function EthernetFrameDiagram() {
-    const { theme } = useContext(ThemeContext)
-    const isDark = theme === 'dark'
+    const isDark = useIsDark()
 
     const renderFn = (
         svg: d3.Selection<SVGSVGElement, unknown, null, undefined>,
@@ -47,11 +45,7 @@ export function EthernetFrameDiagram() {
 
         const colorMap: Record<string, { fill: string; stroke: string; text: string }> = {
             gray: { fill: c.bgCard, stroke: c.border, text: c.textMuted },
-            blue: { fill: c.blueFill, stroke: c.blueStroke, text: c.blueText },
-            cyan: { fill: c.cyanFill, stroke: c.cyanStroke, text: c.cyanText },
-            purple: { fill: c.purpleFill, stroke: c.purpleStroke, text: c.purpleText },
-            green: { fill: c.greenFill, stroke: c.greenStroke, text: c.greenText },
-            amber: { fill: c.amberFill, stroke: c.amberStroke, text: c.amberText },
+            ...createColorMap(c, ['blue', 'cyan', 'purple', 'green', 'amber']),
         }
 
         let xPos = margin.left

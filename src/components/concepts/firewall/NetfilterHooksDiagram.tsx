@@ -1,11 +1,8 @@
 import { useCallback } from 'react'
 import { D3Container } from '../../viz/D3Container'
-import { themeColors } from '../../../lib/colors'
+import { themeColors, createColorMap } from '../../../lib/colors'
+import { useIsDark } from '../../../hooks/useIsDark'
 import * as d3 from 'd3'
-
-function useIsDark() {
-    return document.documentElement.classList.contains('dark')
-}
 
 interface HookDef {
     id: string
@@ -24,21 +21,13 @@ export function NetfilterHooksDiagram() {
             const c = themeColors(isDark)
             const g = svg.append('g')
 
-            const colorMap: Record<string, { fill: string; stroke: string; text: string }> = {
-                amber: { fill: c.amberFill, stroke: c.amberStroke, text: c.amberText },
-                blue: { fill: c.blueFill, stroke: c.blueStroke, text: c.blueText },
-                green: { fill: c.greenFill, stroke: c.greenStroke, text: c.greenText },
-                red: { fill: c.redFill, stroke: c.redStroke, text: c.redText },
-                purple: { fill: c.purpleFill, stroke: c.purpleStroke, text: c.purpleText },
-                cyan: { fill: c.cyanFill, stroke: c.cyanStroke, text: c.cyanText },
-                indigo: { fill: c.indigoFill, stroke: c.indigoStroke, text: c.indigoText },
-            }
+            const colorMap = createColorMap(c, ['amber', 'blue', 'green', 'red', 'purple', 'cyan', 'indigo'])
 
             // Layout constants
             const cx = width / 2
-            const boxW = 130
+            const boxW = Math.min(150, (width - 80) / 4)
             const boxH = 50
-            const smallBoxW = 110
+            const smallBoxW = Math.min(120, (width - 80) / 4)
             const smallBoxH = 40
 
             // Hook positions (relative to center)
@@ -75,8 +64,9 @@ export function NetfilterHooksDiagram() {
                 .text('패킷이 커널을 통과하는 5개 훅 포인트')
 
             // "Packet IN" label
+            const packetInX = Math.max(40, cx - 200 - boxW / 2 - 70)
             g.append('text')
-                .attr('x', cx - 320)
+                .attr('x', packetInX)
                 .attr('y', 85)
                 .attr('text-anchor', 'middle')
                 .attr('font-size', 11)
@@ -86,7 +76,7 @@ export function NetfilterHooksDiagram() {
                 .text('Packet IN')
 
             // Arrow: Packet IN → PREROUTING
-            drawArrow(g, cx - 290, 80, cx - 200 - boxW / 2, 80, c.greenStroke)
+            drawArrow(g, packetInX + 30, 80, cx - 200 - boxW / 2, 80, c.greenStroke)
 
             // Draw hook boxes
             hooks.forEach((hook) => {
@@ -119,7 +109,7 @@ export function NetfilterHooksDiagram() {
                     .attr('x', hook.x)
                     .attr('y', hook.y + 12)
                     .attr('text-anchor', 'middle')
-                    .attr('font-size', 9)
+                    .attr('font-size', hook.sublabel.length > 20 ? 8 : 9)
                     .attr('fill', c.textMuted)
                     .attr('font-family', "'Pretendard Variable', Pretendard, sans-serif")
                     .text(hook.sublabel)
@@ -181,8 +171,9 @@ export function NetfilterHooksDiagram() {
             ], c.greenStroke)
 
             // "Packet OUT" label
+            const packetOutX = Math.min(width - 40, cx + 160 + boxW / 2 + 70)
             g.append('text')
-                .attr('x', cx + 320)
+                .attr('x', packetOutX)
                 .attr('y', 395)
                 .attr('text-anchor', 'middle')
                 .attr('font-size', 11)
@@ -192,7 +183,7 @@ export function NetfilterHooksDiagram() {
                 .text('Packet OUT')
 
             // Arrow: POSTROUTING → Packet OUT
-            drawArrow(g, cx + 160 + boxW / 2, 390, cx + 290, 390, c.redStroke)
+            drawArrow(g, cx + 160 + boxW / 2, 390, packetOutX - 30, 390, c.redStroke)
         },
         [isDark],
     )

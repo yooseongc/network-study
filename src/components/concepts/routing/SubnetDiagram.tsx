@@ -1,11 +1,8 @@
 import { useCallback } from 'react'
 import { D3Container } from '../../viz/D3Container'
 import { themeColors } from '../../../lib/colors'
+import { useIsDark } from '../../../hooks/useIsDark'
 import * as d3 from 'd3'
-
-function useIsDark() {
-    return document.documentElement.classList.contains('dark')
-}
 
 export function SubnetDiagram() {
     const isDark = useIsDark()
@@ -162,6 +159,7 @@ export function SubnetDiagram() {
                         .attr('font-size', 16)
                         .attr('font-weight', 'bold')
                         .attr('fill', c.textMuted)
+                        .attr('font-family', "'JetBrains Mono', monospace")
                         .text('.')
                 }
             }
@@ -173,7 +171,7 @@ export function SubnetDiagram() {
                 { label: '브로드캐스트: 192.168.1.255', color: c.amberStroke },
                 { label: '호스트 범위: .1 ~ .254 (254개)', color: c.greenStroke },
             ]
-            const legendSpacing = Math.min(200, innerW / 3)
+            const legendSpacing = Math.min(220, innerW / 3)
             const legendStartX = width / 2 - (legendItems.length * legendSpacing) / 2
 
             legendItems.forEach((item, i) => {
@@ -189,7 +187,7 @@ export function SubnetDiagram() {
                 g.append('text')
                     .attr('x', lx + 8)
                     .attr('y', legendY + 4)
-                    .attr('font-size', 10)
+                    .attr('font-size', Math.min(10, legendSpacing / 22))
                     .attr('fill', c.textMuted)
                     .attr('font-family', "'Pretendard Variable', Pretendard, sans-serif")
                     .text(item.label)

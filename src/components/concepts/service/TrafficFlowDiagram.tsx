@@ -1,8 +1,8 @@
 import { useCallback, useState } from 'react'
 import * as d3 from 'd3'
 import { D3Container } from '../../viz/D3Container'
-import { useTheme } from '../../../hooks/useTheme'
-import { themeColors } from '../../../lib/colors'
+import { useIsDark } from '../../../hooks/useIsDark'
+import { themeColors, createColorMap } from '../../../lib/colors'
 
 const FONT = "'Pretendard Variable', Pretendard, sans-serif"
 const MONO = "'JetBrains Mono', monospace"
@@ -24,8 +24,7 @@ interface FlowArrow {
 }
 
 export function TrafficFlowDiagram() {
-    const { theme } = useTheme()
-    const isDark = theme === 'dark'
+    const isDark = useIsDark()
     const [step, setStep] = useState(-1)
 
     const renderFn = useCallback(
@@ -42,18 +41,8 @@ export function TrafficFlowDiagram() {
                 .attr('fill', tc.text).attr('font-family', FONT)
                 .text('End-to-End Request Flow')
 
-            const colorMap = (c: string) => {
-                const m: Record<string, { fill: string; stroke: string; text: string }> = {
-                    blue: { fill: tc.blueFill, stroke: tc.blueStroke, text: tc.blueText },
-                    amber: { fill: tc.amberFill, stroke: tc.amberStroke, text: tc.amberText },
-                    red: { fill: tc.redFill, stroke: tc.redStroke, text: tc.redText },
-                    green: { fill: tc.greenFill, stroke: tc.greenStroke, text: tc.greenText },
-                    cyan: { fill: tc.cyanFill, stroke: tc.cyanStroke, text: tc.cyanText },
-                    purple: { fill: tc.purpleFill, stroke: tc.purpleStroke, text: tc.purpleText },
-                    indigo: { fill: tc.indigoFill, stroke: tc.indigoStroke, text: tc.indigoText },
-                }
-                return m[c] || m.blue
-            }
+            const _colorMap = createColorMap(tc, ['blue', 'amber', 'red', 'green', 'cyan', 'purple', 'indigo'])
+            const colorMap = (c: string) => _colorMap[c] || _colorMap.blue
 
             const devices: DeviceNode[] = [
                 { id: 'client', label: 'Client', sublabel: '192.168.1.10', x: cx, y: 55, color: 'cyan' },
@@ -135,9 +124,10 @@ export function TrafficFlowDiagram() {
                 const colors = colorMap(dev.color)
                 const nodeG = g.append('g').attr('transform', `translate(${dev.x},${dev.y})`)
 
+                const nodeW = dev.label.length > 10 ? 140 : 120
                 nodeG.append('rect')
-                    .attr('x', -60).attr('y', -16)
-                    .attr('width', 120).attr('height', 32)
+                    .attr('x', -nodeW / 2).attr('y', -16)
+                    .attr('width', nodeW).attr('height', 32)
                     .attr('rx', 8)
                     .attr('fill', colors.fill)
                     .attr('stroke', colors.stroke)
@@ -178,12 +168,13 @@ export function TrafficFlowDiagram() {
                     .attr('rx', 6)
                     .attr('fill', tc.blueFill).attr('stroke', tc.blueStroke)
 
+                const stepText = `Step ${step + 1}: ${explanations[step]}`
                 g.append('text')
                     .attr('x', cx).attr('y', boxY + 3)
                     .attr('text-anchor', 'middle')
-                    .attr('font-size', 10)
+                    .attr('font-size', stepText.length > 40 ? 9 : 10)
                     .attr('fill', tc.blueText).attr('font-family', FONT)
-                    .text(`Step ${step + 1}: ${explanations[step]}`)
+                    .text(stepText)
             }
         },
         [isDark, step],

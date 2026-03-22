@@ -1,3 +1,5 @@
+import { CardGrid } from '../../components/ui/CardGrid'
+import { InlineCode } from '../../components/ui/InlineCode'
 import { Section } from '../../components/ui/Section'
 import { Prose } from '../../components/ui/Prose'
 import { InfoBox } from '../../components/ui/InfoBox'
@@ -127,9 +129,9 @@ export default function Topic06() {
             <Section id="s061" title="6.1  DNS의 역할과 동작">
                 <Prose>
                     DNS(Domain Name System)는 사람이 읽을 수 있는 도메인 이름(예:{' '}
-                    <code className="bg-gray-100 dark:bg-gray-800 text-blue-600 dark:text-blue-300 px-1.5 py-0.5 rounded text-xs font-mono">
+                    <InlineCode>
                         www.example.com
-                    </code>
+                    </InlineCode>
                     )을 컴퓨터가 사용하는 IP 주소로 변환하는 분산 계층형 데이터베이스입니다.
                     인터넷의 전화번호부 역할을 하며, 거의 모든 인터넷 통신의 첫 단계입니다.
                 </Prose>
@@ -140,12 +142,12 @@ export default function Topic06() {
                     <p className="mt-1">각 수준은 서로 다른 네임서버가 관리하며, 이를 통해 전 세계 도메인을 분산 관리합니다.</p>
                 </InfoBox>
 
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                <CardGrid cols={4}>
                     <StatCard title="Root NS" value="13개 클러스터" color="blue" desc="a~m.root-servers.net" />
                     <StatCard title="기본 포트" value="UDP 53" color="purple" desc="TCP도 사용 (Zone Transfer)" />
                     <StatCard title="캐시 TTL" value="300 ~ 86400 s" color="green" desc="도메인별 설정" />
                     <StatCard title="전 세계 도메인" value="~3.5억 개" color="amber" desc="지속 증가 중" />
-                </div>
+                </CardGrid>
 
                 <InfoBox color="green" title="주요 DNS 레코드 타입">
                     DNS 서버는 다양한 유형의 레코드를 저장합니다. 각 레코드는 특정 목적에 맞는 정보를 제공합니다.
@@ -182,7 +184,7 @@ export default function Topic06() {
                     Local Resolver가 각 네임서버에 차례로 질의하여 답을 찾아가는 방식입니다.
                 </Prose>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <CardGrid cols={2}>
                     <InfoBox color="blue" title="재귀 질의 (Recursive)">
                         <p>클라이언트 → Local Resolver</p>
                         <p>&quot;최종 답을 알려주세요&quot;</p>
@@ -195,7 +197,7 @@ export default function Topic06() {
                         <p className="mt-1">각 NS가 다음 NS의 주소를 알려줌 (Referral)</p>
                         <p>Resolver가 단계별로 질의를 반복</p>
                     </InfoBox>
-                </div>
+                </CardGrid>
 
                 <DnsResolutionDiagram />
 
@@ -214,7 +216,7 @@ export default function Topic06() {
                     기반으로 하며, 기본적으로 무상태(Stateless) 프로토콜입니다.
                 </Prose>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <CardGrid cols={2}>
                     <InfoBox color="blue" title="HTTP 요청 (Request) 구조">
                         <p className="font-mono">GET /index.html HTTP/1.1</p>
                         <p className="font-mono">Host: www.example.com</p>
@@ -231,14 +233,14 @@ export default function Topic06() {
                         <p className="font-mono">Set-Cookie: sid=abc123</p>
                         <p className="mt-1">[응답 본문 — HTML, JSON 등]</p>
                     </InfoBox>
-                </div>
+                </CardGrid>
 
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                <CardGrid cols={4}>
                     <StatCard title="기본 포트" value="80 (HTTP)" color="blue" desc="암호화 없음" />
                     <StatCard title="보안 포트" value="443 (HTTPS)" color="green" desc="TLS 암호화" />
                     <StatCard title="HTTP/2" value="2015" color="purple" desc="멀티플렉싱, 헤더 압축" />
                     <StatCard title="HTTP/3" value="2022" color="amber" desc="QUIC 기반 (UDP)" />
-                </div>
+                </CardGrid>
 
                 <InfoBox color="purple" title="HTTP 메서드">
                     HTTP 메서드는 서버에 수행할 작업의 종류를 알려줍니다.
@@ -303,7 +305,7 @@ export default function Topic06() {
 
                 <TlsHandshakeDiagram />
 
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                <CardGrid cols={3}>
                     <InfoBox color="blue" title="대칭 암호화">
                         <p>AES-128-GCM, AES-256-GCM</p>
                         <p>ChaCha20-Poly1305</p>
@@ -319,7 +321,7 @@ export default function Topic06() {
                         <p>CA(인증기관) 체인 검증</p>
                         <p className="mt-1">Let&apos;s Encrypt 무료 인증서</p>
                     </InfoBox>
-                </div>
+                </CardGrid>
 
                 <Alert variant="warning" title="주의:">
                     TLS 1.3의 0-RTT(Early Data)는 재전송 공격(Replay Attack)에 취약할 수 있습니다.
@@ -343,12 +345,12 @@ export default function Topic06() {
                     광범위하게 사용됩니다.
                 </Prose>
 
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                <CardGrid cols={4}>
                     <StatCard title="서버 포트" value="UDP 67" color="blue" desc="서버 수신" />
                     <StatCard title="클라이언트 포트" value="UDP 68" color="purple" desc="클라이언트 수신" />
                     <StatCard title="임대 시간" value="1 ~ 24시간" color="green" desc="네트워크별 설정" />
                     <StatCard title="DORA" value="4단계" color="amber" desc="Discover→Offer→Request→Ack" />
-                </div>
+                </CardGrid>
 
                 <InfoBox color="blue" title="DHCP DORA 프로세스">
                     DHCP 주소 할당은 4단계로 이루어집니다. 클라이언트에 IP가 없는 상태에서
@@ -387,14 +389,14 @@ export default function Topic06() {
                     파일 전송(SCP, SFTP), 포트 포워딩, VPN 터널링 등 다양한 용도로 활용됩니다.
                 </Prose>
 
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                <CardGrid cols={4}>
                     <StatCard title="기본 포트" value="TCP 22" color="blue" desc="변경 권장 (보안)" />
                     <StatCard title="현재 버전" value="SSH-2" color="green" desc="SSH-1은 사용 금지" />
                     <StatCard title="키 알고리즘" value="Ed25519" color="purple" desc="현재 권장 (빠르고 안전)" />
                     <StatCard title="Telnet 대체" value="1995~" color="amber" desc="암호화 통신" />
-                </div>
+                </CardGrid>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <CardGrid cols={2}>
                     <InfoBox color="blue" title="비밀번호 인증">
                         <p>서버에 사용자 ID/PW를 전송하여 인증</p>
                         <p>간편하지만 브루트포스 공격에 취약</p>
@@ -405,7 +407,7 @@ export default function Topic06() {
                         <p>비밀번호 없이 안전한 인증</p>
                         <p className="mt-1">~/.ssh/authorized_keys에 공개키 등록</p>
                     </InfoBox>
-                </div>
+                </CardGrid>
 
                 <InfoBox color="purple" title="SSH 포트 포워딩 (터널링)">
                     <p><strong>로컬 포워딩 (-L):</strong> 로컬 포트를 원격 서버의 포트로 전달. 방화벽 뒤의 서비스 접근에 유용.</p>
@@ -469,13 +471,9 @@ export default function Topic06() {
                     <p className="mt-1">
                         정확한 시간 동기화는 로그 분석, 인증서 유효성 검증, 분산 시스템 일관성에 필수적입니다.
                         Linux에서는{' '}
-                        <code className="bg-gray-100 dark:bg-gray-800 text-blue-600 dark:text-blue-300 px-1 py-0.5 rounded text-xs font-mono">
-                            chrony
-                        </code>{' '}
+                        <InlineCode>chrony</InlineCode>{' '}
                         또는{' '}
-                        <code className="bg-gray-100 dark:bg-gray-800 text-blue-600 dark:text-blue-300 px-1 py-0.5 rounded text-xs font-mono">
-                            systemd-timesyncd
-                        </code>
+                        <InlineCode>systemd-timesyncd</InlineCode>
                         를 사용합니다.
                     </p>
                 </InfoBox>
@@ -497,7 +495,7 @@ export default function Topic06() {
                     <strong className="text-gray-800 dark:text-gray-200">리버스 프록시</strong>로 구분합니다.
                 </Prose>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <CardGrid cols={2}>
                     <InfoBox color="blue" title="포워드 프록시 (Forward Proxy)">
                         <p className="font-mono">Client → [Forward Proxy] → Server</p>
                         <p className="mt-1">클라이언트 측에 위치하며 클라이언트를 대리합니다.</p>
@@ -510,7 +508,7 @@ export default function Topic06() {
                         <p><strong>용도:</strong> 로드 밸런싱, SSL 종단, 캐싱, DDoS 방어</p>
                         <p><strong>예시:</strong> Nginx, HAProxy, Cloudflare, AWS ALB</p>
                     </InfoBox>
-                </div>
+                </CardGrid>
 
                 <InfoTable
                     headers={['비교 항목', '포워드 프록시', '리버스 프록시']}
@@ -532,7 +530,7 @@ export default function Topic06() {
 
             {/* ── 6.9 요약 ──────────────────────────────────────── */}
             <Section id="s069" title="6.9  요약">
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <CardGrid cols={2}>
                     <InfoBox color="blue" title="DNS">
                         <p>도메인 → IP 변환, 계층형 분산 시스템</p>
                         <p>재귀 질의 + 반복 질의 조합</p>
@@ -563,7 +561,7 @@ export default function Topic06() {
                         <p>리버스: 서버 보호, LB, SSL 종단</p>
                         <p>투명 프록시: 클라이언트 비인지</p>
                     </InfoBox>
-                </div>
+                </CardGrid>
 
                 <Alert variant="info" title="다음 토픽:">
                     Topic 07에서는 지금까지 학습한 프로토콜들이 실제 서비스 환경에서 어떻게

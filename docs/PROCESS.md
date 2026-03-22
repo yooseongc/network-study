@@ -146,6 +146,40 @@
 
 ---
 
+## Sprint 13: UI 공통 컴포넌트 리팩토링 (2026-03-22)
+
+### 완료 항목
+- [x] InlineCode 공통 컴포넌트 생성 (`src/components/ui/InlineCode.tsx`) — 반복되는 인라인 코드 스타일링을 컴포넌트로 추출
+- [x] CardGrid 공통 컴포넌트 생성 (`src/components/ui/CardGrid.tsx`) — 반복되는 그리드 레이아웃(2열/3열/4열)을 컴포넌트로 추출
+- [x] 6개 토픽 페이지에서 InlineCode 패턴 적용 (topic03, 04, 06, 09, 10, 11 — 총 27개소)
+- [x] 11개 페이지에서 CardGrid 패턴 적용 (Home, topic01~07, 09, 11, 12 — 총 64개소)
+- [x] TypeScript 타입 체크 통과
+
+---
+
+## Sprint 14: 용어 사전 페이지 업그레이드 (2026-03-22)
+
+### 완료 항목
+- [x] glossary 데이터에 `GlossaryCategory` 타입, `CATEGORY_LABEL`, `CATEGORY_COLOR` export 추가 (`src/data/glossary.ts`)
+- [x] Glossary 페이지 전면 리라이트 — 검색, 카테고리 필터 칩(rounded-full), 한국어 정렬, 카테고리 배지, 토픽 참조 링크, 빈 결과 안내, anchor scroll 지원 (`src/pages/Glossary/index.tsx`)
+- [x] GlossaryTooltip에서 로컬 CATEGORY_LABEL/CATEGORY_COLOR 제거, 공유 데이터에서 import (`src/components/ui/GlossaryTooltip.tsx`)
+- [x] TypeScript 타입 체크 통과
+
+---
+
+## Sprint 15: 개념 지도 (Graph) 페이지 구현 (2026-03-22)
+
+### 완료 항목
+- [x] Graph 페이지 전면 리라이트 — D3 force-directed 그래프 시각화 (`src/pages/Graph/index.tsx`)
+- [x] 12개 토픽 노드 (번호 표시 대형 원, HSL 색상) + 24개 용어 노드 (카테고리별 색상 소형 원)
+- [x] 토픽 간 공유 태그 링크 (실선) + 용어→토픽 참조 링크 (점선)
+- [x] 인터랙티브: 드래그, 줌/팬, 클릭 시 토픽 페이지 이동, 호버 툴팁
+- [x] 필터 버튼: 토픽/용어 토글, 10개 카테고리 필터
+- [x] 하단 범례 (노드 유형, 링크 유형, 카테고리 색상)
+- [x] TypeScript 타입 체크 통과
+
+---
+
 ## 마일스톤
 
 | 마일스톤 | 목표 | 상태 |

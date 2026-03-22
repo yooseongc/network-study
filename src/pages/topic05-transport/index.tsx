@@ -1,3 +1,4 @@
+import { CardGrid } from '../../components/ui/CardGrid'
 import { Section } from '../../components/ui/Section'
 import { Prose } from '../../components/ui/Prose'
 import { InfoBox } from '../../components/ui/InfoBox'
@@ -136,12 +137,12 @@ export default function Topic05() {
                     클라이언트가 동시 접속할 수 있습니다.
                 </InfoBox>
 
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                <CardGrid cols={4}>
                     <StatCard title="전체 포트 수" value="65,536" desc="0 ~ 65535 (16비트)" color="blue" />
                     <StatCard title="Well-Known" value="1,024" desc="0 ~ 1023" color="purple" />
                     <StatCard title="Registered" value="48,128" desc="1024 ~ 49151" color="green" />
                     <StatCard title="Dynamic" value="16,384" desc="49152 ~ 65535" color="amber" />
-                </div>
+                </CardGrid>
 
                 <InfoBox color="gray" title="소켓 주소의 구조">
                     <code className="text-xs">
@@ -410,7 +411,7 @@ export default function Topic05() {
 
                 <CongestionControlViz />
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <CardGrid cols={2}>
                     <InfoBox color="blue" title="Slow Start (느린 시작)">
                         초기 cwnd=1 MSS에서 시작하여 ACK를 받을 때마다 cwnd를 1 MSS씩 증가시킵니다.
                         매 RTT마다 cwnd가 2배로 되므로 실제로는 지수적으로 증가합니다.
@@ -429,7 +430,7 @@ export default function Topic05() {
                         3개의 중복 ACK를 받으면 타임아웃까지 기다리지 않고 즉시 손실된 세그먼트를
                         재전송합니다 (Fast Retransmit). 이후 cwnd를 절반으로 줄이고 선형 증가를 재개합니다.
                     </InfoBox>
-                </div>
+                </CardGrid>
 
                 <Alert variant="tip" title="AIMD (Additive Increase, Multiplicative Decrease):">
                     TCP 혼잡 제어의 핵심 원리입니다. 정상 시에는 cwnd를 1씩 더하고(AI),
@@ -452,11 +453,11 @@ export default function Topic05() {
                     너무 짧으면 불필요한 재전송이 발생하고, 너무 길면 복구가 느려집니다.
                 </Prose>
 
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                <CardGrid cols={3}>
                     <StatCard title="RTT" value="Round-Trip Time" desc="패킷이 왕복하는 데 걸리는 시간" color="blue" />
                     <StatCard title="SRTT" value="Smoothed RTT" desc="지수 가중 이동 평균으로 계산" color="green" />
                     <StatCard title="RTO" value="Retransmission Timeout" desc="SRTT + 4 x RTTVAR" color="red" />
-                </div>
+                </CardGrid>
 
                 <InfoBox color="orange" title="RTO 계산 (Jacobson 알고리즘, RFC 6298)">
                     <code className="text-xs">
@@ -473,7 +474,7 @@ export default function Topic05() {
                     이는 네트워크가 심각하게 혼잡한 상황에서 추가 트래픽을 줄여 회복을 돕습니다.
                 </InfoBox>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <CardGrid cols={2}>
                     <InfoBox color="rose" title="Keepalive 타이머">
                         연결이 유휴 상태일 때 상대방이 살아있는지 확인합니다.
                         기본값은 7,200초(2시간) 후 첫 프로브를 보내고, 75초 간격으로 9회 재시도합니다.
@@ -484,7 +485,7 @@ export default function Topic05() {
                         응답 데이터와 ACK를 함께 보내는 piggybacking을 시도합니다.
                         네트워크 효율은 좋지만 Nagle 알고리즘과 함께 쓰면 지연이 발생할 수 있습니다.
                     </InfoBox>
-                </div>
+                </CardGrid>
 
                 <Alert variant="warning" title="Nagle + Delayed ACK = 지연 문제:">
                     Nagle 알고리즘은 작은 패킷들을 모아 하나의 큰 패킷으로 보내려 하고,
@@ -504,12 +505,12 @@ export default function Topic05() {
                     없어 지연 시간이 최소화됩니다.
                 </Prose>
 
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                <CardGrid cols={4}>
                     <StatCard title="헤더 크기" value="8 bytes" desc="Source Port + Dest Port + Length + Checksum" color="cyan" />
                     <StatCard title="연결 설정" value="없음" desc="바로 데이터 전송 가능" color="green" />
                     <StatCard title="신뢰성" value="미보장" desc="애플리케이션이 직접 처리" color="amber" />
                     <StatCard title="순서 보장" value="없음" desc="도착 순서 보장하지 않음" color="red" />
-                </div>
+                </CardGrid>
 
                 <InfoBox color="cyan" title="UDP 헤더 구조 (8바이트)">
                     <code className="text-xs">
@@ -560,11 +561,11 @@ export default function Topic05() {
                     rows={quicVsTcpRows}
                 />
 
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                <CardGrid cols={3}>
                     <StatCard title="연결 수립" value="0~1 RTT" desc="재접속 시 0-RTT 가능" color="green" />
                     <StatCard title="HOL Blocking" value="스트림 독립" desc="개별 스트림 손실만 영향" color="blue" />
                     <StatCard title="채택 현황" value="HTTP/3" desc="Chrome, Safari 등 지원" color="purple" />
-                </div>
+                </CardGrid>
 
                 <Alert variant="tip" title="Connection Migration:">
                     QUIC는 Connection ID로 연결을 식별하므로, 모바일에서 Wi-Fi에서 LTE로 전환해도
@@ -577,7 +578,7 @@ export default function Topic05() {
 
             {/* ── 5.11 요약 ───────────────────────────────────── */}
             <Section id="s0511" title="5.11  요약">
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <CardGrid cols={2}>
                     <InfoBox color="blue" title="포트와 소켓">
                         포트 번호(16비트)로 프로세스를 식별하고, 소켓은 (프로토콜, IP, 포트)의 조합입니다.
                         TCP 연결은 두 소켓 쌍으로 유일하게 식별됩니다.
@@ -603,7 +604,7 @@ export default function Topic05() {
                         UDP 위에 구현된 차세대 전송 프로토콜입니다. 0-RTT 연결, HOL Blocking 해결,
                         Connection Migration 등 TCP의 한계를 극복합니다. HTTP/3의 기반입니다.
                     </InfoBox>
-                </div>
+                </CardGrid>
 
                 <Alert variant="tip">
                     전송 계층은 OS 커널에서 구현되어 사용자가 직접 다루기 어렵지만,

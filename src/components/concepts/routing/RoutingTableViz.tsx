@@ -1,11 +1,8 @@
 import { useCallback, useState } from 'react'
 import { D3Container } from '../../viz/D3Container'
 import { themeColors } from '../../../lib/colors'
+import { useIsDark } from '../../../hooks/useIsDark'
 import * as d3 from 'd3'
-
-function useIsDark() {
-    return document.documentElement.classList.contains('dark')
-}
 
 interface RouteEntry {
     destination: string
@@ -214,11 +211,12 @@ export function RoutingTableViz() {
             else if (step === 4)
                 explanation = 'Longest prefix match 결과: 10.1.2.0/24 (prefix 24) 가 가장 구체적인 경로입니다!'
 
+            const explFontSize = explanation.length > 45 ? 9 : 11
             g.append('text')
                 .attr('x', width / 2)
                 .attr('y', bottomY)
                 .attr('text-anchor', 'middle')
-                .attr('font-size', 11)
+                .attr('font-size', explFontSize)
                 .attr('fill', step === 4 ? c.greenText : c.textMuted)
                 .attr('font-weight', step === 4 ? 'bold' : 'normal')
                 .attr('font-family', "'Pretendard Variable', Pretendard, sans-serif")

@@ -1,3 +1,5 @@
+import { CardGrid } from '../../components/ui/CardGrid'
+import { InlineCode } from '../../components/ui/InlineCode'
 import { Section } from '../../components/ui/Section'
 import { Prose } from '../../components/ui/Prose'
 import { InfoBox } from '../../components/ui/InfoBox'
@@ -121,7 +123,7 @@ export default function Topic03() {
             <Section id="s031" title="3.1  Ethernet의 기본 구조">
                 <Prose>
                     Ethernet은 IEEE 802.3 표준으로 정의된 LAN 기술로, 현대 유선 네트워크의 사실상 표준입니다.
-                    데이터는 <code className="bg-gray-100 dark:bg-gray-800 text-blue-600 dark:text-blue-300 px-1.5 py-0.5 rounded text-xs font-mono">프레임(Frame)</code>이라는
+                    데이터는 <InlineCode>프레임(Frame)</InlineCode>이라는
                     단위로 캡슐화되어 전송됩니다.
                 </Prose>
 
@@ -132,11 +134,11 @@ export default function Topic03() {
                     rows={ethernetFrameRows}
                 />
 
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                <CardGrid cols={3}>
                     <StatCard title="최소 프레임 크기" value="64 bytes" color="blue" desc="Preamble/SFD 제외" />
                     <StatCard title="최대 프레임 크기 (MTU)" value="1518 bytes" color="green" desc="표준 Ethernet" />
                     <StatCard title="Jumbo Frame" value="9000+ bytes" color="purple" desc="데이터센터 환경에서 사용" />
-                </div>
+                </CardGrid>
 
                 <Alert variant="info" title="EtherType vs Length">
                     필드 값이 1536(0x0600) 이상이면 EtherType(프로토콜 식별), 이하이면 Length(페이로드 크기)로 해석합니다.
@@ -169,7 +171,7 @@ export default function Topic03() {
             <Section id="s033" title="3.3  MAC 주소의 의미">
                 <Prose>
                     MAC(Media Access Control) 주소는 NIC에 할당된 48비트(6바이트) 고유 식별자입니다.
-                    16진수 표기로 <code className="bg-gray-100 dark:bg-gray-800 text-blue-600 dark:text-blue-300 px-1.5 py-0.5 rounded text-xs font-mono">08:00:27:A1:B2:C3</code> 형태로 나타냅니다.
+                    16진수 표기로 <InlineCode>08:00:27:A1:B2:C3</InlineCode> 형태로 나타냅니다.
                 </Prose>
 
                 <InfoBox color="blue" title="MAC 주소 구조 (48 bits)">
@@ -199,7 +201,7 @@ export default function Topic03() {
                 <Alert variant="tip" title="로컬 관리 MAC 주소">
                     첫 번째 옥텟의 두 번째 비트(U/L 비트)가 1이면 로컬 관리 주소입니다.
                     Docker, VM 하이퍼바이저 등은 이 비트를 설정하여 MAC 충돌을 방지합니다.
-                    예: <code className="bg-gray-100 dark:bg-gray-800 text-blue-600 dark:text-blue-300 px-1.5 py-0.5 rounded text-xs font-mono">02:xx:xx:xx:xx:xx</code>
+                    예: <InlineCode>02:xx:xx:xx:xx:xx</InlineCode>
                 </Alert>
 
                 <CodeBlock code={macAddressCode} language="bash" filename="MAC 주소 확인 및 변경" />
@@ -218,7 +220,7 @@ export default function Topic03() {
                     rows={switchActionRows}
                 />
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <CardGrid cols={2}>
                     <InfoBox color="green" title="Learning (학습)">
                         프레임이 포트 1에서 들어오면, 스위치는 Source MAC 주소와 포트 1의 매핑을
                         MAC 테이블에 기록합니다. 같은 MAC이 다른 포트에서 들어오면 테이블을 갱신합니다.
@@ -227,7 +229,7 @@ export default function Topic03() {
                         Destination MAC이 테이블에 없거나 브로드캐스트(FF:FF:FF:FF:FF:FF)인 경우,
                         수신 포트를 제외한 모든 포트로 프레임을 복제 전송합니다.
                     </InfoBox>
-                </div>
+                </CardGrid>
 
                 <Alert variant="warning" title="MAC Flooding 공격">
                     공격자가 대량의 가짜 MAC 주소를 전송하면 MAC 테이블이 가득 차서 스위치가
@@ -239,7 +241,7 @@ export default function Topic03() {
             <Section id="s035" title="3.5  MAC 주소 테이블">
                 <Prose>
                     MAC 주소 테이블(CAM Table)은 스위치가 학습한 MAC 주소와 포트의 매핑 정보를 저장하는 테이블입니다.
-                    리눅스에서는 <code className="bg-gray-100 dark:bg-gray-800 text-blue-600 dark:text-blue-300 px-1.5 py-0.5 rounded text-xs font-mono">bridge fdb show</code> 명령으로
+                    리눅스에서는 <InlineCode>bridge fdb show</InlineCode> 명령으로
                     소프트웨어 브릿지의 FDB(Forwarding Database)를 확인할 수 있습니다.
                 </Prose>
 
@@ -307,7 +309,7 @@ export default function Topic03() {
                     rows={castTypeRows}
                 />
 
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                <CardGrid cols={3}>
                     <InfoBox color="blue" title="유니캐스트">
                         가장 일반적인 통신. 스위치는 MAC 테이블을 참조하여
                         목적지 포트로만 프레임을 전달합니다.
@@ -320,7 +322,7 @@ export default function Topic03() {
                         IGMP Snooping을 사용하면 스위치가 멀티캐스트 그룹에
                         가입한 포트로만 전달하여 효율성을 높입니다.
                     </InfoBox>
-                </div>
+                </CardGrid>
 
                 <Alert variant="tip" title="브로드캐스트 도메인">
                     브로드캐스트가 도달하는 범위를 브로드캐스트 도메인이라 합니다.
@@ -346,10 +348,10 @@ export default function Topic03() {
                     rows={vlanTagRows}
                 />
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <CardGrid cols={2}>
                     <StatCard title="최대 VLAN 수" value="4,094" color="purple" desc="VID 1~4094 사용 가능 (0, 4095 예약)" />
                     <StatCard title="Native VLAN" value="VLAN 1 (기본)" color="gray" desc="Trunk에서 태그 없이 전송되는 VLAN" />
-                </div>
+                </CardGrid>
 
                 <InfoTable
                     headers={['포트 유형', '소속 VLAN', '태그 처리', '연결 대상']}
@@ -383,7 +385,7 @@ export default function Topic03() {
                     rows={bondingModeRows}
                 />
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <CardGrid cols={2}>
                     <InfoBox color="blue" title="Bonding의 장점">
                         <ul className="list-disc ml-4 space-y-1">
                             <li>고가용성: 하나의 NIC가 고장 나도 다른 NIC로 트래픽 전환</li>
@@ -398,7 +400,7 @@ export default function Topic03() {
                             <li>단일 TCP 연결은 하나의 링크만 사용합니다</li>
                         </ul>
                     </InfoBox>
-                </div>
+                </CardGrid>
 
                 <CodeBlock code={bondingCode} language="bash" filename="Linux NIC Bonding 설정" />
             </Section>
@@ -407,8 +409,8 @@ export default function Topic03() {
             <Section id="s0310" title="3.10  요약">
                 <Prose>
                     물리 계층과 링크 계층의 상태를 파악하는 것은 네트워크 문제 해결의 첫 단계입니다.
-                    Speed, Duplex, Link State는 <code className="bg-gray-100 dark:bg-gray-800 text-blue-600 dark:text-blue-300 px-1.5 py-0.5 rounded text-xs font-mono">ethtool</code>이나
-                    <code className="bg-gray-100 dark:bg-gray-800 text-blue-600 dark:text-blue-300 px-1.5 py-0.5 rounded text-xs font-mono"> ip link</code> 명령으로 확인할 수 있습니다.
+                    Speed, Duplex, Link State는 <InlineCode>ethtool</InlineCode>이나
+                    <InlineCode> ip link</InlineCode> 명령으로 확인할 수 있습니다.
                 </Prose>
 
                 <InfoTable

@@ -1,3 +1,4 @@
+import { CardGrid } from '../../components/ui/CardGrid'
 import { Section } from '../../components/ui/Section'
 import { Prose } from '../../components/ui/Prose'
 import { InfoBox } from '../../components/ui/InfoBox'
@@ -132,7 +133,7 @@ export default function Topic07() {
                     Proxy/SWG → Firewall → Router → ISP → Internet
                 </InfoBox>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <CardGrid cols={2}>
                     <StatCard
                         title="Proxy Server"
                         value="캐싱 + 필터링"
@@ -157,7 +158,7 @@ export default function Topic07() {
                         color="purple"
                         desc="내부 도메인 해석 + 외부 DNS 포워딩, 보안 필터링"
                     />
-                </div>
+                </CardGrid>
 
                 <Alert variant="info" title="투명 프록시 vs 명시적 프록시">
                     명시적 프록시는 클라이언트가 프록시 설정을 직접 지정합니다 (PAC 파일 또는 수동 설정).
@@ -225,7 +226,7 @@ export default function Topic07() {
                     이를 "Dual-Homed Firewall" 또는 "Screened Subnet" 구조라 합니다.
                 </InfoBox>
 
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                <CardGrid cols={3}>
                     <StatCard
                         title="외부 방화벽"
                         value="1st Gate"
@@ -244,7 +245,7 @@ export default function Topic07() {
                         color="green"
                         desc="DMZ → 내부망 트래픽 엄격 제어 (최소 권한)"
                     />
-                </div>
+                </CardGrid>
 
                 <Alert variant="tip" title="Zero Trust 시대의 DMZ">
                     클라우드와 원격 근무가 보편화되면서 전통적인 DMZ 경계가 흐려지고 있습니다.
@@ -262,7 +263,7 @@ export default function Topic07() {
 
                 <EastWestNorthSouth />
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <CardGrid cols={2}>
                     <InfoBox color="blue" title="North-South (남북) 트래픽">
                         <ul className="list-disc list-inside space-y-1 text-sm">
                             <li>클라이언트(외부) ↔ 서버(내부) 간 트래픽</li>
@@ -279,7 +280,7 @@ export default function Topic07() {
                             <li>전체 트래픽의 70-80%를 차지 (현대 DC)</li>
                         </ul>
                     </InfoBox>
-                </div>
+                </CardGrid>
 
                 <Alert variant="warning" title="East-West 트래픽의 보안 맹점">
                     전통적 방화벽은 North-South 경계에 배치되므로, East-West 트래픽은 보안 검사 없이
@@ -327,7 +328,7 @@ export default function Topic07() {
                     Forward Proxy는 클라이언트를 대리하고, Reverse Proxy는 서버를 대리합니다.
                 </Prose>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <CardGrid cols={2}>
                     <InfoBox color="blue" title="Forward Proxy">
                         <ul className="list-disc list-inside space-y-1 text-sm">
                             <li>클라이언트 → <strong>Proxy</strong> → 서버</li>
@@ -344,7 +345,7 @@ export default function Topic07() {
                             <li>백엔드 서버 은닉 (클라이언트에 실제 IP 비노출)</li>
                         </ul>
                     </InfoBox>
-                </div>
+                </CardGrid>
 
                 <CodeBlock code={nginxReverseProxyCode} language="nginx" filename="nginx reverse proxy" />
 
@@ -364,7 +365,7 @@ export default function Topic07() {
                     각 방식은 장단점이 명확하므로 장비의 역할에 맞게 선택해야 합니다.
                 </Prose>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <CardGrid cols={2}>
                     <InfoBox color="red" title="Inline (인라인) 모드">
                         <ul className="list-disc list-inside space-y-1 text-sm">
                             <li>트래픽 경로에 직접 삽입 (직렬 연결)</li>
@@ -381,7 +382,7 @@ export default function Topic07() {
                             <li>포렌식, 감사, 모니터링 용도</li>
                         </ul>
                     </InfoBox>
-                </div>
+                </CardGrid>
 
                 <InfoTable
                     headers={['장비', '주요 기능', '삽입 방식', '배치 위치']}
@@ -407,7 +408,7 @@ export default function Topic07() {
                     rows={haCompareRows}
                 />
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <CardGrid cols={2}>
                     <InfoBox color="blue" title="Active-Standby 구조">
                         <ul className="list-disc list-inside space-y-1 text-sm">
                             <li>Master가 VIP를 보유하고 서비스 처리</li>
@@ -424,7 +425,7 @@ export default function Topic07() {
                             <li>처리량이 노드 수에 비례하여 증가</li>
                         </ul>
                     </InfoBox>
-                </div>
+                </CardGrid>
 
                 <CodeBlock code={haproxyConfigCode} language="text" filename="HAProxy 로드 밸런서 설정" />
 

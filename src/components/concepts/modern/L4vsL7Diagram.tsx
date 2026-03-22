@@ -1,11 +1,8 @@
 import { useCallback } from 'react'
 import { D3Container } from '../../viz/D3Container'
-import { themeColors } from '../../../lib/colors'
+import { themeColors, createColorMap } from '../../../lib/colors'
+import { useIsDark } from '../../../hooks/useIsDark'
 import * as d3 from 'd3'
-
-function useIsDark() {
-    return document.documentElement.classList.contains('dark')
-}
 
 export function L4vsL7Diagram() {
     const isDark = useIsDark()
@@ -46,14 +43,7 @@ export function L4vsL7Diagram() {
                 { x: mid + mid / 2, label: 'L7 Load Balancer', sub: '(Application Layer)', fillKey: 'green' as const },
             ]
 
-            const colorMap = {
-                blue: { fill: c.blueFill, stroke: c.blueStroke, text: c.blueText },
-                green: { fill: c.greenFill, stroke: c.greenStroke, text: c.greenText },
-                amber: { fill: c.amberFill, stroke: c.amberStroke, text: c.amberText },
-                purple: { fill: c.purpleFill, stroke: c.purpleStroke, text: c.purpleText },
-                cyan: { fill: c.cyanFill, stroke: c.cyanStroke, text: c.cyanText },
-                red: { fill: c.redFill, stroke: c.redStroke, text: c.redText },
-            }
+            const colorMap = createColorMap(c, ['blue', 'green', 'amber', 'purple', 'cyan', 'red'])
 
             cols.forEach((col) => {
                 const cm = colorMap[col.fillKey]
@@ -96,11 +86,12 @@ export function L4vsL7Diagram() {
                     .attr('fill', cm.fill)
                     .attr('stroke', cm.stroke)
                     .attr('stroke-width', 1.5)
+                const labelFontSize = label.length > 6 ? Math.min(11, w / (label.length * 0.7)) : 11
                 g.append('text')
                     .attr('x', x)
                     .attr('y', sublabel ? y + h / 2 - 4 : y + h / 2 + 4)
                     .attr('text-anchor', 'middle')
-                    .attr('font-size', 11)
+                    .attr('font-size', labelFontSize)
                     .attr('font-weight', '600')
                     .attr('fill', cm.text)
                     .attr('font-family', font)
@@ -110,7 +101,7 @@ export function L4vsL7Diagram() {
                         .attr('x', x)
                         .attr('y', y + h / 2 + 10)
                         .attr('text-anchor', 'middle')
-                        .attr('font-size', 9)
+                        .attr('font-size', Math.min(9, w / (sublabel.length * 0.55)))
                         .attr('fill', c.textMuted)
                         .attr('font-family', mono)
                         .text(sublabel)
@@ -184,7 +175,7 @@ export function L4vsL7Diagram() {
                 g.append('text')
                     .attr('x', l4x - colW / 2 + 16)
                     .attr('y', noteY + i * 16)
-                    .attr('font-size', 9)
+                    .attr('font-size', Math.min(9, colW / 28))
                     .attr('fill', c.textMuted)
                     .attr('font-family', font)
                     .text(`• ${n}`)
@@ -221,7 +212,7 @@ export function L4vsL7Diagram() {
                 g.append('text')
                     .attr('x', l7x - colW / 2 + 16)
                     .attr('y', noteY + i * 16)
-                    .attr('font-size', 9)
+                    .attr('font-size', Math.min(9, colW / 28))
                     .attr('fill', c.textMuted)
                     .attr('font-family', font)
                     .text(`• ${n}`)

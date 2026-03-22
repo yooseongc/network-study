@@ -1,7 +1,7 @@
 import { useCallback } from 'react'
 import * as d3 from 'd3'
 import { D3Container } from '../../viz/D3Container'
-import { useTheme } from '../../../hooks/useTheme'
+import { useIsDark } from '../../../hooks/useIsDark'
 import { themeColors } from '../../../lib/colors'
 
 const FONT = "'Pretendard Variable', Pretendard, sans-serif"
@@ -15,8 +15,7 @@ interface TierNode {
 }
 
 export function NetworkTiersDiagram() {
-    const { theme } = useTheme()
-    const isDark = theme === 'dark'
+    const isDark = useIsDark()
 
     const renderFn = useCallback(
         (svg: d3.Selection<SVGSVGElement, unknown, null, undefined>, width: number, _height: number) => {

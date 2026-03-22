@@ -1,8 +1,8 @@
 import { useCallback } from 'react'
 import * as d3 from 'd3'
 import { D3Container } from '../../viz/D3Container'
-import { themeColors } from '../../../lib/colors'
-import { useTheme } from '../../../hooks/useTheme'
+import { themeColors, createColorMap } from '../../../lib/colors'
+import { useIsDark } from '../../../hooks/useIsDark'
 
 const osiLayers = [
     { name: '7. 응용 계층', en: 'Application', protocols: 'HTTP, FTP, DNS, SMTP', color: 'purple' as const },
@@ -24,18 +24,12 @@ const tcpipLayers = [
 type ColorKey = 'purple' | 'blue' | 'green' | 'amber'
 
 function getColorPair(c: ReturnType<typeof themeColors>, key: ColorKey) {
-    const map: Record<ColorKey, { fill: string; stroke: string; text: string }> = {
-        purple: { fill: c.purpleFill, stroke: c.purpleStroke, text: c.purpleText },
-        blue: { fill: c.blueFill, stroke: c.blueStroke, text: c.blueText },
-        green: { fill: c.greenFill, stroke: c.greenStroke, text: c.greenText },
-        amber: { fill: c.amberFill, stroke: c.amberStroke, text: c.amberText },
-    }
+    const map = createColorMap(c, ['purple', 'blue', 'green', 'amber'])
     return map[key]
 }
 
 export function OsiTcpIpCompare() {
-    const { theme } = useTheme()
-    const isDark = theme === 'dark'
+    const isDark = useIsDark()
 
     const render = useCallback(
         (svg: d3.Selection<SVGSVGElement, unknown, null, undefined>, width: number, height: number) => {

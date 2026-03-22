@@ -1,3 +1,4 @@
+import { CardGrid } from '../../components/ui/CardGrid'
 import { Section } from '../../components/ui/Section'
 import { Prose } from '../../components/ui/Prose'
 import { InfoBox } from '../../components/ui/InfoBox'
@@ -114,7 +115,7 @@ export default function Topic02() {
                     Tier 1(국제 백본), Tier 2(국가/지역 ISP), Tier 3(가입자 접속)으로 나뉩니다.
                 </Prose>
 
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                <CardGrid cols={3}>
                     <StatCard
                         title="Tier 1 ISP"
                         value="국제 백본"
@@ -133,7 +134,7 @@ export default function Topic02() {
                         color="green"
                         desc="가정/소규모 기업에 직접 인터넷 회선을 제공하는 최종 사업자"
                     />
-                </div>
+                </CardGrid>
 
                 <InfoBox color="blue" title="기업의 인터넷 회선">
                     기업은 일반 가정과 달리 전용회선(Dedicated Line)이나 MPLS VPN을 사용합니다.
@@ -151,7 +152,7 @@ export default function Topic02() {
 
                 <CodeBlock code={privateIpRangesCode} language="bash" filename="RFC 1918 사설 IP 대역" />
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <CardGrid cols={2}>
                     <InfoBox color="green" title="공인 IP (Public IP)">
                         인터넷에서 유일한 주소. ISP가 할당하며, 외부에서 직접 접근 가능합니다.
                         서버, 방화벽의 외부 인터페이스에 사용됩니다.
@@ -160,7 +161,7 @@ export default function Topic02() {
                         내부 네트워크에서만 유효한 주소. 인터넷으로 나갈 때 NAT를 통해 공인 IP로 변환됩니다.
                         같은 사설 IP 대역이 서로 다른 네트워크에서 중복 사용 가능합니다.
                     </InfoBox>
-                </div>
+                </CardGrid>
 
                 <CodeBlock code={homeNetworkConfigCode} language="bash" filename="가정용 공유기 NAT 구성" />
 
@@ -182,7 +183,7 @@ export default function Topic02() {
                     rows={deviceCompareRows}
                 />
 
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                <CardGrid cols={3}>
                     <InfoBox color="red" title="라우터 (Router)">
                         서로 다른 네트워크(서브넷) 사이에서 패킷을 전달합니다. IP 주소 기반으로
                         최적 경로를 결정하며, WAN 구간(ISP 연결)에서 핵심 역할을 합니다.
@@ -195,7 +196,7 @@ export default function Topic02() {
                         MAC 주소 테이블을 기반으로 같은 네트워크 내에서 프레임을 전달합니다.
                         사용자 PC, 서버 등 종단 장비를 직접 연결하는 액세스 계층 장비입니다.
                     </InfoBox>
-                </div>
+                </CardGrid>
 
                 <Alert variant="tip" title="L3 스위치 vs 라우터:">
                     요즘 기업 내부에서는 L3 스위치가 라우터를 대체하는 경우가 많습니다. 다만 ISP와의 연결이나
@@ -232,7 +233,7 @@ export default function Topic02() {
 
                 <CodeBlock code={enterpriseSubnetCode} language="bash" filename="기업 서브넷 설계 예시" />
 
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                <CardGrid cols={3}>
                     <InfoBox color="blue" title="서버망 (Server Network)">
                         웹 서버, DB 서버, 애플리케이션 서버 등이 위치합니다.
                         접근 제어가 엄격하며, 서버 간 통신(East-West 트래픽)이 많습니다.
@@ -248,7 +249,7 @@ export default function Topic02() {
                         일반 사용자 접근이 차단되며, 관리자만 접근 가능합니다.
                         대역: 10.30.x.x/16
                     </InfoBox>
-                </div>
+                </CardGrid>
 
                 <Alert variant="warning" title="주의:">
                     망 분리는 물리적 분리와 논리적 분리(VLAN)로 구현할 수 있습니다.
@@ -265,7 +266,7 @@ export default function Topic02() {
                     안 되는 서버들을 이 영역에 배치합니다.
                 </Prose>
 
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                <CardGrid cols={3}>
                     <StatCard
                         title="외부 구간"
                         value="Internet"
@@ -284,7 +285,7 @@ export default function Topic02() {
                         color="green"
                         desc="DB, 사용자 PC 등 보호 대상이 있는 안전 구역"
                     />
-                </div>
+                </CardGrid>
 
                 <InfoBox color="cyan" title="DMZ에 배치하는 서버">
                     <ul className="list-disc list-inside space-y-1 mt-1">
@@ -348,7 +349,7 @@ export default function Topic02() {
                     rows={redundancyRows}
                 />
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <CardGrid cols={2}>
                     <InfoBox color="blue" title="Active-Standby">
                         평상시 Master 장비가 모든 트래픽을 처리합니다. Master 장애 시 Standby 장비가
                         자동으로 역할을 이어받습니다(Failover). 절체 시간이 발생하지만 구성이 단순합니다.
@@ -359,7 +360,7 @@ export default function Topic02() {
                         대역폭 활용이 효율적이지만 설정과 트러블슈팅이 복잡합니다.
                         대표 프로토콜: ECMP, MC-LAG.
                     </InfoBox>
-                </div>
+                </CardGrid>
 
                 <CodeBlock code={redundancyConfigCode} language="bash" filename="VRRP 설정 예시" />
 
@@ -379,12 +380,12 @@ export default function Topic02() {
                     이중화까지 네트워크 설계의 핵심 원칙을 다루었습니다.
                 </Prose>
 
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                <CardGrid cols={4}>
                     <StatCard title="장비 역할" value="3종" color="blue" desc="라우터, L3 SW, L2 SW" />
                     <StatCard title="계층 구조" value="3-Tier" color="amber" desc="Core / Dist / Access" />
                     <StatCard title="망 분리" value="3+1" color="green" desc="서버/사용자/관리 + DMZ" />
                     <StatCard title="이중화" value="HA" color="red" desc="A-S / A-A 구성" />
-                </div>
+                </CardGrid>
 
                 <InfoBox color="gray" title="다음 토픽 미리보기">
                     Topic 03에서는 물리 계층과 링크 계층을 다룹니다. Ethernet 프레임 구조, MAC 주소,

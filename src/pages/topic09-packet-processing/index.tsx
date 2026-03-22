@@ -1,3 +1,5 @@
+import { CardGrid } from '../../components/ui/CardGrid'
+import { InlineCode } from '../../components/ui/InlineCode'
 import { Section } from '../../components/ui/Section'
 import { Prose } from '../../components/ui/Prose'
 import { InfoTable } from '../../components/ui/InfoTable'
@@ -109,7 +111,7 @@ export default function Topic09() {
             <Section id="s091" title="9.1  Netfilter 구조">
                 <Prose>
                     Netfilter는 리눅스 커널의 네트워크 스택 안에 삽입된 패킷 처리 프레임워크입니다.
-                    커널이 패킷을 처리하는 경로 위에 5개의 <code className="bg-gray-100 dark:bg-gray-800 text-blue-600 dark:text-blue-300 px-1.5 py-0.5 rounded text-xs font-mono">hook point</code>를
+                    커널이 패킷을 처리하는 경로 위에 5개의 <InlineCode>hook point</InlineCode>를
                     정의하고, 각 훅에 등록된 콜백 함수(모듈)가 순서대로 패킷을 검사하거나 변조합니다.
                     iptables, nftables, conntrack 등은 모두 이 Netfilter 훅 위에서 동작하는 모듈입니다.
                 </Prose>
@@ -151,7 +153,7 @@ export default function Topic09() {
                 </Prose>
 
                 <InfoBox color="purple" title="iptables 규칙 구조">
-                    iptables 규칙은 <code className="bg-gray-100 dark:bg-gray-800 text-blue-600 dark:text-blue-300 px-1.5 py-0.5 rounded text-xs font-mono">iptables -t [테이블] -A [체인] [조건] -j [타겟]</code> 형식입니다.
+                    iptables 규칙은 <InlineCode>iptables -t [테이블] -A [체인] [조건] -j [타겟]</InlineCode> 형식입니다.
                     조건에는 프로토콜(-p), 출발지(-s), 목적지(-d), 포트(--dport/--sport), 상태(-m state) 등을 지정하고,
                     타겟(ACCEPT, DROP, REJECT, LOG 등)으로 처리를 결정합니다.
                 </InfoBox>
@@ -194,7 +196,7 @@ export default function Topic09() {
                     rows={conntrackStateRows}
                 />
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <CardGrid cols={2}>
                     <StatCard
                         title="기본 conntrack 테이블 크기"
                         value="65,536"
@@ -207,7 +209,7 @@ export default function Topic09() {
                         color="amber"
                         desc="5일 (nf_conntrack_tcp_timeout_established)"
                     />
-                </div>
+                </CardGrid>
 
                 <InfoBox color="green" title="Stateful 방화벽의 장점">
                     stateful 방화벽은 conntrack을 활용하여 &quot;이미 허용된 연결의 응답 패킷&quot;을
@@ -238,7 +240,7 @@ export default function Topic09() {
                     rows={natCompareRows}
                 />
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <CardGrid cols={2}>
                     <InfoBox color="amber" title="SNAT (Source NAT)">
                         POSTROUTING 체인에서 출발지 IP를 변환합니다.
                         사설 네트워크의 호스트가 인터넷에 접근할 때 공인 IP로 변환하는 것이 대표적입니다.
@@ -249,7 +251,7 @@ export default function Topic09() {
                         DHCP나 PPPoE처럼 IP가 동적으로 변하는 환경에서 사용합니다.
                         SNAT보다 약간의 오버헤드가 있습니다.
                     </InfoBox>
-                </div>
+                </CardGrid>
 
                 <InfoBox color="rose" title="DNAT (Destination NAT)">
                     PREROUTING 체인에서 목적지 IP/포트를 변환합니다.
@@ -288,7 +290,7 @@ export default function Topic09() {
 
                 <Alert variant="warning" title="ip_forward 필수:">
                     포트 포워딩이 동작하려면 반드시 IP 포워딩이 활성화되어 있어야 합니다.
-                    <code className="bg-gray-100 dark:bg-gray-800 text-blue-600 dark:text-blue-300 px-1.5 py-0.5 rounded text-xs font-mono ml-1">sysctl -w net.ipv4.ip_forward=1</code>
+                    <InlineCode>sysctl -w net.ipv4.ip_forward=1</InlineCode>
                 </Alert>
             </Section>
 
@@ -296,13 +298,13 @@ export default function Topic09() {
             <Section id="s096" title="9.6  mark / fwmark과 policy routing">
                 <Prose>
                     mark(fwmark)는 커널 내부에서 패킷이나 연결에 부여하는 정수 태그입니다.
-                    패킷 자체에는 기록되지 않고 <code className="bg-gray-100 dark:bg-gray-800 text-blue-600 dark:text-blue-300 px-1.5 py-0.5 rounded text-xs font-mono">sk_buff.mark</code> 필드에
+                    패킷 자체에는 기록되지 않고 <InlineCode>sk_buff.mark</InlineCode> 필드에
                     저장됩니다. iptables/nftables의 mangle 테이블에서 설정하고,
-                    <code className="bg-gray-100 dark:bg-gray-800 text-blue-600 dark:text-blue-300 px-1.5 py-0.5 rounded text-xs font-mono ml-1">ip rule</code>과
+                    <InlineCode>ip rule</InlineCode>과
                     연동하여 policy-based routing을 구현합니다.
                 </Prose>
 
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                <CardGrid cols={3}>
                     <StatCard
                         title="mark 크기"
                         value="32-bit"
@@ -321,7 +323,7 @@ export default function Topic09() {
                         color="teal"
                         desc="fwmark 조건으로 테이블 선택"
                     />
-                </div>
+                </CardGrid>
 
                 <InfoBox color="violet" title="Policy-based Routing 활용 사례">
                     <strong>멀티 ISP 환경:</strong> HTTPS 트래픽은 ISP-A로, 일반 트래픽은 ISP-B로 분리<br />
@@ -347,7 +349,7 @@ export default function Topic09() {
                     통신한다고 생각하지만, 실제로는 중간의 프록시가 트래픽을 가로채 처리합니다.
                 </Prose>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <CardGrid cols={2}>
                     <InfoBox color="emerald" title="REDIRECT 방식">
                         nat 테이블의 PREROUTING에서 목적지를 로컬 프록시 포트로 변경합니다.
                         구현이 간단하지만, 원본 목적지 IP가 변경되어 프록시가 SO_ORIGINAL_DST
@@ -358,7 +360,7 @@ export default function Topic09() {
                         원본 목적지 IP/포트가 보존되며, IP_TRANSPARENT 소켓 옵션을 사용합니다.
                         TCP와 UDP 모두 지원하며, REDIRECT보다 유연합니다.
                     </InfoBox>
-                </div>
+                </CardGrid>
 
                 <CodeBlock code={tproxyCode} language="bash" filename="TPROXY / REDIRECT 설정" />
 
@@ -390,7 +392,7 @@ export default function Topic09() {
                     rows={inlineVsOopRows}
                 />
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <CardGrid cols={2}>
                     <InfoBox color="red" title="Inline 장비">
                         트래픽이 반드시 장비를 통과해야 하므로 실시간 차단이 가능합니다.
                         방화벽, IPS(침입 방지 시스템), WAF(웹 애플리케이션 방화벽) 등이 대표적입니다.
@@ -403,7 +405,7 @@ export default function Topic09() {
                         SPAN 포트나 네트워크 TAP 장비를 통해 트래픽을 복제하여 전달받습니다.
                         실시간 차단은 불가능하지만, TCP RST 전송으로 연결을 끊는 방식도 있습니다.
                     </InfoBox>
-                </div>
+                </CardGrid>
 
                 <Alert variant="info" title="하이브리드 구성:">
                     실무에서는 inline 장비와 out-of-path 장비를 조합하여 사용합니다.
@@ -415,7 +417,7 @@ export default function Topic09() {
 
             {/* ── 9.9 요약 ───────────────────────────────────────── */}
             <Section id="s099" title="9.9  요약">
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <CardGrid cols={2}>
                     <InfoBox color="blue" title="Netfilter 5개 훅">
                         PREROUTING → INPUT/FORWARD → OUTPUT → POSTROUTING.
                         각 훅에 raw, mangle, nat, filter 테이블의 규칙이 우선순위대로 적용됩니다.
@@ -440,7 +442,7 @@ export default function Topic09() {
                         TPROXY는 원본 목적지를 보존하며 프록시로 전달합니다.
                         REDIRECT는 목적지를 변경하므로 SO_ORIGINAL_DST가 필요합니다.
                     </InfoBox>
-                </div>
+                </CardGrid>
 
                 <Alert variant="tip" title="다음 단계:">
                     Topic 10에서는 RSS/RPS, qdisc, XDP, DPDK 등 고성능 패킷 처리와

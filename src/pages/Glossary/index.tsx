@@ -1,82 +1,150 @@
-import { useState } from 'react'
-import { glossary, type GlossaryTerm } from '../../data/glossary'
+import { useEffect, useState } from 'react'
+import { glossary, CATEGORY_LABEL, CATEGORY_COLOR, type GlossaryCategory } from '../../data/glossary'
 
-const CATEGORIES: { value: GlossaryTerm['category']; label: string }[] = [
-    { value: 'fundamentals', label: '기초' },
-    { value: 'link', label: '링크 계층' },
-    { value: 'network', label: '네트워크' },
-    { value: 'transport', label: '전송 계층' },
-    { value: 'application', label: '응용 계층' },
-    { value: 'security', label: '보안' },
-    { value: 'linux', label: '리눅스' },
-    { value: 'performance', label: '성능' },
-    { value: 'design', label: '설계' },
-    { value: 'general', label: '일반' },
-]
+const allCategories = Object.keys(CATEGORY_LABEL) as GlossaryCategory[]
 
 export default function Glossary() {
-    const [filter, setFilter] = useState<GlossaryTerm['category'] | 'all'>('all')
-    const filtered = filter === 'all' ? glossary : glossary.filter((g) => g.category === filter)
+    const [searchQuery, setSearchQuery] = useState('')
+    const [activeCategory, setActiveCategory] = useState<string | null>(null)
+
+    useEffect(() => {
+        const parts = window.location.hash.split('#')
+        const anchor = parts.length >= 3 ? parts[parts.length - 1] : null
+        if (anchor) {
+            requestAnimationFrame(() => {
+                const el = document.getElementById(anchor)
+                if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' })
+            })
+        }
+    }, [])
+
+    const sorted = [...glossary].sort((a, b) => a.term.localeCompare(b.term, 'ko'))
+
+    const filtered = sorted.filter((term) => {
+        const matchesCategory = activeCategory === null || term.category === activeCategory
+        if (!matchesCategory) return false
+        if (!searchQuery.trim()) return true
+        const q = searchQuery.toLowerCase()
+        return (
+            term.term.toLowerCase().includes(q) ||
+            (term.aliases ?? []).some((a) => a.toLowerCase().includes(q)) ||
+            term.definition.toLowerCase().includes(q)
+        )
+    })
 
     return (
-        <div className="max-w-4xl mx-auto px-6 py-10 space-y-8">
-            <header className="space-y-3">
-                <h1 className="text-3xl font-bold text-gray-900 dark:text-white">용어 사전</h1>
-                <p className="text-gray-500 dark:text-gray-400 text-sm">
-                    네트워크 학습에서 자주 등장하는 핵심 용어를 정리합니다.
-                </p>
-            </header>
+        <div className="max-w-4xl mx-auto px-6 py-10">
+            <div className="text-xs font-mono text-blue-600 dark:text-blue-400 mb-2">용어 사전</div>
+            <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">네트워크 용어 사전</h1>
+            <p className="text-gray-500 dark:text-gray-400 mb-6">
+                네트워크를 이해하는 데 필요한 핵심 용어 {glossary.length}개
+            </p>
 
-            <div className="flex flex-wrap gap-2">
+            {/* 검색 */}
+            <div className="relative mb-4">
+                <svg
+                    className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                >
+                    <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                    />
+                </svg>
+                <input
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    placeholder="용어명 또는 정의 검색..."
+                    className="w-full pl-9 pr-4 py-2 text-sm rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 placeholder-gray-400 outline-none focus:border-blue-400 dark:focus:border-blue-600 transition-colors"
+                />
+                {searchQuery && (
+                    <button
+                        onClick={() => setSearchQuery('')}
+                        className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
+                    >
+                        ✕
+                    </button>
+                )}
+            </div>
+
+            {/* 카테고리 필터 칩 */}
+            <div className="flex flex-wrap gap-2 mb-8">
                 <button
-                    onClick={() => setFilter('all')}
-                    className={`text-xs px-3 py-1.5 rounded-lg border transition-colors ${
-                        filter === 'all'
-                            ? 'bg-blue-50 dark:bg-blue-900/40 border-blue-300 dark:border-blue-700 text-blue-700 dark:text-blue-300'
-                            : 'border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800'
+                    onClick={() => setActiveCategory(null)}
+                    className={`text-xs px-3 py-1 rounded-full border transition-colors ${
+                        activeCategory === null
+                            ? 'bg-blue-600 text-white border-blue-600'
+                            : 'border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-400 hover:border-blue-400 dark:hover:border-blue-600'
                     }`}
                 >
                     전체 ({glossary.length})
                 </button>
-                {CATEGORIES.map((cat) => {
-                    const count = glossary.filter((g) => g.category === cat.value).length
+                {allCategories.map((cat) => {
+                    const count = glossary.filter((t) => t.category === cat).length
                     if (count === 0) return null
                     return (
                         <button
-                            key={cat.value}
-                            onClick={() => setFilter(cat.value)}
-                            className={`text-xs px-3 py-1.5 rounded-lg border transition-colors ${
-                                filter === cat.value
-                                    ? 'bg-blue-50 dark:bg-blue-900/40 border-blue-300 dark:border-blue-700 text-blue-700 dark:text-blue-300'
-                                    : 'border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800'
+                            key={cat}
+                            onClick={() => setActiveCategory(activeCategory === cat ? null : cat)}
+                            className={`text-xs px-3 py-1 rounded-full border transition-colors ${
+                                activeCategory === cat
+                                    ? `${CATEGORY_COLOR[cat]} border-current`
+                                    : 'border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-400 hover:border-blue-400 dark:hover:border-blue-600'
                             }`}
                         >
-                            {cat.label} ({count})
+                            {CATEGORY_LABEL[cat]} ({count})
                         </button>
                     )
                 })}
             </div>
 
-            <div className="space-y-4">
+            {/* 결과 수 */}
+            {(searchQuery || activeCategory) && (
+                <p className="text-xs text-gray-400 dark:text-gray-600 mb-4">{filtered.length}개 용어</p>
+            )}
+
+            <div className="space-y-3">
                 {filtered.map((term) => (
                     <div
                         key={term.id}
                         id={term.id}
-                        className="rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 p-4"
+                        className="rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 p-5 scroll-mt-6"
                     >
-                        <div className="flex items-start justify-between gap-2 mb-2">
-                            <span className="font-mono font-semibold text-sm text-gray-900 dark:text-gray-100">
-                                {term.term}
-                                {term.aliases.length > 0 && (
-                                    <span className="ml-2 font-normal text-gray-400 dark:text-gray-500 text-xs">
+                        <div className="flex items-start justify-between gap-3 mb-2">
+                            <div>
+                                <span className="font-mono font-bold text-gray-900 dark:text-gray-100">
+                                    {term.term}
+                                </span>
+                                {term.aliases && term.aliases.length > 0 && (
+                                    <span className="ml-2 text-sm text-gray-400 dark:text-gray-500">
                                         ({term.aliases.join(', ')})
                                     </span>
                                 )}
+                            </div>
+                            <span
+                                className={`shrink-0 text-xs px-2 py-0.5 rounded-full ${CATEGORY_COLOR[term.category]}`}
+                            >
+                                {CATEGORY_LABEL[term.category]}
                             </span>
                         </div>
-                        <p className="text-xs text-gray-600 dark:text-gray-400 leading-relaxed">{term.definition}</p>
+                        <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed">{term.definition}</p>
+                        {term.topicRef.length > 0 && (
+                            <a
+                                href={`#/topic/${term.topicRef[0]}`}
+                                className="inline-flex items-center gap-1 mt-3 text-xs text-blue-600 dark:text-blue-400 hover:underline"
+                            >
+                                → 관련 토픽 보기
+                            </a>
+                        )}
                     </div>
                 ))}
+                {filtered.length === 0 && (
+                    <div className="text-center py-12 text-sm text-gray-400">검색 결과가 없습니다</div>
+                )}
             </div>
         </div>
     )

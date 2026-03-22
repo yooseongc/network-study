@@ -1,11 +1,8 @@
 import { useCallback } from 'react'
 import { D3Container } from '../../viz/D3Container'
-import { themeColors } from '../../../lib/colors'
+import { themeColors, createColorMap } from '../../../lib/colors'
+import { useIsDark } from '../../../hooks/useIsDark'
 import * as d3 from 'd3'
-
-function useIsDark() {
-    return document.documentElement.classList.contains('dark')
-}
 
 interface LayerDef {
     label: string
@@ -53,15 +50,7 @@ export function LinuxNetworkStackDiagram() {
                 .attr('font-family', "'Pretendard Variable', Pretendard, sans-serif")
                 .text('Linux Network Stack (Packet Flow)')
 
-            const colorMap: Record<string, { fill: string; stroke: string; text: string }> = {
-                blue: { fill: c.blueFill, stroke: c.blueStroke, text: c.blueText },
-                green: { fill: c.greenFill, stroke: c.greenStroke, text: c.greenText },
-                amber: { fill: c.amberFill, stroke: c.amberStroke, text: c.amberText },
-                purple: { fill: c.purpleFill, stroke: c.purpleStroke, text: c.purpleText },
-                cyan: { fill: c.cyanFill, stroke: c.cyanStroke, text: c.cyanText },
-                red: { fill: c.redFill, stroke: c.redStroke, text: c.redText },
-                indigo: { fill: c.indigoFill, stroke: c.indigoStroke, text: c.indigoText },
-            }
+            const colorMap = createColorMap(c, ['blue', 'green', 'amber', 'purple', 'cyan', 'red', 'indigo'])
 
             layers.forEach((layer, i) => {
                 const y = offsetY + i * (boxH + gap)
@@ -86,10 +75,11 @@ export function LinuxNetworkStackDiagram() {
                     .attr('font-family', "'Pretendard Variable', Pretendard, sans-serif")
                     .text(layer.label)
 
+                const subFontSize = layer.sublabel.length > 45 ? 8 : 9.5
                 g.append('text')
                     .attr('x', offsetX + 14)
                     .attr('y', y + 31)
-                    .attr('font-size', 9.5)
+                    .attr('font-size', subFontSize)
                     .attr('fill', c.textMuted)
                     .attr('font-family', "'JetBrains Mono', monospace")
                     .text(layer.sublabel)

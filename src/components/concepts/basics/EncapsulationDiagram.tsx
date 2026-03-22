@@ -1,6 +1,6 @@
 import { AnimatedDiagram } from '../../viz/AnimatedDiagram'
 import { themeColors } from '../../../lib/colors'
-import { useTheme } from '../../../hooks/useTheme'
+import { useIsDark } from '../../../hooks/useIsDark'
 
 const steps = [
     {
@@ -37,8 +37,7 @@ interface LayerBlock {
 }
 
 function EncapVisual({ currentStep }: { currentStep: number; isDark: boolean }) {
-    const { theme } = useTheme()
-    const isDk = theme === 'dark'
+    const isDk = useIsDark()
     const c = themeColors(isDk)
 
     const allLayers: LayerBlock[] = [
@@ -142,8 +141,7 @@ function EncapVisual({ currentStep }: { currentStep: number; isDark: boolean }) 
 }
 
 export function EncapsulationDiagram() {
-    const { theme } = useTheme()
-    const isDark = theme === 'dark'
+    const isDark = useIsDark()
 
     return (
         <AnimatedDiagram

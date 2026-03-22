@@ -1,11 +1,8 @@
 import { useCallback } from 'react'
 import { D3Container } from '../../viz/D3Container'
 import { themeColors } from '../../../lib/colors'
+import { useIsDark } from '../../../hooks/useIsDark'
 import * as d3 from 'd3'
-
-function useIsDark() {
-    return document.documentElement.classList.contains('dark')
-}
 
 /**
  * Generate TCP congestion window data points simulating:

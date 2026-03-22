@@ -1,13 +1,10 @@
 import { useCallback, useState } from 'react'
 import { D3Container } from '../../viz/D3Container'
-import { themeColors } from '../../../lib/colors'
+import { themeColors, createColorMap } from '../../../lib/colors'
+import { useIsDark } from '../../../hooks/useIsDark'
 import * as d3 from 'd3'
 
 type Mode = 'rss' | 'rps'
-
-function useIsDark() {
-    return document.documentElement.classList.contains('dark')
-}
 
 export function RssRpsDiagram() {
     const isDark = useIsDark()
@@ -102,12 +99,8 @@ export function RssRpsDiagram() {
             // RX queues inside NIC
             const queueStartX = centerX - ((queueCount * (queueW + 8) - 8) / 2)
             const queueY = nicY + 55
-            const queueColors = [
-                { fill: c.greenFill, stroke: c.greenStroke, text: c.greenText },
-                { fill: c.amberFill, stroke: c.amberStroke, text: c.amberText },
-                { fill: c.purpleFill, stroke: c.purpleStroke, text: c.purpleText },
-                { fill: c.cyanFill, stroke: c.cyanStroke, text: c.cyanText },
-            ]
+            const cm = createColorMap(c, ['green', 'amber', 'purple', 'cyan'])
+            const queueColors = [cm.green, cm.amber, cm.purple, cm.cyan]
 
             for (let i = 0; i < queueCount; i++) {
                 const qx = queueStartX + i * (queueW + 8)

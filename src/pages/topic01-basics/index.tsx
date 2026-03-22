@@ -1,3 +1,4 @@
+import { CardGrid } from '../../components/ui/CardGrid'
 import { Section } from '../../components/ui/Section'
 import { Prose } from '../../components/ui/Prose'
 import { InfoTable } from '../../components/ui/InfoTable'
@@ -102,11 +103,11 @@ export default function Topic01() {
                     인터넷을 통해 전 세계의 정보에 접근할 수 있게 해줍니다.
                 </Prose>
 
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                <CardGrid cols={3}>
                     <StatCard title="연결된 장치 수 (2025)" value="~410억" color="blue" desc="IoT 포함 전 세계 네트워크 연결 장치" />
                     <StatCard title="글로벌 인터넷 트래픽" value="~4.8 ZB/년" color="purple" desc="매년 기하급수적으로 증가하는 데이터" />
                     <StatCard title="해저 케이블 수" value="~550+" color="cyan" desc="대륙 간 데이터를 전달하는 물리 인프라" />
-                </div>
+                </CardGrid>
 
                 <Prose>
                     네트워크의 핵심 구성 요소는 다음과 같습니다: 통신하려는 장치(호스트), 데이터를 전달하는
@@ -216,7 +217,7 @@ export default function Topic01() {
                     프로토콜이 정의하는 요소는 크게 세 가지입니다:
                 </Prose>
 
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                <CardGrid cols={3}>
                     <InfoBox color="blue" title="구문 (Syntax)">
                         데이터의 형식과 구조를 정의합니다.
                         예: IP 패킷의 헤더 크기와 각 필드의 위치
@@ -229,7 +230,7 @@ export default function Topic01() {
                         데이터를 보내는 순서와 속도를 정의합니다.
                         예: TCP 3-way handshake의 순서
                     </InfoBox>
-                </div>
+                </CardGrid>
 
                 <Alert variant="info" title="대표적 프로토콜:">
                     HTTP(웹), TCP(신뢰성 있는 전송), IP(경로 지정), DNS(이름 해석),
@@ -258,7 +259,7 @@ export default function Topic01() {
                     계층형 설계(Layered Architecture)의 핵심 이점은 다음과 같습니다:
                 </Prose>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <CardGrid cols={2}>
                     <InfoBox color="blue" title="모듈화 (Modularity)">
                         각 계층은 독립적인 기능을 담당합니다.
                         한 계층의 내부 구현을 변경해도 다른 계층에 영향을 주지 않습니다.
@@ -277,7 +278,7 @@ export default function Topic01() {
                         같은 계층의 프로토콜을 여러 상위 프로토콜이 재사용합니다.
                         IP 위에서 TCP도, UDP도, ICMP도 동작할 수 있습니다.
                     </InfoBox>
-                </div>
+                </CardGrid>
 
                 <Alert variant="tip" title="핵심:">
                     계층형 설계 덕분에 네트워크 기술은 빠르게 발전할 수 있었습니다.
@@ -384,11 +385,11 @@ export default function Topic01() {
                     MTU를 초과하는 패킷은 분할(Fragmentation)되거나 폐기됩니다.
                 </Prose>
 
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                <CardGrid cols={3}>
                     <StatCard title="이더넷 기본 MTU" value="1,500 B" color="blue" desc="가장 일반적인 MTU 값" />
                     <StatCard title="점보 프레임" value="9,000 B" color="green" desc="데이터센터 내부에서 사용" />
                     <StatCard title="최소 MTU (IPv6)" value="1,280 B" color="amber" desc="IPv6이 보장하는 최소 크기" />
-                </div>
+                </CardGrid>
 
                 <InfoBox color="orange" title="MTU와 MSS의 관계">
                     MSS(Maximum Segment Size)는 TCP 세그먼트의 최대 데이터 크기입니다.
@@ -400,7 +401,7 @@ export default function Topic01() {
                     MTU를 초과하는 패킷이 발생하면 두 가지 처리 방법이 있습니다:
                 </Prose>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <CardGrid cols={2}>
                     <InfoBox color="red" title="IP 단편화 (Fragmentation)">
                         라우터가 큰 패킷을 MTU에 맞게 여러 조각으로 분할합니다.
                         수신 측에서 재조립하지만, 하나라도 유실되면 전체를 재전송해야 하므로
@@ -411,7 +412,7 @@ export default function Topic01() {
                         자동으로 탐지합니다. 단편화 대신 송신 측에서 패킷 크기를 줄입니다.
                         현대 네트워크에서 권장되는 방식입니다.
                     </InfoBox>
-                </div>
+                </CardGrid>
 
                 <CodeBlock code={mtuCheckCode} language="bash" filename="MTU 확인 및 테스트" />
 

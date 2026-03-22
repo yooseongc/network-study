@@ -1,3 +1,5 @@
+import { CardGrid } from '../../components/ui/CardGrid'
+import { InlineCode } from '../../components/ui/InlineCode'
 import { Section } from '../../components/ui/Section'
 import { Prose } from '../../components/ui/Prose'
 import { InfoBox } from '../../components/ui/InfoBox'
@@ -103,20 +105,20 @@ export default function Topic04() {
                     IPv4 주소는 32비트 숫자로, 네트워크 상의 장치를 고유하게 식별합니다.
                     사람이 읽기 쉽도록 8비트(1바이트)씩 4개의 옥텟으로 나누고, 각 옥텟을
                     10진수로 변환하여 점(dot)으로 구분합니다. 이를{' '}
-                    <code className="bg-gray-100 dark:bg-gray-800 text-blue-600 dark:text-blue-300 px-1.5 py-0.5 rounded text-xs font-mono">
+                    <InlineCode>
                         Dotted Decimal Notation
-                    </code>
+                    </InlineCode>
                     이라 합니다.
                 </Prose>
 
                 <SubnetDiagram />
 
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                <CardGrid cols={4}>
                     <StatCard title="주소 길이" value="32 bits" color="blue" desc="4바이트 = 4 옥텟" />
                     <StatCard title="최대 주소 수" value="2^32" color="purple" desc="약 43억 개" />
                     <StatCard title="옥텟 범위" value="0 ~ 255" color="green" desc="각 옥텟 8비트" />
                     <StatCard title="표기법" value="a.b.c.d" color="amber" desc="Dotted Decimal" />
-                </div>
+                </CardGrid>
 
                 <InfoBox color="blue" title="IPv4 주소 클래스 (전통적 분류)">
                     인터넷 초기에는 IP 주소를 A~E 다섯 클래스로 분류했습니다.
@@ -185,7 +187,7 @@ export default function Topic04() {
                     동시 전송할 때 사용됩니다.
                 </Prose>
 
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                <CardGrid cols={3}>
                     <InfoBox color="blue" title="네트워크 주소">
                         <p className="font-mono">192.168.1.0/24</p>
                         <p>호스트 비트 전부 0</p>
@@ -204,7 +206,7 @@ export default function Topic04() {
                         <p>실제 장치에 할당 가능한 주소</p>
                         <p>/24 기준 총 254개</p>
                     </InfoBox>
-                </div>
+                </CardGrid>
 
                 <Alert variant="info" title="호스트 주소 개념:">
                     호스트 주소란 서브넷 내에서 개별 장치(호스트)에 할당할 수 있는 주소입니다.
@@ -239,7 +241,7 @@ export default function Topic04() {
                     <p className="mt-1 font-semibold">게이트웨이는 반드시 호스트와 같은 서브넷에 있어야 합니다.</p>
                 </InfoBox>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <CardGrid cols={2}>
                     <StatCard
                         title="가정 환경"
                         value="192.168.1.1"
@@ -252,7 +254,7 @@ export default function Topic04() {
                         color="teal"
                         desc="코어/디스트리뷰션 라우터의 VLAN 인터페이스"
                     />
-                </div>
+                </CardGrid>
 
                 <Alert variant="warning" title="잘못된 게이트웨이 설정:">
                     기본 게이트웨이가 설정되지 않으면 같은 서브넷 내부 통신만 가능합니다.
@@ -270,7 +272,7 @@ export default function Topic04() {
                     네트워크 간 패킷을 전달합니다.
                 </Prose>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <CardGrid cols={2}>
                     <InfoBox color="blue" title="라우터의 주요 기능">
                         <p>1. 패킷 포워딩 — 라우팅 테이블 기반 경로 결정</p>
                         <p>2. 네트워크 분리 — 브로드캐스트 도메인 분할</p>
@@ -284,7 +286,7 @@ export default function Topic04() {
                         <p className="mt-1">라우터는 각 인터페이스마다 서로 다른 서브넷의 IP를 가집니다.</p>
                         <p>패킷이 라우터를 지날 때마다 L2 헤더(MAC)는 교체되지만 L3 헤더(IP)는 유지됩니다.</p>
                     </InfoBox>
-                </div>
+                </CardGrid>
 
                 <Alert variant="tip" title="L3 스위치:">
                     현대 네트워크에서는 라우팅 기능을 내장한 L3 스위치가 널리 사용됩니다.
@@ -326,9 +328,9 @@ export default function Topic04() {
                 <Prose>
                     라우팅 테이블에 여러 엔트리가 목적지 IP와 매치될 수 있습니다. 이때 라우터는
                     가장 긴 프리픽스(가장 구체적인 경로)를 선택합니다. 이것이
-                    <code className="bg-gray-100 dark:bg-gray-800 text-blue-600 dark:text-blue-300 px-1.5 py-0.5 rounded text-xs font-mono">
+                    <InlineCode>
                         Longest Prefix Match
-                    </code>
+                    </InlineCode>
                     알고리즘입니다. 예를 들어, 10.1.2.5로 가는 패킷은 /8, /16, /24 모두 매치되지만,
                     가장 구체적인 /24가 선택됩니다.
                 </Prose>
@@ -359,7 +361,7 @@ export default function Topic04() {
                     동적 라우팅이 필수적입니다.
                 </Prose>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <CardGrid cols={2}>
                     <InfoBox color="blue" title="정적 라우팅 (Static Routing)">
                         <p>관리자가 수동으로 경로 추가/삭제</p>
                         <p>라우팅 프로토콜 오버헤드 없음</p>
@@ -374,7 +376,7 @@ export default function Topic04() {
                         <p>대규모 네트워크에 필수</p>
                         <p className="font-mono mt-1">OSPF, BGP, RIP, EIGRP</p>
                     </InfoBox>
-                </div>
+                </CardGrid>
 
                 <InfoTable
                     headers={['프로토콜', '분류', '메트릭', '주 사용처']}
@@ -402,12 +404,12 @@ export default function Topic04() {
                     ICMP Time Exceeded 메시지를 보냅니다.
                 </Prose>
 
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                <CardGrid cols={4}>
                     <StatCard title="Linux 기본 TTL" value="64" color="green" desc="리눅스 시스템 기본값" />
                     <StatCard title="Windows 기본" value="128" color="blue" desc="윈도우 시스템 기본값" />
                     <StatCard title="Cisco 기본" value="255" color="purple" desc="라우터/스위치 장비" />
                     <StatCard title="최대 TTL" value="255" color="amber" desc="8비트 필드 (0~255)" />
-                </div>
+                </CardGrid>
 
                 <InfoBox color="cyan" title="TTL의 활용: traceroute">
                     <p>traceroute는 TTL을 1부터 순서대로 증가시키며 패킷을 보냅니다.</p>
@@ -446,7 +448,7 @@ export default function Topic04() {
                     rows={ipv6vs4Rows}
                 />
 
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                <CardGrid cols={3}>
                     <InfoBox color="blue" title="글로벌 유니캐스트">
                         <p className="font-mono">2000::/3</p>
                         <p>인터넷에서 라우팅 가능한 공인 주소</p>
@@ -462,7 +464,7 @@ export default function Topic04() {
                         <p>자기 자신을 가리키는 주소</p>
                         <p>IPv4의 127.0.0.1에 해당</p>
                     </InfoBox>
-                </div>
+                </CardGrid>
 
                 <CodeBlock code={ipv6ExampleCode} language="bash" filename="IPv6 명령어" />
 
@@ -474,7 +476,7 @@ export default function Topic04() {
 
             {/* ── 4.11 요약 ────────────────────────────────────── */}
             <Section id="s0411" title="4.11  요약">
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <CardGrid cols={2}>
                     <InfoBox color="blue" title="IPv4 주소 체계">
                         32비트, Dotted Decimal 표기. 네트워크 부분과 호스트 부분으로 나뉘며,
                         서브넷 마스크(CIDR)가 그 경계를 결정합니다.
@@ -491,7 +493,7 @@ export default function Topic04() {
                         TTL은 패킷 루프를 방지하고 traceroute의 기반 원리입니다.
                         IPv6는 128비트 주소로 주소 고갈을 해결합니다.
                     </InfoBox>
-                </div>
+                </CardGrid>
 
                 <Alert variant="tip" title="다음 단계:">
                     Topic 05에서는 전송 계층(TCP/UDP)을 학습합니다.

@@ -1,3 +1,4 @@
+import { CardGrid } from '../../components/ui/CardGrid'
 import { Link } from 'react-router-dom'
 import { networkTopics } from '../../data/networkTopics'
 
@@ -49,7 +50,7 @@ export default function Home() {
             </div>
 
             {/* 토픽 그리드 */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <CardGrid cols={2} className="gap-4">
                 {networkTopics.map((topic) => (
                     <Link
                         key={topic.id}
@@ -95,7 +96,7 @@ export default function Home() {
                         </div>
                     </Link>
                 ))}
-            </div>
+            </CardGrid>
 
             <p className="text-center text-xs text-gray-400 dark:text-gray-700 mt-10">
                 © 2026 yooseongc · network-study
