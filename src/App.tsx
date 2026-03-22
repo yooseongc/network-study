@@ -9,13 +9,16 @@ const Topic02 = lazy(() => import('./pages/topic02-network-design'))
 const Topic03 = lazy(() => import('./pages/topic03-link-layer'))
 const Topic04 = lazy(() => import('./pages/topic04-ip-routing'))
 const Topic05 = lazy(() => import('./pages/topic05-transport'))
-const Topic06 = lazy(() => import('./pages/topic06-application'))
-const Topic07 = lazy(() => import('./pages/topic07-service-flow'))
-const Topic08 = lazy(() => import('./pages/topic08-linux-network'))
-const Topic09 = lazy(() => import('./pages/topic09-packet-processing'))
-const Topic10 = lazy(() => import('./pages/topic10-performance'))
-const Topic11 = lazy(() => import('./pages/topic11-troubleshooting'))
-const Topic12 = lazy(() => import('./pages/topic12-modern-architecture'))
+const Topic06 = lazy(() => import('./pages/topic06-dns'))
+const Topic07 = lazy(() => import('./pages/topic07-http-tls-security'))
+const Topic08 = lazy(() => import('./pages/topic08-service-flow'))
+const Topic09 = lazy(() => import('./pages/topic09-linux-stack'))
+const Topic10 = lazy(() => import('./pages/topic10-iproute2-admin'))
+const Topic11 = lazy(() => import('./pages/topic11-packet-processing'))
+const Topic12 = lazy(() => import('./pages/topic12-performance'))
+const Topic13 = lazy(() => import('./pages/topic13-troubleshooting'))
+const Topic14 = lazy(() => import('./pages/topic14-load-balancing'))
+const Topic15 = lazy(() => import('./pages/topic15-cloud-container'))
 const Glossary = lazy(() => import('./pages/Glossary'))
 const Graph = lazy(() => import('./pages/Graph'))
 
@@ -38,7 +41,6 @@ export default function App() {
                 <Routes>
                     <Route element={<AppLayout />}>
                         <Route index element={<Home />} />
-                        {/* Suspense는 Routes 직계 자식이 될 수 없으므로 중간 레이아웃 Route로 감쌈 */}
                         <Route
                             element={
                                 <Suspense fallback={<PageFallback />}>
@@ -51,13 +53,16 @@ export default function App() {
                             <Route path="topic/03-link-layer" element={<Topic03 />} />
                             <Route path="topic/04-ip-routing" element={<Topic04 />} />
                             <Route path="topic/05-transport" element={<Topic05 />} />
-                            <Route path="topic/06-application" element={<Topic06 />} />
-                            <Route path="topic/07-service-flow" element={<Topic07 />} />
-                            <Route path="topic/08-linux-network" element={<Topic08 />} />
-                            <Route path="topic/09-packet-processing" element={<Topic09 />} />
-                            <Route path="topic/10-performance" element={<Topic10 />} />
-                            <Route path="topic/11-troubleshooting" element={<Topic11 />} />
-                            <Route path="topic/12-modern-architecture" element={<Topic12 />} />
+                            <Route path="topic/06-dns" element={<Topic06 />} />
+                            <Route path="topic/07-http-tls-security" element={<Topic07 />} />
+                            <Route path="topic/08-service-flow" element={<Topic08 />} />
+                            <Route path="topic/09-linux-stack" element={<Topic09 />} />
+                            <Route path="topic/10-iproute2-admin" element={<Topic10 />} />
+                            <Route path="topic/11-packet-processing" element={<Topic11 />} />
+                            <Route path="topic/12-performance" element={<Topic12 />} />
+                            <Route path="topic/13-troubleshooting" element={<Topic13 />} />
+                            <Route path="topic/14-load-balancing" element={<Topic14 />} />
+                            <Route path="topic/15-cloud-container" element={<Topic15 />} />
                             <Route path="glossary" element={<Glossary />} />
                             <Route path="graph" element={<Graph />} />
                         </Route>

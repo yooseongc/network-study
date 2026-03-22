@@ -273,6 +273,64 @@
 
 ---
 
+## Topic 08 분할: Topic 09 (리눅스 네트워크 스택) + Topic 10 (iproute2) 신규 생성 (2026-03-22)
+
+### 완료 항목
+
+- [x] Topic 08의 커널 이론 섹션(8.1~8.4, 8.11)을 Topic 09 (리눅스 네트워크 스택)으로 분리
+- [x] Topic 08의 iproute2 섹션(8.5~8.10, 8.12)을 Topic 10 (iproute2와 리눅스 네트워크 관리)으로 분리
+- [x] Topic 09: 6개 섹션 (9.1 스택 개요, 9.2 NIC 드라이버, 9.3 NAPI, 9.4 sk_buff, 9.5 sysctl, 9.6 요약)
+- [x] Topic 09: LinuxNetworkStackDiagram, SkbuffDiagram import, sysctl 고급 튜닝 코드 추가
+- [x] Topic 10: 10개 섹션 (10.1 ip addr, 10.2 ip link, 10.3 ip route, 10.4 ip rule, 10.5 ip neigh, 10.6 정책 해석 실습, 10.7 tc/qdisc 상세, 10.8 ss, 10.9 네임스페이스, 10.10 요약)
+- [x] Topic 10 신규 콘텐츠: ip route show 출력 한 줄씩 해석, ip rule show 각 필드 의미, RPDB 매칭 시뮬레이션
+- [x] Topic 10 신규 콘텐츠: fwmark 기반 VPN split-tunnel 시나리오, multi-ISP failover 실전 구성
+- [x] Topic 10 신규 콘텐츠: tc/qdisc 상세 (HTB 계층 구조, netem 시뮬레이션, fq_codel 동작, 대역폭 제한, tc mirred 포트 미러링, tc -s qdisc show 출력 읽기)
+- [x] IprouteFlowDiagram (기존) import하여 Topic 10.6에서 활용
+- [x] App.tsx에 두 신규 토픽 라우트 추가
+- [x] networkTopics.ts에 두 신규 토픽 등록
+- [x] PAGES.md 라우트 테이블 및 토픽 개요 업데이트
+- [x] 기존 Topic 08 (topic08-linux-network) 유지 (삭제/수정 없음)
+- [x] TypeScript 타입 체크 통과
+
+---
+
+## 토픽 구조 재편: 번호 변경 + 분리 + Topic 02 확장 (2026-03-22)
+
+### 완료 항목
+
+- [x] Topic 12 (현대 아키텍처) → Topic 14 (로드밸런싱과 글로벌 트래픽 관리) + Topic 15 (클라우드·컨테이너 네트워크와 제로 트러스트) 분리
+- [x] Topic 14: 7개 섹션 (14.1 LB 기본, 14.2 L4vsL7, 14.3 리버스프록시/API GW, 14.4 CDN, 14.5 GSLB(신규), 14.6 고가용성, 14.7 요약)
+- [x] Topic 14: GSLB 신규 섹션 추가 (DNS 기반 글로벌 LB, health check, geo-routing, failover, Anycast 비교, GslbDiagram import)
+- [x] Topic 15: 6개 섹션 (15.1 VPN/터널링, 15.2 클라우드, 15.3 컨테이너/CNI, 15.4 서비스 메시, 15.5 Zero Trust, 15.6 요약)
+- [x] Old Topic 07 → New Topic 08 (service-flow): 섹션 ID s07X→s08X, 번호 7.N→8.N
+- [x] Old Topic 09 → New Topic 11 (packet-processing): 섹션 ID s09X→s11X, 번호 9.N→11.N
+- [x] Old Topic 10 → New Topic 12 (performance): 섹션 ID s10X→s12X, 번호 10.N→12.N, QoS 섹션(12.8) 신규 추가
+- [x] Topic 12 QoS 신규: DiffServ/IntServ, DSCP 마킹 (EF/AF/BE), 큐잉 전략 InfoTable (PQ/WFQ/CBWFQ/LLQ), 셰이핑 vs 폴리싱, tc QoS 실전 예제 (HTB+prio), 기업 QoS 정책 사례
+- [x] Old Topic 11 → New Topic 13 (troubleshooting): 섹션 ID s11X→s13X, 번호 11.N→13.N
+- [x] Topic 02 확장: 기존 2.4 (장비 통합) → 2.4 L2 스위치, 2.5 L3 스위치, 2.6 라우터/백본, 2.7 방화벽, 2.8 L4/L7 LB 분리
+- [x] Topic 02: L2 스위치에 STP/RSTP/MSTP, SPAN/RSPAN/ERSPAN, 관리형 vs 비관리형, 제조사 비교 추가
+- [x] Topic 02: 기존 2.5~2.10 → 2.9~2.14로 번호 재조정
+- [x] 기존 토픽 디렉토리(topic07~topic12)는 수정/삭제하지 않음
+- [x] App.tsx에 6개 신규 라우트 추가
+- [x] PAGES.md 라우트 테이블 및 토픽 개요 업데이트
+- [x] TypeScript 타입 체크 (`pnpm tsc --noEmit`) 통과
+
+---
+
+## 용어 사전 확장: 24 → 55 용어 (2026-03-22)
+
+### 완료 항목
+
+- [x] glossary.ts 기존 24개 용어의 topicRef를 신규 15-토픽 ID 체계로 업데이트 (06-dns, 07-http-tls-security, 08-service-flow, 09-linux-stack, 10-iproute2-admin, 11-packet-processing, 12-performance, 13-troubleshooting, 14-load-balancing, 15-cloud-container)
+- [x] network(routing) 카테고리 5개 용어 추가: BGP, OSPF, ECMP, BFD, Anycast
+- [x] security 카테고리 8개 용어 추가: IDS, IPS, WAF, DDoS, DNSSEC, OCSP, SNI, Zero Trust
+- [x] application 카테고리 6개 용어 추가: GSLB, QUIC, HTTP/3, gRPC, WebSocket, Service Mesh
+- [x] design 카테고리 8개 용어 추가: VRRP, HSRP, LACP, MC-LAG, VXLAN, CNI, SPAN, QoS
+- [x] linux 카테고리 5개 용어 추가: NAPI, sysctl, Network Namespace, ip rule, tc qdisc
+- [x] TypeScript 타입 체크 통과
+
+---
+
 ## 마일스톤
 
 | 마일스톤 | 목표 | 상태 |

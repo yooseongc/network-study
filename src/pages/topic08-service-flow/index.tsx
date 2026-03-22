@@ -65,12 +65,12 @@ const haCompareRows = [
     { cells: ['N+M Redundancy', 'N대 가동 + M대 예비', '대규모 환경', '클라우드 인프라'] },
 ]
 
-export default function Topic07() {
+export default function Topic08ServiceFlow() {
     return (
         <div className="max-w-4xl mx-auto px-6 py-10 space-y-14">
             <header className="space-y-3">
                 <p className="text-xs font-mono text-blue-500 dark:text-blue-400 uppercase tracking-widest">
-                    Topic 07
+                    Topic 08
                 </p>
                 <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
                     실제 서비스 망 설계와 트래픽 흐름
@@ -85,7 +85,7 @@ export default function Topic07() {
             </header>
 
             <LearningCard
-                topicId="07-service-flow"
+                topicId="08-service-flow"
                 items={[
                     '사용자 요청의 End-to-End 경로를 장비 단위로 추적할 수 있다',
                     'DMZ, 내부망, 관리망의 분리 이유를 설명할 수 있다',
@@ -95,8 +95,8 @@ export default function Topic07() {
                 ]}
             />
 
-            {/* ── 7.1 ─────────────────────────────────────────────── */}
-            <Section id="s071" title="7.1  사용자 요청의 전체 경로">
+            {/* ── 8.1 ─────────────────────────────────────────────── */}
+            <Section id="s081" title="8.1  사용자 요청의 전체 경로">
                 <Prose>
                     웹 브라우저에서 URL을 입력하면, 패킷은 여러 네트워크 장비를 순차적으로 통과합니다.
                     각 장비는 고유한 역할을 수행하며, 패킷의 헤더 정보가 단계마다 변환됩니다.
@@ -121,8 +121,8 @@ export default function Topic07() {
                 </InfoBox>
             </Section>
 
-            {/* ── 7.2 ─────────────────────────────────────────────── */}
-            <Section id="s072" title="7.2  사내 인터넷 접속망 구조">
+            {/* ── 8.2 ─────────────────────────────────────────────── */}
+            <Section id="s082" title="8.2  사내 인터넷 접속망 구조">
                 <Prose>
                     기업 네트워크에서 사내 사용자가 인터넷에 접속하는 경로는 보안과 관리 효율을 위해
                     여러 단계의 장비를 거칩니다. 일반적인 구조는 다음과 같습니다.
@@ -134,30 +134,10 @@ export default function Topic07() {
                 </InfoBox>
 
                 <CardGrid cols={2}>
-                    <StatCard
-                        title="Proxy Server"
-                        value="캐싱 + 필터링"
-                        color="blue"
-                        desc="웹 트래픽 캐싱, URL 필터링, 악성 사이트 차단"
-                    />
-                    <StatCard
-                        title="SWG"
-                        value="SSL 검사"
-                        color="amber"
-                        desc="Secure Web Gateway: HTTPS 복호화 후 콘텐츠 검사"
-                    />
-                    <StatCard
-                        title="NAT Gateway"
-                        value="IP 변환"
-                        color="green"
-                        desc="내부 사설 IP → 공인 IP 변환 (SNAT/Masquerade)"
-                    />
-                    <StatCard
-                        title="DNS Resolver"
-                        value="내부 DNS"
-                        color="purple"
-                        desc="내부 도메인 해석 + 외부 DNS 포워딩, 보안 필터링"
-                    />
+                    <StatCard title="Proxy Server" value="캐싱 + 필터링" color="blue" desc="웹 트래픽 캐싱, URL 필터링, 악성 사이트 차단" />
+                    <StatCard title="SWG" value="SSL 검사" color="amber" desc="Secure Web Gateway: HTTPS 복호화 후 콘텐츠 검사" />
+                    <StatCard title="NAT Gateway" value="IP 변환" color="green" desc="내부 사설 IP → 공인 IP 변환 (SNAT/Masquerade)" />
+                    <StatCard title="DNS Resolver" value="내부 DNS" color="purple" desc="내부 도메인 해석 + 외부 DNS 포워딩, 보안 필터링" />
                 </CardGrid>
 
                 <Alert variant="info" title="투명 프록시 vs 명시적 프록시">
@@ -173,17 +153,14 @@ export default function Topic07() {
                 </Prose>
             </Section>
 
-            {/* ── 7.3 ─────────────────────────────────────────────── */}
-            <Section id="s073" title="7.3  서버 인프라 분리 (Web / WAS / DB 3-Tier)">
+            {/* ── 8.3 ─────────────────────────────────────────────── */}
+            <Section id="s083" title="8.3  서버 인프라 분리 (Web / WAS / DB 3-Tier)">
                 <Prose>
                     서비스 인프라는 역할별로 분리하여 보안, 확장성, 유지보수성을 높입니다.
                     가장 일반적인 구조는 3-Tier 아키텍처입니다.
                 </Prose>
 
-                <InfoTable
-                    headers={['계층', '역할', '대표 솔루션']}
-                    rows={threeColRows}
-                />
+                <InfoTable headers={['계층', '역할', '대표 솔루션']} rows={threeColRows} />
 
                 <InfoBox color="green" title="3-Tier 분리의 장점">
                     <ul className="list-disc list-inside space-y-1 text-sm">
@@ -207,18 +184,15 @@ export default function Topic07() {
                 </Prose>
             </Section>
 
-            {/* ── 7.4 ─────────────────────────────────────────────── */}
-            <Section id="s074" title="7.4  DMZ와 공개 서비스망">
+            {/* ── 8.4 ─────────────────────────────────────────────── */}
+            <Section id="s084" title="8.4  DMZ와 공개 서비스망">
                 <Prose>
                     DMZ(Demilitarized Zone)는 외부 인터넷과 내부 네트워크 사이에 위치한
                     완충 영역입니다. 외부에 공개해야 하는 서비스를 DMZ에 배치하여
                     내부 네트워크를 보호합니다.
                 </Prose>
 
-                <InfoTable
-                    headers={['영역', '배치 서비스', '위치', '접근 정책']}
-                    rows={dmzRows}
-                />
+                <InfoTable headers={['영역', '배치 서비스', '위치', '접근 정책']} rows={dmzRows} />
 
                 <InfoBox color="red" title="DMZ에 웹 서버를 두는 이유">
                     외부 사용자가 접근해야 하는 웹 서버는 반드시 DMZ에 배치합니다.
@@ -227,24 +201,9 @@ export default function Topic07() {
                 </InfoBox>
 
                 <CardGrid cols={3}>
-                    <StatCard
-                        title="외부 방화벽"
-                        value="1st Gate"
-                        color="red"
-                        desc="인터넷 → DMZ 트래픽 필터링 (HTTP/HTTPS만 허용)"
-                    />
-                    <StatCard
-                        title="DMZ"
-                        value="완충 영역"
-                        color="amber"
-                        desc="Web, Mail, DNS 등 공개 서비스 배치"
-                    />
-                    <StatCard
-                        title="내부 방화벽"
-                        value="2nd Gate"
-                        color="green"
-                        desc="DMZ → 내부망 트래픽 엄격 제어 (최소 권한)"
-                    />
+                    <StatCard title="외부 방화벽" value="1st Gate" color="red" desc="인터넷 → DMZ 트래픽 필터링 (HTTP/HTTPS만 허용)" />
+                    <StatCard title="DMZ" value="완충 영역" color="amber" desc="Web, Mail, DNS 등 공개 서비스 배치" />
+                    <StatCard title="내부 방화벽" value="2nd Gate" color="green" desc="DMZ → 내부망 트래픽 엄격 제어 (최소 권한)" />
                 </CardGrid>
 
                 <Alert variant="tip" title="Zero Trust 시대의 DMZ">
@@ -254,8 +213,8 @@ export default function Topic07() {
                 </Alert>
             </Section>
 
-            {/* ── 7.5 ─────────────────────────────────────────────── */}
-            <Section id="s075" title="7.5  East-West vs North-South 트래픽">
+            {/* ── 8.5 ─────────────────────────────────────────────── */}
+            <Section id="s085" title="8.5  East-West vs North-South 트래픽">
                 <Prose>
                     데이터센터 내 트래픽은 방향에 따라 두 가지로 분류됩니다.
                     이 분류는 네트워크 설계, 보안 정책, 성능 최적화에 직접적인 영향을 미칩니다.
@@ -289,18 +248,15 @@ export default function Topic07() {
                 </Alert>
             </Section>
 
-            {/* ── 7.6 ─────────────────────────────────────────────── */}
-            <Section id="s076" title="7.6  NAT 적용 위치와 동작">
+            {/* ── 8.6 ─────────────────────────────────────────────── */}
+            <Section id="s086" title="8.6  NAT 적용 위치와 동작">
                 <Prose>
                     NAT(Network Address Translation)는 IP 주소를 변환하는 기술로,
                     사설 IP와 공인 IP 간의 변환에 핵심 역할을 합니다.
                     실제 서비스 망에서 NAT는 여러 위치에서 다양한 목적으로 사용됩니다.
                 </Prose>
 
-                <InfoTable
-                    headers={['유형', '설명', 'iptables Chain', '사용 사례']}
-                    rows={natTypeRows}
-                />
+                <InfoTable headers={['유형', '설명', 'iptables Chain', '사용 사례']} rows={natTypeRows} />
 
                 <CodeBlock code={iptablesNatCode} language="bash" filename="iptables NAT 규칙" />
 
@@ -321,8 +277,8 @@ export default function Topic07() {
                 </Alert>
             </Section>
 
-            {/* ── 7.7 ─────────────────────────────────────────────── */}
-            <Section id="s077" title="7.7  프록시 기반 트래픽 흐름">
+            {/* ── 8.7 ─────────────────────────────────────────────── */}
+            <Section id="s087" title="8.7  프록시 기반 트래픽 흐름">
                 <Prose>
                     프록시 서버는 클라이언트와 서버 사이에서 요청을 중계하는 중간자 역할을 합니다.
                     Forward Proxy는 클라이언트를 대리하고, Reverse Proxy는 서버를 대리합니다.
@@ -357,8 +313,8 @@ export default function Topic07() {
                 </Alert>
             </Section>
 
-            {/* ── 7.8 ─────────────────────────────────────────────── */}
-            <Section id="s078" title="7.8  보안장비 삽입 구조 (Inline vs Out-of-Path)">
+            {/* ── 8.8 ─────────────────────────────────────────────── */}
+            <Section id="s088" title="8.8  보안장비 삽입 구조 (Inline vs Out-of-Path)">
                 <Prose>
                     네트워크 보안장비는 트래픽 경로에 삽입하는 방식에 따라
                     Inline(인라인)과 Out-of-Path(우회) 방식으로 구분됩니다.
@@ -384,10 +340,7 @@ export default function Topic07() {
                     </InfoBox>
                 </CardGrid>
 
-                <InfoTable
-                    headers={['장비', '주요 기능', '삽입 방식', '배치 위치']}
-                    rows={securityDeviceRows}
-                />
+                <InfoTable headers={['장비', '주요 기능', '삽입 방식', '배치 위치']} rows={securityDeviceRows} />
 
                 <Alert variant="info" title="서비스 체이닝 (Service Chaining)">
                     여러 보안장비를 순차적으로 통과시키는 구조를 Service Chaining이라 합니다.
@@ -396,17 +349,14 @@ export default function Topic07() {
                 </Alert>
             </Section>
 
-            {/* ── 7.9 ─────────────────────────────────────────────── */}
-            <Section id="s079" title="7.9  고가용성 설계 기초">
+            {/* ── 8.9 ─────────────────────────────────────────────── */}
+            <Section id="s089" title="8.9  고가용성 설계 기초">
                 <Prose>
                     서비스의 연속성을 보장하기 위해, 네트워크의 모든 단일 장애점(SPOF)을
                     이중화하는 것이 고가용성(HA) 설계의 핵심입니다.
                 </Prose>
 
-                <InfoTable
-                    headers={['구성 방식', '동작', '특징', '사용 사례']}
-                    rows={haCompareRows}
-                />
+                <InfoTable headers={['구성 방식', '동작', '특징', '사용 사례']} rows={haCompareRows} />
 
                 <CardGrid cols={2}>
                     <InfoBox color="blue" title="Active-Standby 구조">
@@ -428,7 +378,6 @@ export default function Topic07() {
                 </CardGrid>
 
                 <CodeBlock code={haproxyConfigCode} language="text" filename="HAProxy 로드 밸런서 설정" />
-
                 <CodeBlock code={keepalivedVrrpCode} language="bash" filename="Keepalived VRRP 설정" />
 
                 <Alert variant="warning" title="Failover의 함정: Split Brain">
@@ -439,8 +388,8 @@ export default function Topic07() {
                 </Alert>
             </Section>
 
-            {/* ── 7.10 ────────────────────────────────────────────── */}
-            <Section id="s0710" title="7.10  요약">
+            {/* ── 8.10 ────────────────────────────────────────────── */}
+            <Section id="s0810" title="8.10  요약">
                 <Prose>
                     실제 서비스 네트워크는 단순한 "클라이언트 → 서버" 통신이 아니라,
                     수많은 장비와 정책이 개입하는 복잡한 시스템입니다.
@@ -463,7 +412,7 @@ export default function Topic07() {
                 </Alert>
             </Section>
 
-            <TopicNavigation topicId="07-service-flow" />
+            <TopicNavigation topicId="08-service-flow" />
         </div>
     )
 }

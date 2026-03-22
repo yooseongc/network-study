@@ -293,29 +293,28 @@ export function CongestionControlViz() {
                 .attr('font-family', "'Pretendard Variable', Pretendard, sans-serif")
                 .text('TCP 혼잡 제어: cwnd 변화 과정')
 
-            // Legend
+            // Legend — positioned at top-right to avoid X-axis RTT label overlap
             const legendItems = [
                 { label: 'Slow Start', color: c.blueStroke },
                 { label: 'Congestion Avoidance', color: c.greenStroke },
                 { label: 'Packet Loss', color: c.redStroke },
                 { label: 'Fast Recovery', color: c.purpleStroke },
             ]
-            const legendY = height - 8
-            const legendSpacing = Math.min(160, innerW / 4)
-            const legendStartX = margin.left + (innerW - legendItems.length * legendSpacing) / 2
+            const legendX = margin.left + innerW - 4
+            const legendY0 = margin.top + 8
 
             legendItems.forEach((item, i) => {
-                const lx = legendStartX + i * legendSpacing
+                const ly = legendY0 + i * 16
                 g.append('rect')
-                    .attr('x', lx)
-                    .attr('y', legendY - 8)
+                    .attr('x', legendX - 130)
+                    .attr('y', ly - 4)
                     .attr('width', 14)
                     .attr('height', 3)
                     .attr('rx', 1.5)
                     .attr('fill', item.color)
                 g.append('text')
-                    .attr('x', lx + 18)
-                    .attr('y', legendY - 3)
+                    .attr('x', legendX - 112)
+                    .attr('y', ly)
                     .attr('font-size', 9)
                     .attr('fill', c.textMuted)
                     .attr('font-family', "'Pretendard Variable', Pretendard, sans-serif")

@@ -227,3 +227,58 @@ char _license[] SEC("license") = "GPL";
 // XDP 프로그램 로드
 // $ ip link set dev eth0 xdpgeneric obj xdp_drop.o sec xdp
 // $ ip link show dev eth0  # xdpgeneric 확인`
+
+export const tcQosCode = `# ── QoS 실전 예제: HTB + prio (VoIP 우선) ──────────────
+# root qdisc를 HTB로 설정 (전체 100Mbps)
+$ sudo tc qdisc add dev eth0 root handle 1: htb default 30
+
+# 전체 대역폭 클래스
+$ sudo tc class add dev eth0 parent 1: classid 1:1 \\
+    htb rate 100mbit ceil 100mbit
+
+# 1) VoIP (EF = DSCP 46) — 최우선, 10Mbps 보장
+$ sudo tc class add dev eth0 parent 1:1 classid 1:10 \\
+    htb rate 10mbit ceil 20mbit prio 0
+$ sudo tc qdisc add dev eth0 parent 1:10 handle 10: \\
+    pfifo limit 50
+
+# 2) 업무 트래픽 (AF21 = DSCP 18) — 50Mbps 보장
+$ sudo tc class add dev eth0 parent 1:1 classid 1:20 \\
+    htb rate 50mbit ceil 80mbit prio 1
+$ sudo tc qdisc add dev eth0 parent 1:20 handle 20: \\
+    fq_codel
+
+# 3) 일반/Best Effort (BE = DSCP 0) — 나머지
+$ sudo tc class add dev eth0 parent 1:1 classid 1:30 \\
+    htb rate 20mbit ceil 50mbit prio 2
+$ sudo tc qdisc add dev eth0 parent 1:30 handle 30: \\
+    fq_codel
+
+# 필터: DSCP 기반 분류
+# EF (DSCP 46 = TOS 0xb8) → 1:10
+$ sudo tc filter add dev eth0 parent 1: protocol ip prio 1 \\
+    u32 match ip tos 0xb8 0xfc flowid 1:10
+
+# AF21 (DSCP 18 = TOS 0x48) → 1:20
+$ sudo tc filter add dev eth0 parent 1: protocol ip prio 2 \\
+    u32 match ip tos 0x48 0xfc flowid 1:20
+
+# 나머지 → 1:30 (default)
+
+# ── DSCP 마킹 (iptables mangle) ──────────────────────
+# VoIP 트래픽에 EF 마킹
+$ sudo iptables -t mangle -A POSTROUTING \\
+    -p udp --dport 5060 -j DSCP --set-dscp-class EF
+$ sudo iptables -t mangle -A POSTROUTING \\
+    -p udp --dport 10000:20000 -j DSCP --set-dscp-class EF
+
+# 셰이핑 vs 폴리싱 비교:
+# 셰이핑(Shaping): 초과 트래픽을 버퍼에 저장 후 지연 전송 (htb, tbf)
+# 폴리싱(Policing): 초과 트래픽을 즉시 DROP (tc police action)
+
+# 폴리싱 예시: 인바운드 100Mbps 제한
+$ sudo tc qdisc add dev eth0 handle ffff: ingress
+$ sudo tc filter add dev eth0 parent ffff: protocol ip \\
+    u32 match u32 0 0 \\
+    police rate 100mbit burst 1mbit drop \\
+    flowid :1`
