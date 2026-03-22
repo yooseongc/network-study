@@ -40,14 +40,14 @@ src/
 ├── pages/
 │   ├── Home/                    # 홈 화면
 │   ├── Glossary/                # 용어사전
-│   └── topicXX-*/index.tsx      # 13개 토픽 페이지
+│   └── topicXX-*/index.tsx      # 12개 토픽 페이지
 ├── components/
 │   ├── layout/                  # AppLayout, Sidebar, TOC, BackToTop
 │   ├── ui/                      # Section, Prose, InfoTable, GlossaryTooltip
 │   └── viz/                     # D3Container, AnimatedDiagram, MermaidDiagram, CodeBlock
 ├── data/
-│   ├── kernelTopics.ts          # 토픽 메타데이터
-│   └── glossary.ts              # 용어사전 데이터 (64개 용어)
+│   ├── networkTopics.ts         # 토픽 메타데이터
+│   └── glossary.ts              # 용어사전 데이터
 ├── contexts/ThemeContext.tsx    # 다크/라이트 모드
 ├── hooks/                       # useD3, useThree, useAnimationStep
 └── lib/colors.ts                # oklch 색상 팔레트
@@ -63,19 +63,18 @@ docs/
 
 | # | 토픽 | 주요 내용 |
 |---|------|----------|
-| 01 | 커널 개요와 전체 구조 | 유저/커널 공간, 시스템 콜, 모노리식 구조 |
-| 02 | 프로세스·스레드·스케줄러 | task_struct, CFS, 컨텍스트 스위치, cgroup |
-| 03 | 가상 메모리와 메모리 관리 | 페이지 테이블, VMA, Buddy, SLUB, kswapd |
-| 04 | 파일시스템과 VFS | VFS, inode, dentry, page cache, ext4 |
-| 05 | 인터럽트·예외·Deferred Work | IRQ, softirq, tasklet, workqueue |
-| 06 | 네트워크 스택 전체 흐름 | sk_buff, NAPI, L2/L3/L4 처리 |
-| 07 | 패킷 처리와 Netfilter | Netfilter, iptables, conntrack, TPROXY |
-| 08 | XDP, eBPF, 고성능 패킷 처리 | XDP, eBPF, kprobe, TC BPF |
-| 09 | 동기화와 멀티코어 환경 | Spinlock, Mutex, RCU, atomic, seqlock |
-| 10 | 디바이스 드라이버와 커널 모듈 | DMA, PCI, 문자/블록/네트워크 드라이버 |
-| 11 | 성능 분석과 디버깅 | perf, ftrace, KASAN, lockdep, /proc |
-| 12 | 보안 — LSM·네임스페이스·seccomp | LSM, AppArmor, SELinux, namespace, seccomp |
-| 13 | KVM과 가상화 | KVM, VMCS, VMEXIT, EPT, virtio |
+| 01 | 네트워크의 기초와 전체 구조 | OSI 7계층, TCP/IP 모델, 캡슐화, MTU |
+| 02 | 실제 네트워크 망 구성의 기초 | LAN/WAN, ISP, DMZ, 이중화 구성 |
+| 03 | 물리 계층과 링크 계층 | Ethernet, MAC, 스위치, VLAN, ARP |
+| 04 | IP 주소와 라우팅의 기초 | IPv4/IPv6, 서브넷, 라우팅 테이블, longest prefix match |
+| 05 | 전송 계층: TCP와 UDP | 3-way handshake, 흐름/혼잡 제어, QUIC |
+| 06 | 이름 해석과 주요 응용 프로토콜 | DNS, HTTP/HTTPS, TLS, DHCP, SSH |
+| 07 | 실제 서비스 망 설계와 트래픽 흐름 | DMZ, NAT, East-West/North-South 트래픽 |
+| 08 | 리눅스에서의 네트워크 동작 | sk_buff, NAPI, iproute2, 네트워크 네임스페이스 |
+| 09 | 패킷 처리와 방화벽 / NAT / 프록시 | netfilter, conntrack, iptables, TPROXY |
+| 10 | 성능과 트래픽 제어 | RSS/RPS, NIC offload, XDP, tc/qdisc |
+| 11 | 네트워크 장애 분석과 관측 | tcpdump, Wireshark, mtr, 장애 분석 절차 |
+| 12 | 현대 네트워크와 실전 아키텍처 | 로드밸런서, CDN, VPN, 컨테이너 네트워크, 서비스 메시 |
 
 ---
 

@@ -89,7 +89,7 @@ src/pages/topic{NN}-{slug}/
 | `Alert` | `../../components/ui/Alert` | 팁(💡)/경고(⚠️)/정보(ℹ️)/위험(🚨) |
 | `TopicNavigation` | `../../components/ui/TopicNavigation` | 이전/다음 토픽 (자동 계산) |
 | `LearningCard` | `../../components/ui/LearningCard` | 토픽 상단 학습 목표 카드 |
-| `KernelRef` | `../../components/ui/KernelRef` | 커널 소스 외부 링크 배지 |
+| `RfcRef` | `../../components/ui/RfcRef` | RFC 문서 외부 링크 배지 |
 
 ### 사용 규칙
 
@@ -190,7 +190,7 @@ className="bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300 borde
 <TopicNavigation topicId="02-scheduler" />
 ```
 
-- `kernelTopics` 배열에서 이전/다음 토픽을 자동 계산합니다.
+- `networkTopics` 배열에서 이전/다음 토픽을 자동 계산합니다.
 - 인라인 `<nav>` 태그 하드코딩 금지.
 
 ---
@@ -201,16 +201,18 @@ className="bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300 borde
 
 ```
 src/components/concepts/
-├── scheduler/    (ProcessStateDiagram, CfsTreeViz, ContextSwitchViz, ...)
-├── memory/       (BuddyAllocatorViz, PageTableViz, CoWAnimationViz, ...)
-├── network/      (NetworkLayerDiagram, SkbuffLayout, ...)
-├── interrupt/    (IRQViz, DeferredWorkFlow)
-├── ebpf/         (XdpVsNormalDiagram, EbpfPipelineDiagram)
-├── sync/         (RaceConditionViz, LockComparisonChart, RcuGracePeriodViz)
-├── driver/       (DriverTreeChart, DMAViz)
-├── debug/        (FlameGraphViz, ProcTreeChart, NetworkBottleneckChart)
-├── filesystem/   (OpenFlowViz, VfsLayerDiagram)
-└── overview/     (RingDiagram, SyscallFlowViz, ...)
+├── basics/       (OsiModelDiagram, EncapsulationViz, ...)
+├── topology/     (NetworkTopologyViz, DmzLayoutViz, ...)
+├── link/         (SwitchForwardingViz, VlanDiagram, ArpFlowViz, ...)
+├── routing/      (RoutingTableViz, SubnetCalcViz, ...)
+├── transport/    (TcpHandshakeViz, FlowControlViz, ...)
+├── application/  (DnsResolutionViz, TlsHandshakeViz, ...)
+├── service/      (TrafficFlowDiagram, LoadBalancerViz, ...)
+├── linux-net/    (SkbuffLayout, NapiFlowViz, ...)
+├── firewall/     (NetfilterChainViz, ConntrackViz, NatFlowViz, ...)
+├── performance/  (RssRpsViz, QdiscTreeViz, XdpPipelineViz, ...)
+├── troubleshoot/ (PacketCaptureViz, TcpdumpFlowViz, ...)
+└── modern/       (LbArchitectureViz, ContainerNetworkViz, ...)
 ```
 
 **규칙:**
