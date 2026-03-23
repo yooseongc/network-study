@@ -1,6 +1,6 @@
 import { TcpHandshakeDiagram } from '../../components/concepts/transport/TcpHandshakeDiagram'
 import { CongestionControlViz } from '../../components/concepts/transport/CongestionControlViz'
-import { Alert, CardGrid, CodeBlock, InfoBox, InfoTable, LearningCard, Prose, Section, StatCard, T, TopicNavigation } from '@study-ui/components'
+import { Alert, CardGrid, CodeBlock, InfoBox, InfoTable, Prose, Section, StatCard, T , TopicPage } from '@study-ui/components'
 import {
     ssCommandCode,
     netstatCode,
@@ -78,35 +78,14 @@ const quicVsTcpRows = [
 
 export default function Topic05() {
     return (
-        <div className="max-w-4xl mx-auto px-6 py-10 space-y-14">
-            {/* Header */}
-            <header className="space-y-3">
-                <p className="text-xs font-mono text-blue-500 dark:text-blue-400 uppercase tracking-widest">
-                    Topic 05
-                </p>
-                <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
-                    전송 계층: TCP와 UDP
-                </h1>
-                <p className="text-sm text-gray-500 dark:text-gray-400">
-                    Transport Layer: TCP & UDP
-                </p>
-                <p className="text-gray-600 dark:text-gray-400 leading-relaxed text-sm">
-                    전송 계층은 프로세스 간 통신을 담당합니다. TCP의 연결 설정/해제 과정과
-                    흐름/혼잡 제어 메커니즘을 시각화하고, UDP와의 차이를 비교하며,
-                    차세대 프로토콜 QUIC의 등장 배경까지 살펴봅니다.
-                </p>
-            </header>
-
-            <LearningCard
-                topicId="05-transport"
-                items={[
+        <TopicPage topicId="05-transport" learningItems={[
                     '포트 번호와 소켓의 개념을 이해한다',
                     'TCP 3-way/4-way handshake 과정을 설명할 수 있다',
                     '시퀀스 번호, 흐름/혼잡 제어 메커니즘을 이해한다',
                     'UDP의 특징과 활용 사례를 파악한다',
                     'QUIC의 등장 배경과 장점을 설명할 수 있다',
-                ]}
-            />
+                ]}>
+            {/* Header */}
 
             {/* ── 5.1 포트 번호와 소켓 ────────────────────────── */}
             <Section id="s051" title="5.1  포트 번호와 소켓">
@@ -603,8 +582,6 @@ export default function Topic05() {
                     다음 토픽에서는 전송 계층 위에 구축되는 응용 계층 프로토콜을 학습합니다.
                 </Alert>
             </Section>
-
-            <TopicNavigation topicId="05-transport" />
-        </div>
+        </TopicPage>
     )
 }

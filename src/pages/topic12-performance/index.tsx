@@ -1,5 +1,5 @@
 import { RssRpsDiagram } from '../../components/concepts/performance/RssRpsDiagram'
-import { Alert, CardGrid, CodeBlock, InfoBox, InfoTable, InlineCode, LearningCard, Prose, Section, StatCard, T, TopicNavigation } from '@study-ui/components'
+import { Alert, CardGrid, CodeBlock, InfoBox, InfoTable, InlineCode, Prose, Section, StatCard, T , TopicPage } from '@study-ui/components'
 import {
     ethtoolOffloadCode,
     ethtoolStatsCode,
@@ -75,33 +75,13 @@ const queuingRows = [
 
 export default function Topic12Performance() {
     return (
-        <div className="max-w-4xl mx-auto px-6 py-10 space-y-14">
-            <header className="space-y-3">
-                <p className="text-xs font-mono text-blue-500 dark:text-blue-400 uppercase tracking-widest">
-                    Topic 12
-                </p>
-                <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
-                    성능과 트래픽 제어
-                </h1>
-                <p className="text-sm text-gray-500 dark:text-gray-400">
-                    Performance & Traffic Control
-                </p>
-                <p className="text-gray-600 dark:text-gray-400 leading-relaxed text-sm">
-                    네트워크 성능을 결정하는 핵심 지표를 이해하고, NIC offload, 멀티코어 패킷 분산,
-                    qdisc/tc를 이용한 트래픽 제어, QoS, XDP/DPDK 등 고성능 패킷 처리 기법을 학습합니다.
-                </p>
-            </header>
-
-            <LearningCard
-                topicId="12-performance"
-                items={[
+        <TopicPage topicId="12-performance" learningItems={[
                     'NIC offload 기능의 종류와 효과를 이해한다',
                     'RSS/RPS로 멀티코어 분산 처리를 설명할 수 있다',
                     'qdisc와 tc의 트래픽 제어 원리를 파악한다',
                     'QoS의 DiffServ/IntServ 모델과 DSCP 마킹을 이해한다',
                     'XDP와 DPDK의 개요와 차이를 파악한다',
-                ]}
-            />
+                ]}>
 
             {/* ── 12.1 ────────────────────────────────────────────── */}
             <Section id="s121" title="12.1  네트워크 성능 지표">
@@ -356,8 +336,6 @@ export default function Topic12Performance() {
                     </ul>
                 </InfoBox>
             </Section>
-
-            <TopicNavigation topicId="12-performance" />
-        </div>
+        </TopicPage>
     )
 }

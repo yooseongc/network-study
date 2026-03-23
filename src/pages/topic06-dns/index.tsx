@@ -1,5 +1,5 @@
 import { DnsResolutionDiagram } from '../../components/concepts/application/DnsResolutionDiagram'
-import { Alert, CardGrid, CodeBlock, InfoBox, InfoTable, InlineCode, LearningCard, Prose, Section, StatCard, T, TopicNavigation } from '@study-ui/components'
+import { Alert, CardGrid, CodeBlock, InfoBox, InfoTable, InlineCode, Prose, Section, StatCard, T , TopicPage } from '@study-ui/components'
 import {
     digCode,
     nslookupCode,
@@ -52,36 +52,15 @@ const dnssecRecordRows = [
 
 export default function Topic06Dns() {
     return (
-        <div className="max-w-4xl mx-auto px-6 py-10 space-y-14">
-            {/* Header */}
-            <header className="space-y-3">
-                <p className="text-xs font-mono text-blue-500 dark:text-blue-400 uppercase tracking-widest">
-                    Topic 06
-                </p>
-                <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
-                    DNS 심화
-                </h1>
-                <p className="text-sm text-gray-500 dark:text-gray-400">
-                    DNS Deep Dive
-                </p>
-                <p className="text-gray-600 dark:text-gray-400 leading-relaxed text-sm">
-                    DNS의 계층 구조와 레코드 타입, 서버 종류, 질의 과정을 심층적으로 학습합니다.
-                    DNSSEC의 신뢰 체인과 DNS 보안/프라이버시 기술(DoH, DoT), 그리고
-                    기업 환경의 Split-Horizon DNS 구성까지 포괄적으로 다룹니다.
-                </p>
-            </header>
-
-            <LearningCard
-                topicId="06-dns"
-                items={[
+        <TopicPage topicId="06-dns" learningItems={[
                     'DNS 도메인 계층 구조와 주요 레코드 타입을 설명할 수 있다',
                     'DNS 서버의 종류(Authoritative, Recursive, Root, Stub)를 구분할 수 있다',
                     '재귀 질의와 반복 질의의 차이를 이해한다',
                     'DNSSEC의 신뢰 체인(Chain of Trust)을 설명할 수 있다',
                     'DoH, DoT 등 DNS 프라이버시 기술을 비교할 수 있다',
                     'Split-Horizon DNS와 기업 DNS 구성을 이해한다',
-                ]}
-            />
+                ]}>
+            {/* Header */}
 
             {/* ── 6.1 DNS의 역할과 구조 ──────────────────────────── */}
             <Section id="s061" title="6.1  DNS의 역할과 구조">
@@ -389,8 +368,6 @@ export default function Topic06Dns() {
                     핵심 프로토콜과 보안 기술을 학습합니다.
                 </Alert>
             </Section>
-
-            <TopicNavigation topicId="06-dns" />
-        </div>
+        </TopicPage>
     )
 }

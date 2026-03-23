@@ -1,6 +1,6 @@
 import { LinuxNetworkStackDiagram } from '../../components/concepts/linux-net/LinuxNetworkStackDiagram'
 import { SkbuffDiagram } from '../../components/concepts/linux-net/SkbuffDiagram'
-import { Alert, CardGrid, CodeBlock, InfoBox, InfoTable, LearningCard, Prose, Section, T, TopicNavigation } from '@study-ui/components'
+import { Alert, CardGrid, CodeBlock, InfoBox, InfoTable, Prose, Section, T , TopicPage } from '@study-ui/components'
 import {
     ethtoolCode,
     skbAscii,
@@ -46,36 +46,16 @@ const sysctlRows = [
 
 export default function Topic09LinuxStack() {
     return (
-        <div className="max-w-4xl mx-auto px-6 py-10 space-y-14">
-            {/* ── Header ─────────────────────────────────────────── */}
-            <header className="space-y-3">
-                <p className="text-xs font-mono text-blue-500 dark:text-blue-400 uppercase tracking-widest">
-                    Topic 09
-                </p>
-                <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
-                    리눅스 네트워크 스택
-                </h1>
-                <p className="text-sm text-gray-500 dark:text-gray-400">
-                    Linux Network Stack Internals
-                </p>
-                <p className="text-gray-600 dark:text-gray-400 leading-relaxed text-sm">
-                    리눅스 커널의 네트워크 스택 내부 구조와 패킷 처리 과정을 단계별로 학습합니다.
-                    NIC 드라이버에서 소켓 API까지의 데이터 흐름을 이해하고,
-                    NAPI 기반 수신 처리, sk_buff 구조, sysctl 파라미터 튜닝을 익힙니다.
-                </p>
-            </header>
-
-            {/* ── Learning Card ───────────────────────────────────── */}
-            <LearningCard
-                topicId="09-linux-stack"
-                items={[
+        <TopicPage topicId="09-linux-stack" learningItems={[
                     '리눅스 네트워크 스택의 전체 계층 구조를 설명할 수 있다',
                     'NIC 드라이버와 DMA Ring Buffer의 동작을 이해한다',
                     'NAPI의 인터럽트-폴링 하이브리드 모델을 설명할 수 있다',
                     'sk_buff 데이터 구조의 포인터 관리와 제로카피를 이해한다',
                     'sysctl 네트워크 파라미터를 이해하고 조정할 수 있다',
-                ]}
-            />
+                ]}>
+            {/* ── Header ─────────────────────────────────────────── */}
+
+            {/* ── Learning Card ───────────────────────────────────── */}
 
             {/* ── 9.1 리눅스 네트워크 스택 개요 ────────────────── */}
             <Section id="s091" title="9.1  리눅스 네트워크 스택 개요">
@@ -308,8 +288,6 @@ export default function Topic09LinuxStack() {
                     tc/qdisc를 이용한 트래픽 제어를 학습합니다.
                 </Alert>
             </Section>
-
-            <TopicNavigation topicId="09-linux-stack" />
-        </div>
+        </TopicPage>
     )
 }

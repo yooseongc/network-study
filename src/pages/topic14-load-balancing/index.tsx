@@ -1,7 +1,7 @@
 import { L4vsL7Diagram } from '../../components/concepts/modern/L4vsL7Diagram'
 import { GslbDiagram } from '../../components/concepts/modern/GslbDiagram'
 import { nginxLbCode, nginxReverseProxyCode, haproxyHealthCode, gslbDnsCode } from './codeSnippets'
-import { Alert, CardGrid, CodeBlock, InfoBox, InfoTable, LearningCard, Prose, Section, StatCard, T, TopicNavigation } from '@study-ui/components'
+import { Alert, CardGrid, CodeBlock, InfoBox, InfoTable, Prose, Section, StatCard, T , TopicPage } from '@study-ui/components'
 
 /* ── Inline data ──────────────────────────────────────────────────── */
 
@@ -42,33 +42,13 @@ const gslbMethodRows = [
 
 export default function Topic14LoadBalancing() {
     return (
-        <div className="max-w-4xl mx-auto px-6 py-10 space-y-14">
-            <header className="space-y-3">
-                <p className="text-xs font-mono text-blue-500 dark:text-blue-400 uppercase tracking-widest">
-                    Topic 14
-                </p>
-                <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
-                    로드밸런싱과 글로벌 트래픽 관리
-                </h1>
-                <p className="text-sm text-gray-500 dark:text-gray-400">
-                    Load Balancing & Global Traffic Management
-                </p>
-                <p className="text-gray-600 dark:text-gray-400 leading-relaxed text-sm">
-                    로드밸런서의 기본 구조부터 L4/L7 비교, 리버스 프록시, CDN, GSLB, 고가용성 설계까지
-                    트래픽 분산과 글로벌 서비스 아키텍처의 핵심을 학습합니다.
-                </p>
-            </header>
-
-            <LearningCard
-                topicId="14-load-balancing"
-                items={[
+        <TopicPage topicId="14-load-balancing" learningItems={[
                     'L4/L7 로드밸런싱의 차이를 이해한다',
                     '리버스 프록시와 API 게이트웨이의 역할을 설명할 수 있다',
                     'CDN의 캐싱 원리와 Origin Pull 구조를 파악한다',
                     'GSLB의 DNS 기반 글로벌 분산 원리를 이해한다',
                     '고가용성(HA) 설계 원리를 파악한다',
-                ]}
-            />
+                ]}>
 
             {/* ── 14.1 ────────────────────────────────────────────── */}
             <Section id="s141" title="14.1  로드밸런서 기본 구조">
@@ -266,8 +246,6 @@ export default function Topic14LoadBalancing() {
                     </ul>
                 </InfoBox>
             </Section>
-
-            <TopicNavigation topicId="14-load-balancing" />
-        </div>
+        </TopicPage>
     )
 }

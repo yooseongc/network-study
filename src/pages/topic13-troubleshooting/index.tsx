@@ -1,5 +1,5 @@
 import { TroubleshootFlowDiagram } from '../../components/concepts/troubleshoot/TroubleshootFlowDiagram'
-import { Alert, CardGrid, CodeBlock, InfoBox, InfoTable, InlineCode, LearningCard, Prose, Section, StatCard, T, TopicNavigation } from '@study-ui/components'
+import { Alert, CardGrid, CodeBlock, InfoBox, InfoTable, InlineCode, Prose, Section, StatCard, T , TopicPage } from '@study-ui/components'
 import {
     pingCode, tracerouteCode, mtrCode, tcpdumpBasicCode, tcpdumpFlagCode,
     dnsDebugCode, tcpDebugCode, mtuDebugCode, ssSocketCode, dmesgNetCode,
@@ -87,32 +87,11 @@ const diagToolRows = [
 
 export default function Topic13Troubleshooting() {
     return (
-        <div className="max-w-4xl mx-auto px-6 py-10 space-y-14">
-            <header className="space-y-3">
-                <p className="text-xs font-mono text-blue-500 dark:text-blue-400 uppercase tracking-widest">
-                    Topic 13
-                </p>
-                <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
-                    네트워크 장애 분석과 관측
-                </h1>
-                <p className="text-sm text-gray-500 dark:text-gray-400">
-                    Network Troubleshooting & Observability
-                </p>
-                <p className="text-gray-600 dark:text-gray-400 leading-relaxed text-sm">
-                    네트워크 장애가 발생했을 때 원인을 체계적으로 분석하는 방법을 학습합니다.
-                    ping, traceroute, tcpdump 등의 도구 사용법부터 TCP 플래그 해석,
-                    DNS/TCP/MTU 장애 구분, 그리고 통합 분석 절차를 다룹니다.
-                </p>
-            </header>
-
-            <LearningCard
-                topicId="13-troubleshooting"
-                items={[
+        <TopicPage topicId="13-troubleshooting" learningItems={[
                     'tcpdump로 패킷 캡처 및 분석을 수행할 수 있다',
                     '장애 원인을 DNS/TCP/TLS 단계별로 구분할 수 있다',
                     '체계적 장애 분석 절차를 설명할 수 있다',
-                ]}
-            />
+                ]}>
 
             <Section id="s131" title="13.1  장애 분석 기본 절차">
                 <Prose>
@@ -282,8 +261,6 @@ export default function Topic13Troubleshooting() {
                     </InfoBox>
                 </CardGrid>
             </Section>
-
-            <TopicNavigation topicId="13-troubleshooting" />
-        </div>
+        </TopicPage>
     )
 }

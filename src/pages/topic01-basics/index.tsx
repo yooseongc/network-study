@@ -1,6 +1,6 @@
 import { OsiTcpIpCompare } from '../../components/concepts/basics/OsiTcpIpCompare'
 import { EncapsulationDiagram } from '../../components/concepts/basics/EncapsulationDiagram'
-import { Alert, CardGrid, CodeBlock, InfoBox, InfoTable, LearningCard, Prose, Section, StatCard, T, TopicNavigation } from '@study-ui/components'
+import { Alert, CardGrid, CodeBlock, InfoBox, InfoTable, Prose, Section, StatCard, T , TopicPage } from '@study-ui/components'
 import {
     pingCode,
     mtuCheckCode,
@@ -44,35 +44,16 @@ const osiDetailRows = [
 
 export default function Topic01() {
     return (
-        <div className="max-w-4xl mx-auto px-6 py-10 space-y-14">
-            {/* ── Header ─────────────────────────────────────────── */}
-            <header className="space-y-3">
-                <p className="text-xs font-mono text-blue-500 dark:text-blue-400 uppercase tracking-widest">
-                    Topic 01
-                </p>
-                <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
-                    네트워크의 기초와 전체 구조
-                </h1>
-                <p className="text-sm text-gray-500 dark:text-gray-400">
-                    Network Fundamentals & Architecture
-                </p>
-                <p className="text-gray-600 dark:text-gray-400 leading-relaxed text-sm">
-                    네트워크가 왜 계층적으로 설계되었는지 이해하고, 데이터가 어떤 단위를 거쳐
-                    전달되는지 큰 그림을 잡습니다. 이 토픽은 이후 모든 네트워크 학습의 기반이 됩니다.
-                </p>
-            </header>
-
-            {/* ── Learning Card ───────────────────────────────────── */}
-            <LearningCard
-                topicId="01-basics"
-                items={[
+        <TopicPage topicId="01-basics" learningItems={[
                     'LAN, WAN, Internet의 차이를 구분할 수 있다',
                     '패킷 교환 방식과 회선 교환 방식의 차이를 이해한다',
                     'OSI 7계층과 TCP/IP 모델의 차이를 이해한다',
                     '캡슐화/역캡슐화 과정을 시각적으로 파악한다',
                     'MTU의 의미와 중요성을 설명할 수 있다',
-                ]}
-            />
+                ]}>
+            {/* ── Header ─────────────────────────────────────────── */}
+
+            {/* ── Learning Card ───────────────────────────────────── */}
 
             {/* ── 1.1 네트워크란 무엇인가 ──────────────────────────── */}
             <Section id="s011" title="1.1  네트워크란 무엇인가">
@@ -457,7 +438,6 @@ export default function Topic01() {
             </Section>
 
             {/* ── Navigation ─────────────────────────────────────── */}
-            <TopicNavigation topicId="01-basics" />
-        </div>
+        </TopicPage>
     )
 }

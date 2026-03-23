@@ -1,7 +1,7 @@
 import { HomeVsEnterprise } from '../../components/concepts/topology/HomeVsEnterprise'
 import { NetworkTiersDiagram } from '../../components/concepts/topology/NetworkTiersDiagram'
 import { DevicePlacementDiagram } from '../../components/concepts/topology/DevicePlacementDiagram'
-import { Alert, CardGrid, CodeBlock, InfoBox, InfoTable, LearningCard, Prose, Section, StatCard, T, TopicNavigation } from '@study-ui/components'
+import { Alert, CardGrid, CodeBlock, InfoBox, InfoTable, Prose, Section, StatCard, T , TopicPage } from '@study-ui/components'
 import {
     homeNetworkConfigCode,
     enterpriseSubnetCode,
@@ -110,34 +110,13 @@ const vlanDesignRows = [
 
 export default function Topic02() {
     return (
-        <div className="max-w-4xl mx-auto px-6 py-10 space-y-14">
-            <header className="space-y-3">
-                <p className="text-xs font-mono text-blue-500 dark:text-blue-400 uppercase tracking-widest">
-                    Topic 02
-                </p>
-                <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
-                    실제 네트워크 망 구성의 기초
-                </h1>
-                <p className="text-sm text-gray-500 dark:text-gray-400">
-                    Real-World Network Design
-                </p>
-                <p className="text-gray-600 dark:text-gray-400 leading-relaxed text-sm">
-                    가정용과 기업 네트워크 구조의 차이를 비교하고, DMZ와 보안장비 배치의 원리를 학습합니다.
-                    각 네트워크 장비의 상세 기능과 실제 이중화 구성까지, 실무에서 네트워크가 어떻게 설계되는지
-                    전체 그림을 잡는 것이 이 토픽의 목표입니다.
-                </p>
-            </header>
-
-            <LearningCard
-                topicId="02-network-design"
-                items={[
+        <TopicPage topicId="02-network-design" learningItems={[
                     '가정용/기업 네트워크 구조 차이를 설명할 수 있다',
                     'DMZ와 망 분리 개념을 이해한다',
                     'L2 스위치, L3 스위치, 라우터, 방화벽, 로드밸런서의 상세 기능을 구분할 수 있다',
                     'VRRP, LACP, ECMP 등 이중화 프로토콜의 동작 원리를 이해한다',
                     '실무 이중화 구성 사례를 읽고 설명할 수 있다',
-                ]}
-            />
+                ]}>
 
             {/* ── 2.1 ────────────────────────────────────────────── */}
             <Section id="s021" title="2.1  가정용 네트워크 vs 기업 네트워크">
@@ -437,8 +416,6 @@ export default function Topic02() {
                     Topic 03에서는 물리 계층과 링크 계층을 다룹니다.
                 </InfoBox>
             </Section>
-
-            <TopicNavigation topicId="02-network-design" />
-        </div>
+        </TopicPage>
     )
 }

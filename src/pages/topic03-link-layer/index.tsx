@@ -1,6 +1,6 @@
 import { EthernetFrameDiagram } from '../../components/concepts/link/EthernetFrameDiagram'
 import { ArpFlowDiagram } from '../../components/concepts/link/ArpFlowDiagram'
-import { Alert, CardGrid, CodeBlock, InfoBox, InfoTable, InlineCode, LearningCard, Prose, Section, StatCard, T, TopicNavigation } from '@study-ui/components'
+import { Alert, CardGrid, CodeBlock, InfoBox, InfoTable, InlineCode, Prose, Section, StatCard, T , TopicPage } from '@study-ui/components'
 import {
     ipLinkShowCode,
     arpTableCode,
@@ -78,36 +78,15 @@ const linkStateRows = [
 
 export default function Topic03() {
     return (
-        <div className="max-w-4xl mx-auto px-6 py-10 space-y-14">
-            {/* ── Header ── */}
-            <header className="space-y-3">
-                <p className="text-xs font-mono text-blue-500 dark:text-blue-400 uppercase tracking-widest">
-                    Topic 03
-                </p>
-                <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
-                    물리 계층과 링크 계층
-                </h1>
-                <p className="text-sm text-gray-500 dark:text-gray-400">
-                    Physical & Link Layer
-                </p>
-                <p className="text-gray-600 dark:text-gray-400 leading-relaxed text-sm">
-                    네트워크 통신의 가장 낮은 두 계층을 살펴봅니다. Ethernet 프레임이 어떻게 구성되는지,
-                    스위치가 MAC 주소를 학습하여 효율적으로 패킷을 전달하는 과정을 이해하고,
-                    VLAN과 NIC bonding 등 실무 기술을 학습합니다.
-                </p>
-            </header>
-
-            <LearningCard
-                topicId="03-link-layer"
-                items={[
+        <TopicPage topicId="03-link-layer" learningItems={[
                     'Ethernet 프레임 구조를 이해한다',
                     'NIC의 역할과 MAC 주소의 의미를 설명할 수 있다',
                     '스위치의 MAC 테이블 동작(Learning, Flooding, Forwarding)을 설명할 수 있다',
                     'ARP 동작 과정과 Gratuitous ARP의 용도를 이해한다',
                     'VLAN과 802.1Q 태깅의 원리를 파악한다',
                     'NIC bonding/LACP의 기본 개념을 이해한다',
-                ]}
-            />
+                ]}>
+            {/* ── Header ── */}
 
             {/* ── 3.1 Ethernet 기본 구조 ── */}
             <Section id="s031" title="3.1  Ethernet의 기본 구조">
@@ -493,8 +472,6 @@ export default function Topic03() {
                     </ul>
                 </InfoBox>
             </Section>
-
-            <TopicNavigation topicId="03-link-layer" />
-        </div>
+        </TopicPage>
     )
 }

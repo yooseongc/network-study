@@ -1,6 +1,6 @@
 import { TrafficFlowDiagram } from '../../components/concepts/service/TrafficFlowDiagram'
 import { EastWestNorthSouth } from '../../components/concepts/service/EastWestNorthSouth'
-import { Alert, CardGrid, CodeBlock, InfoBox, InfoTable, LearningCard, Prose, Section, StatCard, T, TopicNavigation } from '@study-ui/components'
+import { Alert, CardGrid, CodeBlock, InfoBox, InfoTable, Prose, Section, StatCard, T , TopicPage } from '@study-ui/components'
 import {
     iptablesNatCode,
     nginxReverseProxyCode,
@@ -58,33 +58,13 @@ const haCompareRows = [
 
 export default function Topic08ServiceFlow() {
     return (
-        <div className="max-w-4xl mx-auto px-6 py-10 space-y-14">
-            <header className="space-y-3">
-                <p className="text-xs font-mono text-blue-500 dark:text-blue-400 uppercase tracking-widest">
-                    Topic 08
-                </p>
-                <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
-                    실제 서비스 망 설계와 트래픽 흐름
-                </h1>
-                <p className="text-sm text-gray-500 dark:text-gray-400">
-                    Service Network Design & Traffic Flow
-                </p>
-                <p className="text-gray-600 dark:text-gray-400 leading-relaxed text-sm">
-                    사용자의 요청이 실제로 어떤 장비를 거쳐 서버에 도달하는지, 망 설계의 핵심 원칙과
-                    NAT, 로드 밸런서, 보안장비의 역할을 단계별로 학습합니다.
-                </p>
-            </header>
-
-            <LearningCard
-                topicId="08-service-flow"
-                items={[
+        <TopicPage topicId="08-service-flow" learningItems={[
                     '사용자 요청의 End-to-End 경로를 장비 단위로 추적할 수 있다',
                     'DMZ, 내부망, 관리망의 분리 이유를 설명할 수 있다',
                     'NAT(SNAT/DNAT) 적용 위치와 동작 원리를 이해한다',
                     'East-West / North-South 트래픽 패턴을 구분할 수 있다',
                     '고가용성(HA) 구성의 기본 패턴을 파악한다',
-                ]}
-            />
+                ]}>
 
             {/* ── 8.1 ─────────────────────────────────────────────── */}
             <Section id="s081" title="8.1  사용자 요청의 전체 경로">
@@ -402,8 +382,6 @@ export default function Topic08ServiceFlow() {
                     패킷을 처리하는지 소프트웨어 관점에서 심층적으로 학습합니다.
                 </Alert>
             </Section>
-
-            <TopicNavigation topicId="08-service-flow" />
-        </div>
+        </TopicPage>
     )
 }

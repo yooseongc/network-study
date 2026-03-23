@@ -1,5 +1,5 @@
 import { IprouteFlowDiagram } from '../../components/concepts/linux-net/IprouteFlowDiagram'
-import { Alert, CardGrid, CodeBlock, InfoBox, InfoTable, LearningCard, Prose, Section, T, TopicNavigation } from '@study-ui/components'
+import { Alert, CardGrid, CodeBlock, InfoBox, InfoTable, Prose, Section, T , TopicPage } from '@study-ui/components'
 import {
     ipAddrCode,
     ipAddrDetailCode,
@@ -90,30 +90,7 @@ const ssOptionRows = [
 
 export default function Topic10Iproute2Admin() {
     return (
-        <div className="max-w-4xl mx-auto px-6 py-10 space-y-14">
-            {/* ── Header ─────────────────────────────────────────── */}
-            <header className="space-y-3">
-                <p className="text-xs font-mono text-blue-500 dark:text-blue-400 uppercase tracking-widest">
-                    Topic 10
-                </p>
-                <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
-                    iproute2와 리눅스 네트워크 관리
-                </h1>
-                <p className="text-sm text-gray-500 dark:text-gray-400">
-                    iproute2 & Linux Network Administration
-                </p>
-                <p className="text-gray-600 dark:text-gray-400 leading-relaxed text-sm">
-                    iproute2 도구의 심화 사용법을 학습합니다.
-                    ip addr, ip link, ip route, ip rule의 고급 기능과 실전 시나리오를 다루고,
-                    tc/qdisc를 활용한 트래픽 제어, ss를 이용한 소켓 상태 관찰,
-                    네트워크 네임스페이스의 원리를 익힙니다.
-                </p>
-            </header>
-
-            {/* ── Learning Card ───────────────────────────────────── */}
-            <LearningCard
-                topicId="10-iproute2-admin"
-                items={[
+        <TopicPage topicId="10-iproute2-admin" learningItems={[
                     'ip addr로 scope, primary/secondary, IPv6까지 세밀하게 관리할 수 있다',
                     'ip link로 veth, bridge, vlan, bond 등 가상 인터페이스를 생성할 수 있다',
                     'ip route 출력을 한 줄씩 해석하고 ECMP/blackhole 등 고급 라우팅을 설정할 수 있다',
@@ -122,8 +99,10 @@ export default function Topic10Iproute2Admin() {
                     'tc/qdisc로 HTB 대역폭 제어, netem 시뮬레이션, fq_codel 동작을 이해한다',
                     'ss로 소켓 상태를 관찰하고 분석할 수 있다',
                     '네트워크 네임스페이스와 veth의 원리를 파악한다',
-                ]}
-            />
+                ]}>
+            {/* ── Header ─────────────────────────────────────────── */}
+
+            {/* ── Learning Card ───────────────────────────────────── */}
 
             {/* ── 10.1 ip addr — 주소 관리 상세 ────────────────── */}
             <Section id="s101" title="10.1  ip addr — 주소 관리 상세">
@@ -443,8 +422,6 @@ export default function Topic10Iproute2Admin() {
                     고성능 네트워크 처리(XDP, DPDK), 그리고 실전 네트워크 장애 분석을 학습합니다.
                 </Alert>
             </Section>
-
-            <TopicNavigation topicId="10-iproute2-admin" />
-        </div>
+        </TopicPage>
     )
 }

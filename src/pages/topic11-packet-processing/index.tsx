@@ -1,5 +1,5 @@
 import { NetfilterHooksDiagram } from '../../components/concepts/firewall/NetfilterHooksDiagram'
-import { Alert, CardGrid, CodeBlock, InfoBox, InfoTable, InlineCode, LearningCard, Prose, Section, StatCard, T, TopicNavigation } from '@study-ui/components'
+import { Alert, CardGrid, CodeBlock, InfoBox, InfoTable, InlineCode, Prose, Section, StatCard, T , TopicPage } from '@study-ui/components'
 import {
     iptablesListCode,
     iptablesBasicCode,
@@ -66,34 +66,13 @@ const inlineVsOopRows = [
 
 export default function Topic11PacketProcessing() {
     return (
-        <div className="max-w-4xl mx-auto px-6 py-10 space-y-14">
-            <header className="space-y-3">
-                <p className="text-xs font-mono text-blue-500 dark:text-blue-400 uppercase tracking-widest">
-                    Topic 11
-                </p>
-                <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
-                    패킷 처리와 방화벽 / NAT / 프록시
-                </h1>
-                <p className="text-sm text-gray-500 dark:text-gray-400">
-                    Packet Processing, Firewall, NAT & Proxy
-                </p>
-                <p className="text-gray-600 dark:text-gray-400 leading-relaxed text-sm">
-                    리눅스 커널의 Netfilter 프레임워크를 기반으로 패킷 필터링, 주소 변환(NAT),
-                    투명 프록시(TPROXY)가 어떻게 동작하는지 커널 수준에서 이해합니다.
-                    iptables/nftables를 통한 방화벽 구성과 conntrack 기반 상태 추적의 원리를 학습합니다.
-                </p>
-            </header>
-
-            <LearningCard
-                topicId="11-packet-processing"
-                items={[
+        <TopicPage topicId="11-packet-processing" learningItems={[
                     'Netfilter 5개 훅 포인트의 위치와 역할을 이해한다',
                     'conntrack과 stateful 방화벽의 동작을 설명할 수 있다',
                     'SNAT/DNAT/MASQUERADE의 차이와 적용 위치를 파악한다',
                     'TPROXY와 transparent proxy의 원리를 이해한다',
                     'inline 장비와 out-of-path 장비의 차이를 구분할 수 있다',
-                ]}
-            />
+                ]}>
 
             {/* ── 11.1 ──────────────────────────────────────────────── */}
             <Section id="s111" title="11.1  Netfilter 구조">
@@ -344,8 +323,6 @@ export default function Topic11PacketProcessing() {
                     트래픽 제어(Traffic Control), QoS를 학습합니다.
                 </Alert>
             </Section>
-
-            <TopicNavigation topicId="11-packet-processing" />
-        </div>
+        </TopicPage>
     )
 }

@@ -1,5 +1,5 @@
 import { TlsHandshakeDiagram } from '../../components/concepts/application/TlsHandshakeDiagram'
-import { Alert, CardGrid, CodeBlock, InfoBox, InfoTable, InlineCode, LearningCard, Prose, Section, StatCard, T, TopicNavigation } from '@study-ui/components'
+import { Alert, CardGrid, CodeBlock, InfoBox, InfoTable, InlineCode, Prose, Section, StatCard, T , TopicPage } from '@study-ui/components'
 import {
     curlCode,
     opensslCode,
@@ -107,28 +107,7 @@ const defenseRows = [
 
 export default function Topic07HttpTlsSecurity() {
     return (
-        <div className="max-w-4xl mx-auto px-6 py-10 space-y-14">
-            {/* Header */}
-            <header className="space-y-3">
-                <p className="text-xs font-mono text-blue-500 dark:text-blue-400 uppercase tracking-widest">
-                    Topic 07
-                </p>
-                <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
-                    HTTP, TLS와 응용 보안
-                </h1>
-                <p className="text-sm text-gray-500 dark:text-gray-400">
-                    HTTP, TLS &amp; Application Security
-                </p>
-                <p className="text-gray-600 dark:text-gray-400 leading-relaxed text-sm">
-                    HTTP/HTTPS 통신 구조와 TLS handshake, 인증서/PKI 체계를 심층적으로 학습합니다.
-                    DHCP, SSH, 메일/파일 전송 프로토콜과 네트워크 보안 기초,
-                    프록시/리버스 프록시의 역할까지 응용 계층의 핵심 기술을 포괄적으로 다룹니다.
-                </p>
-            </header>
-
-            <LearningCard
-                topicId="07-http-tls-security"
-                items={[
+        <TopicPage topicId="07-http-tls-security" learningItems={[
                     'HTTP 요청/응답 구조와 주요 메서드, HTTP/2와 HTTP/3의 차이를 설명할 수 있다',
                     'TLS 1.2/1.3 handshake 차이와 인증서 체인을 이해한다',
                     'mTLS, 암호 스위트, SNI, OCSP를 설명할 수 있다',
@@ -136,8 +115,8 @@ export default function Topic07HttpTlsSecurity() {
                     'SSH 인증 방식과 포트 포워딩을 이해한다',
                     '주요 네트워크 공격 유형과 방어 기술을 파악한다',
                     '프록시와 리버스 프록시의 차이를 구분할 수 있다',
-                ]}
-            />
+                ]}>
+            {/* Header */}
 
             {/* ── 7.1 HTTP 기본 구조 ──────────────────────────────── */}
             <Section id="s071" title="7.1  HTTP 기본 구조">
@@ -548,8 +527,6 @@ export default function Topic07HttpTlsSecurity() {
                     조합되어 동작하는지, 전체 트래픽 흐름을 추적합니다.
                 </Alert>
             </Section>
-
-            <TopicNavigation topicId="07-http-tls-security" />
-        </div>
+        </TopicPage>
     )
 }

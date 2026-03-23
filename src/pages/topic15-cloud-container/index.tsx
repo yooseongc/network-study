@@ -1,5 +1,5 @@
 import { wireguardCode, dockerNetworkCode, kubectlNetworkCode, istioSidecarCode } from './codeSnippets'
-import { Alert, CardGrid, CodeBlock, InfoBox, InfoTable, LearningCard, Prose, Section, StatCard, T, TopicNavigation } from '@study-ui/components'
+import { Alert, CardGrid, CodeBlock, InfoBox, InfoTable, Prose, Section, StatCard, T , TopicPage } from '@study-ui/components'
 
 /* ── Inline data ──────────────────────────────────────────────────── */
 
@@ -50,33 +50,13 @@ const zeroTrustRows = [
 
 export default function Topic15CloudContainer() {
     return (
-        <div className="max-w-4xl mx-auto px-6 py-10 space-y-14">
-            <header className="space-y-3">
-                <p className="text-xs font-mono text-blue-500 dark:text-blue-400 uppercase tracking-widest">
-                    Topic 15
-                </p>
-                <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
-                    클라우드·컨테이너 네트워크와 제로 트러스트
-                </h1>
-                <p className="text-sm text-gray-500 dark:text-gray-400">
-                    Cloud, Container Network & Zero Trust
-                </p>
-                <p className="text-gray-600 dark:text-gray-400 leading-relaxed text-sm">
-                    VPN/터널링, 클라우드 VPC, 컨테이너 네트워크, 서비스 메시, Zero Trust 등
-                    현대적인 인프라 네트워크의 핵심 기술을 학습합니다.
-                </p>
-            </header>
-
-            <LearningCard
-                topicId="15-cloud-container"
-                items={[
+        <TopicPage topicId="15-cloud-container" learningItems={[
                     'VPN/터널링 기술의 종류와 차이를 구분할 수 있다',
                     '클라우드 VPC 네트워크의 기초를 설명할 수 있다',
                     '컨테이너 네트워크와 CNI 플러그인의 역할을 이해한다',
                     '서비스 메시의 구조와 mTLS를 설명할 수 있다',
                     'Zero Trust 보안 모델의 핵심 원칙을 파악한다',
-                ]}
-            />
+                ]}>
 
             {/* ── 15.1 ────────────────────────────────────────────── */}
             <Section id="s151" title="15.1  VPN과 터널링">
@@ -233,8 +213,6 @@ export default function Topic15CloudContainer() {
                     </ul>
                 </InfoBox>
             </Section>
-
-            <TopicNavigation topicId="15-cloud-container" />
-        </div>
+        </TopicPage>
     )
 }
