@@ -95,7 +95,7 @@ export default function Topic13Troubleshooting() {
                 <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
                     네트워크 장애 분석과 관측
                 </h1>
-                <p className="text-sm text-gray-500 dark:text-gray-400 font-mono">
+                <p className="text-sm text-gray-500 dark:text-gray-400">
                     Network Troubleshooting & Observability
                 </p>
                 <p className="text-gray-600 dark:text-gray-400 leading-relaxed text-sm">

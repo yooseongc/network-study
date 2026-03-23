@@ -55,7 +55,7 @@ export default function Topic09LinuxStack() {
                 <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
                     리눅스 네트워크 스택
                 </h1>
-                <p className="text-sm text-gray-500 dark:text-gray-400 font-mono">
+                <p className="text-sm text-gray-500 dark:text-gray-400">
                     Linux Network Stack Internals
                 </p>
                 <p className="text-gray-600 dark:text-gray-400 leading-relaxed text-sm">

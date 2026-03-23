@@ -50,7 +50,7 @@ export default function Topic14LoadBalancing() {
                 <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
                     로드밸런싱과 글로벌 트래픽 관리
                 </h1>
-                <p className="text-sm text-gray-500 dark:text-gray-400 font-mono">
+                <p className="text-sm text-gray-500 dark:text-gray-400">
                     Load Balancing & Global Traffic Management
                 </p>
                 <p className="text-gray-600 dark:text-gray-400 leading-relaxed text-sm">

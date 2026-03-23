@@ -116,7 +116,7 @@ export default function Topic07HttpTlsSecurity() {
                 <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
                     HTTP, TLS와 응용 보안
                 </h1>
-                <p className="text-sm text-gray-500 dark:text-gray-400 font-mono">
+                <p className="text-sm text-gray-500 dark:text-gray-400">
                     HTTP, TLS &amp; Application Security
                 </p>
                 <p className="text-gray-600 dark:text-gray-400 leading-relaxed text-sm">

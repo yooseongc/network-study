@@ -99,7 +99,7 @@ export default function Topic10Iproute2Admin() {
                 <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
                     iproute2와 리눅스 네트워크 관리
                 </h1>
-                <p className="text-sm text-gray-500 dark:text-gray-400 font-mono">
+                <p className="text-sm text-gray-500 dark:text-gray-400">
                     iproute2 & Linux Network Administration
                 </p>
                 <p className="text-gray-600 dark:text-gray-400 leading-relaxed text-sm">

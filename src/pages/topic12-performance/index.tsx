@@ -83,7 +83,7 @@ export default function Topic12Performance() {
                 <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
                     성능과 트래픽 제어
                 </h1>
-                <p className="text-sm text-gray-500 dark:text-gray-400 font-mono">
+                <p className="text-sm text-gray-500 dark:text-gray-400">
                     Performance & Traffic Control
                 </p>
                 <p className="text-gray-600 dark:text-gray-400 leading-relaxed text-sm">

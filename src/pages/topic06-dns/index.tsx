@@ -61,7 +61,7 @@ export default function Topic06Dns() {
                 <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
                     DNS 심화
                 </h1>
-                <p className="text-sm text-gray-500 dark:text-gray-400 font-mono">
+                <p className="text-sm text-gray-500 dark:text-gray-400">
                     DNS Deep Dive
                 </p>
                 <p className="text-gray-600 dark:text-gray-400 leading-relaxed text-sm">

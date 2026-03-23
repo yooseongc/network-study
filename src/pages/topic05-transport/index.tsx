@@ -87,7 +87,7 @@ export default function Topic05() {
                 <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
                     전송 계층: TCP와 UDP
                 </h1>
-                <p className="text-sm text-gray-500 dark:text-gray-400 font-mono">
+                <p className="text-sm text-gray-500 dark:text-gray-400">
                     Transport Layer: TCP & UDP
                 </p>
                 <p className="text-gray-600 dark:text-gray-400 leading-relaxed text-sm">

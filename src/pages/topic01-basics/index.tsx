@@ -53,7 +53,7 @@ export default function Topic01() {
                 <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
                     네트워크의 기초와 전체 구조
                 </h1>
-                <p className="text-sm text-gray-500 dark:text-gray-400 font-mono">
+                <p className="text-sm text-gray-500 dark:text-gray-400">
                     Network Fundamentals & Architecture
                 </p>
                 <p className="text-gray-600 dark:text-gray-400 leading-relaxed text-sm">
