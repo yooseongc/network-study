@@ -334,7 +334,7 @@ export default function Graph() {
         <div className="max-w-6xl mx-auto px-6 py-10">
             {/* Header */}
             <header className="space-y-2 mb-8">
-                <p className="text-xs font-mono text-blue-500 dark:text-blue-400 uppercase tracking-widest">
+                <p className="text-xs font-semibold text-blue-500 dark:text-blue-400 uppercase tracking-widest">
                     개념 지도
                 </p>
                 <h1 className="text-3xl font-bold text-gray-900 dark:text-white">네트워크 개념 그래프</h1>
