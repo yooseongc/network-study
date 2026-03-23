@@ -1,4 +1,4 @@
-import { AnimatedDiagram } from '../../viz/AnimatedDiagram'
+import { AnimatedDiagram } from '@study-ui/components'
 
 const dnsSteps = [
     {

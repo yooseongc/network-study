@@ -1,17 +1,7 @@
-import { CardGrid } from '../../components/ui/CardGrid'
-import { Section } from '../../components/ui/Section'
-import { Prose } from '../../components/ui/Prose'
-import { InfoBox } from '../../components/ui/InfoBox'
-import { InfoTable } from '../../components/ui/InfoTable'
-import { StatCard } from '../../components/ui/StatCard'
-import { Alert } from '../../components/ui/Alert'
-import { LearningCard } from '../../components/ui/LearningCard'
-import { TopicNavigation } from '../../components/ui/TopicNavigation'
-import { CodeBlock } from '../../components/viz/CodeBlock'
-import { T } from '../../components/ui/GlossaryTooltip'
 import { HomeVsEnterprise } from '../../components/concepts/topology/HomeVsEnterprise'
 import { NetworkTiersDiagram } from '../../components/concepts/topology/NetworkTiersDiagram'
 import { DevicePlacementDiagram } from '../../components/concepts/topology/DevicePlacementDiagram'
+import { Alert, CardGrid, CodeBlock, InfoBox, InfoTable, LearningCard, Prose, Section, StatCard, T, TopicNavigation } from '@study-ui/components'
 import {
     homeNetworkConfigCode,
     enterpriseSubnetCode,

@@ -1,6 +1,6 @@
-import { CardGrid } from '../../components/ui/CardGrid'
 import { Link } from 'react-router-dom'
 import { networkTopics } from '../../data/networkTopics'
+import { CardGrid } from '@study-ui/components'
 
 const difficultyLabel = { beginner: '입문', intermediate: '중급', advanced: '심화' }
 const difficultyColor = {

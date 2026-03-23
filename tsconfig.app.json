@@ -7,6 +7,12 @@
     "module": "ESNext",
     "types": ["vite/client"],
     "skipLibCheck": true,
+
+    "paths": {
+      "@study-ui/components": ["./lib/study-ui-lib/packages/ui/src/index.ts"],
+      "@study-ui/components/*": ["./lib/study-ui-lib/packages/ui/src/*"]
+    },
+
     "moduleResolution": "bundler",
     "allowImportingTsExtensions": true,
     "verbatimModuleSyntax": true,

@@ -1,6 +1,4 @@
-import { AnimatedDiagram } from '../../viz/AnimatedDiagram'
-import { themeColors } from '../../../lib/colors'
-import { useIsDark } from '../../../hooks/useIsDark'
+import { themeColors,useIsDark , AnimatedDiagram } from '@study-ui/components'
 
 const steps = [
     {

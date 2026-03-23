@@ -1,7 +1,5 @@
 import { useCallback } from 'react'
-import { D3Container } from '../../viz/D3Container'
-import { themeColors } from '../../../lib/colors'
-import { useIsDark } from '../../../hooks/useIsDark'
+import { themeColors,useIsDark , D3Container } from '@study-ui/components'
 import * as d3 from 'd3'
 
 export function SkbuffDiagram() {

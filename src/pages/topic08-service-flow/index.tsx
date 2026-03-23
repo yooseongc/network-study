@@ -1,16 +1,6 @@
-import { CardGrid } from '../../components/ui/CardGrid'
-import { Section } from '../../components/ui/Section'
-import { Prose } from '../../components/ui/Prose'
-import { InfoBox } from '../../components/ui/InfoBox'
-import { InfoTable } from '../../components/ui/InfoTable'
-import { StatCard } from '../../components/ui/StatCard'
-import { Alert } from '../../components/ui/Alert'
-import { LearningCard } from '../../components/ui/LearningCard'
-import { TopicNavigation } from '../../components/ui/TopicNavigation'
-import { CodeBlock } from '../../components/viz/CodeBlock'
-import { T } from '../../components/ui/GlossaryTooltip'
 import { TrafficFlowDiagram } from '../../components/concepts/service/TrafficFlowDiagram'
 import { EastWestNorthSouth } from '../../components/concepts/service/EastWestNorthSouth'
+import { Alert, CardGrid, CodeBlock, InfoBox, InfoTable, LearningCard, Prose, Section, StatCard, T, TopicNavigation } from '@study-ui/components'
 import {
     iptablesNatCode,
     nginxReverseProxyCode,

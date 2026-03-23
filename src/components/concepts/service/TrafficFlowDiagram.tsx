@@ -1,8 +1,6 @@
 import { useCallback, useState } from 'react'
 import * as d3 from 'd3'
-import { D3Container } from '../../viz/D3Container'
-import { useIsDark } from '../../../hooks/useIsDark'
-import { themeColors, createColorMap } from '../../../lib/colors'
+import { createColorMap,themeColors,useIsDark , D3Container } from '@study-ui/components'
 
 const FONT = "'Pretendard Variable', Pretendard, sans-serif"
 const MONO = "'JetBrains Mono', monospace"

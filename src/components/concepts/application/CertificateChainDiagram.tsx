@@ -1,7 +1,5 @@
 import { useCallback } from 'react'
-import { D3Container } from '../../viz/D3Container'
-import { themeColors, createColorMap } from '../../../lib/colors'
-import { useIsDark } from '../../../hooks/useIsDark'
+import { createColorMap,themeColors,useIsDark , D3Container } from '@study-ui/components'
 import * as d3 from 'd3'
 
 const FONT = "'Pretendard Variable', Pretendard, sans-serif"

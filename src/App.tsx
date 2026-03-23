@@ -1,7 +1,7 @@
 import { lazy, Suspense } from 'react'
 import { BrowserRouter, Routes, Route, Outlet } from 'react-router-dom'
-import { ThemeProvider } from './contexts/ThemeContext'
-import { AppLayout } from './components/layout/AppLayout'
+import { ThemeProvider, StudyProvider, AppLayout } from '@study-ui/components'
+import { siteConfig } from './data/siteConfig'
 import Home from './pages/Home'
 
 const Topic01 = lazy(() => import('./pages/topic01-basics'))
@@ -37,38 +37,40 @@ function PageFallback() {
 export default function App() {
     return (
         <ThemeProvider>
-            <BrowserRouter basename="/network-study">
-                <Routes>
-                    <Route element={<AppLayout />}>
-                        <Route index element={<Home />} />
-                        <Route
-                            element={
-                                <Suspense fallback={<PageFallback />}>
-                                    <Outlet />
-                                </Suspense>
-                            }
-                        >
-                            <Route path="topic/01-basics" element={<Topic01 />} />
-                            <Route path="topic/02-network-design" element={<Topic02 />} />
-                            <Route path="topic/03-link-layer" element={<Topic03 />} />
-                            <Route path="topic/04-ip-routing" element={<Topic04 />} />
-                            <Route path="topic/05-transport" element={<Topic05 />} />
-                            <Route path="topic/06-dns" element={<Topic06 />} />
-                            <Route path="topic/07-http-tls-security" element={<Topic07 />} />
-                            <Route path="topic/08-service-flow" element={<Topic08 />} />
-                            <Route path="topic/09-linux-stack" element={<Topic09 />} />
-                            <Route path="topic/10-iproute2-admin" element={<Topic10 />} />
-                            <Route path="topic/11-packet-processing" element={<Topic11 />} />
-                            <Route path="topic/12-performance" element={<Topic12 />} />
-                            <Route path="topic/13-troubleshooting" element={<Topic13 />} />
-                            <Route path="topic/14-load-balancing" element={<Topic14 />} />
-                            <Route path="topic/15-cloud-container" element={<Topic15 />} />
-                            <Route path="glossary" element={<Glossary />} />
-                            <Route path="graph" element={<Graph />} />
+            <StudyProvider config={siteConfig}>
+                <BrowserRouter basename="/network-study">
+                    <Routes>
+                        <Route element={<AppLayout />}>
+                            <Route index element={<Home />} />
+                            <Route
+                                element={
+                                    <Suspense fallback={<PageFallback />}>
+                                        <Outlet />
+                                    </Suspense>
+                                }
+                            >
+                                <Route path="topic/01-basics" element={<Topic01 />} />
+                                <Route path="topic/02-network-design" element={<Topic02 />} />
+                                <Route path="topic/03-link-layer" element={<Topic03 />} />
+                                <Route path="topic/04-ip-routing" element={<Topic04 />} />
+                                <Route path="topic/05-transport" element={<Topic05 />} />
+                                <Route path="topic/06-dns" element={<Topic06 />} />
+                                <Route path="topic/07-http-tls-security" element={<Topic07 />} />
+                                <Route path="topic/08-service-flow" element={<Topic08 />} />
+                                <Route path="topic/09-linux-stack" element={<Topic09 />} />
+                                <Route path="topic/10-iproute2-admin" element={<Topic10 />} />
+                                <Route path="topic/11-packet-processing" element={<Topic11 />} />
+                                <Route path="topic/12-performance" element={<Topic12 />} />
+                                <Route path="topic/13-troubleshooting" element={<Topic13 />} />
+                                <Route path="topic/14-load-balancing" element={<Topic14 />} />
+                                <Route path="topic/15-cloud-container" element={<Topic15 />} />
+                                <Route path="glossary" element={<Glossary />} />
+                                <Route path="graph" element={<Graph />} />
+                            </Route>
                         </Route>
-                    </Route>
-                </Routes>
-            </BrowserRouter>
+                    </Routes>
+                </BrowserRouter>
+            </StudyProvider>
         </ThemeProvider>
     )
 }

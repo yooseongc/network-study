@@ -1,15 +1,6 @@
-import { CardGrid } from '../../components/ui/CardGrid'
-import { Section } from '../../components/ui/Section'
-import { Prose } from '../../components/ui/Prose'
-import { InfoTable } from '../../components/ui/InfoTable'
-import { InfoBox } from '../../components/ui/InfoBox'
-import { Alert } from '../../components/ui/Alert'
-import { LearningCard } from '../../components/ui/LearningCard'
-import { TopicNavigation } from '../../components/ui/TopicNavigation'
-import { CodeBlock } from '../../components/viz/CodeBlock'
-import { T } from '../../components/ui/GlossaryTooltip'
 import { LinuxNetworkStackDiagram } from '../../components/concepts/linux-net/LinuxNetworkStackDiagram'
 import { SkbuffDiagram } from '../../components/concepts/linux-net/SkbuffDiagram'
+import { Alert, CardGrid, CodeBlock, InfoBox, InfoTable, LearningCard, Prose, Section, T, TopicNavigation } from '@study-ui/components'
 import {
     ethtoolCode,
     skbAscii,

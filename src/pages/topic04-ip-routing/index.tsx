@@ -1,18 +1,7 @@
-import { CardGrid } from '../../components/ui/CardGrid'
-import { InlineCode } from '../../components/ui/InlineCode'
-import { Section } from '../../components/ui/Section'
-import { Prose } from '../../components/ui/Prose'
-import { InfoBox } from '../../components/ui/InfoBox'
-import { InfoTable } from '../../components/ui/InfoTable'
-import { StatCard } from '../../components/ui/StatCard'
-import { Alert } from '../../components/ui/Alert'
-import { LearningCard } from '../../components/ui/LearningCard'
-import { TopicNavigation } from '../../components/ui/TopicNavigation'
 import { RfcRef } from '../../components/ui/RfcRef'
-import { CodeBlock } from '../../components/viz/CodeBlock'
-import { T } from '../../components/ui/GlossaryTooltip'
 import { SubnetDiagram } from '../../components/concepts/routing/SubnetDiagram'
 import { RoutingTableViz } from '../../components/concepts/routing/RoutingTableViz'
+import { Alert, CardGrid, CodeBlock, InfoBox, InfoTable, InlineCode, LearningCard, Prose, Section, StatCard, T, TopicNavigation } from '@study-ui/components'
 import {
     ipAddrShowCode,
     ipRouteShowCode,

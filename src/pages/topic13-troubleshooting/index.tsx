@@ -1,16 +1,5 @@
-import { CardGrid } from '../../components/ui/CardGrid'
-import { InlineCode } from '../../components/ui/InlineCode'
-import { Section } from '../../components/ui/Section'
-import { Prose } from '../../components/ui/Prose'
-import { InfoTable } from '../../components/ui/InfoTable'
-import { InfoBox } from '../../components/ui/InfoBox'
-import { StatCard } from '../../components/ui/StatCard'
-import { Alert } from '../../components/ui/Alert'
-import { LearningCard } from '../../components/ui/LearningCard'
-import { TopicNavigation } from '../../components/ui/TopicNavigation'
-import { CodeBlock } from '../../components/viz/CodeBlock'
-import { T } from '../../components/ui/GlossaryTooltip'
 import { TroubleshootFlowDiagram } from '../../components/concepts/troubleshoot/TroubleshootFlowDiagram'
+import { Alert, CardGrid, CodeBlock, InfoBox, InfoTable, InlineCode, LearningCard, Prose, Section, StatCard, T, TopicNavigation } from '@study-ui/components'
 import {
     pingCode, tracerouteCode, mtrCode, tcpdumpBasicCode, tcpdumpFlagCode,
     dnsDebugCode, tcpDebugCode, mtuDebugCode, ssSocketCode, dmesgNetCode,
