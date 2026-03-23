@@ -8,8 +8,7 @@ export default function Glossary() {
     const [activeCategory, setActiveCategory] = useState<string | null>(null)
 
     useEffect(() => {
-        const parts = window.location.hash.split('#')
-        const anchor = parts.length >= 3 ? parts[parts.length - 1] : null
+        const anchor = window.location.hash.replace('#', '')
         if (anchor) {
             requestAnimationFrame(() => {
                 const el = document.getElementById(anchor)
