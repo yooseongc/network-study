@@ -1,5 +1,5 @@
 import { useCallback } from 'react'
-import { createColorMap,themeColors,useIsDark , D3Container } from '@study-ui/components'
+import { createColorMap,createD3Theme,themeColors,useIsDark , D3Container } from '@study-ui/components'
 import * as d3 from 'd3'
 
 interface HookDef {
@@ -17,6 +17,7 @@ export function NetfilterHooksDiagram() {
     const render = useCallback(
         (svg: d3.Selection<SVGSVGElement, unknown, null, undefined>, width: number, _height: number) => {
             const c = themeColors(isDark)
+            const theme = createD3Theme(isDark)
             const g = svg.append('g')
 
             const colorMap = createColorMap(c, ['amber', 'blue', 'green', 'red', 'purple', 'cyan', 'indigo'])
@@ -48,7 +49,7 @@ export function NetfilterHooksDiagram() {
                 .attr('font-size', 14)
                 .attr('font-weight', 'bold')
                 .attr('fill', c.text)
-                .attr('font-family', "'Pretendard Variable', Pretendard, sans-serif")
+                .attr('font-family', theme.fonts.sans)
                 .text('Netfilter Hook Points')
 
             // Subtitle
@@ -58,7 +59,7 @@ export function NetfilterHooksDiagram() {
                 .attr('text-anchor', 'middle')
                 .attr('font-size', 11)
                 .attr('fill', c.textMuted)
-                .attr('font-family', "'Pretendard Variable', Pretendard, sans-serif")
+                .attr('font-family', theme.fonts.sans)
                 .text('패킷이 커널을 통과하는 5개 훅 포인트')
 
             // Arrow: Packet IN → PREROUTING
@@ -73,7 +74,7 @@ export function NetfilterHooksDiagram() {
                 .attr('font-size', 11)
                 .attr('font-weight', 'bold')
                 .attr('fill', c.greenText)
-                .attr('font-family', "'JetBrains Mono', monospace")
+                .attr('font-family', theme.fonts.mono)
                 .text('→ Packet IN')
 
             // Draw hook boxes
@@ -100,7 +101,7 @@ export function NetfilterHooksDiagram() {
                     .attr('font-size', isSmall ? 10 : 11)
                     .attr('font-weight', 'bold')
                     .attr('fill', cm.text)
-                    .attr('font-family', "'JetBrains Mono', monospace")
+                    .attr('font-family', theme.fonts.sans)
                     .text(hook.label)
 
                 g.append('text')
@@ -109,7 +110,7 @@ export function NetfilterHooksDiagram() {
                     .attr('text-anchor', 'middle')
                     .attr('font-size', hook.sublabel.length > 20 ? 8 : 9)
                     .attr('fill', c.textMuted)
-                    .attr('font-family', "'Pretendard Variable', Pretendard, sans-serif")
+                    .attr('font-family', theme.fonts.sans)
                     .text(hook.sublabel)
             })
 
@@ -130,7 +131,7 @@ export function NetfilterHooksDiagram() {
                 .attr('text-anchor', 'middle')
                 .attr('font-size', 9)
                 .attr('fill', c.textMuted)
-                .attr('font-family', "'JetBrains Mono', monospace")
+                .attr('font-family', theme.fonts.mono)
                 .text('local dest')
 
             // Routing Decision → FORWARD (remote dest)
@@ -146,7 +147,7 @@ export function NetfilterHooksDiagram() {
                 .attr('text-anchor', 'middle')
                 .attr('font-size', 9)
                 .attr('fill', c.textMuted)
-                .attr('font-family', "'JetBrains Mono', monospace")
+                .attr('font-family', theme.fonts.mono)
                 .text('remote dest')
 
             // INPUT → Local Process
@@ -180,7 +181,7 @@ export function NetfilterHooksDiagram() {
                 .attr('font-size', 11)
                 .attr('font-weight', 'bold')
                 .attr('fill', c.redText)
-                .attr('font-family', "'JetBrains Mono', monospace")
+                .attr('font-family', theme.fonts.mono)
                 .text('Packet OUT →')
         },
         [isDark],

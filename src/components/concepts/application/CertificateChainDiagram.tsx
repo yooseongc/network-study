@@ -1,9 +1,6 @@
 import { useCallback } from 'react'
-import { createColorMap,themeColors,useIsDark , D3Container } from '@study-ui/components'
+import { createColorMap,themeColors,useIsDark , D3Container, createD3Theme } from '@study-ui/components'
 import * as d3 from 'd3'
-
-const FONT = "'Pretendard Variable', Pretendard, sans-serif"
-const MONO = "'JetBrains Mono', monospace"
 
 export function CertificateChainDiagram() {
     const isDark = useIsDark()
@@ -11,6 +8,7 @@ export function CertificateChainDiagram() {
     const render = useCallback(
         (svg: d3.Selection<SVGSVGElement, unknown, null, undefined>, width: number, height: number) => {
             const c = themeColors(isDark)
+            const theme = createD3Theme(isDark)
             const cm = createColorMap(c, ['red', 'amber', 'green', 'blue', 'cyan'])
             const g = svg.append('g')
 
@@ -51,7 +49,7 @@ export function CertificateChainDiagram() {
                         .attr('font-size', 10)
                         .attr('font-weight', '600')
                         .attr('fill', color)
-                        .attr('font-family', FONT)
+                        .attr('font-family', theme.fonts.sans)
                         .text(label)
                 }
             }
@@ -64,7 +62,7 @@ export function CertificateChainDiagram() {
                 .attr('font-size', 14)
                 .attr('font-weight', 'bold')
                 .attr('fill', c.text)
-                .attr('font-family', FONT)
+                .attr('font-family', theme.fonts.sans)
                 .text('TLS Certificate Chain of Trust')
 
             // ── Certs ──
@@ -114,7 +112,7 @@ export function CertificateChainDiagram() {
                     .attr('font-size', 12)
                     .attr('font-weight', 'bold')
                     .attr('fill', m.text)
-                    .attr('font-family', FONT)
+                    .attr('font-family', theme.fonts.sans)
                     .text(cert.name)
 
                 // Issuer
@@ -124,7 +122,7 @@ export function CertificateChainDiagram() {
                     .attr('text-anchor', 'middle')
                     .attr('font-size', 9)
                     .attr('fill', c.textMuted)
-                    .attr('font-family', MONO)
+                    .attr('font-family', theme.fonts.mono)
                     .text(cert.issuer)
 
                 // Validity concept
@@ -134,7 +132,7 @@ export function CertificateChainDiagram() {
                     .attr('text-anchor', 'middle')
                     .attr('font-size', 9)
                     .attr('fill', c.textDim)
-                    .attr('font-family', MONO)
+                    .attr('font-family', theme.fonts.mono)
                     .text(cert.validity)
 
                 // "signs" arrow between certs
@@ -182,7 +180,7 @@ export function CertificateChainDiagram() {
                 .attr('font-size', 11)
                 .attr('font-weight', 'bold')
                 .attr('fill', cm.blue.text)
-                .attr('font-family', FONT)
+                .attr('font-family', theme.fonts.sans)
                 .attr('transform', `rotate(-90, ${chainX - 10}, ${chainMidY})`)
                 .text('Chain of Trust')
 
@@ -193,7 +191,7 @@ export function CertificateChainDiagram() {
                 .attr('text-anchor', 'middle')
                 .attr('font-size', 10)
                 .attr('fill', c.textMuted)
-                .attr('font-family', FONT)
+                .attr('font-family', theme.fonts.sans)
                 .text('Browser trusts Root CA → validates chain → accepts end-entity')
         },
         [isDark],

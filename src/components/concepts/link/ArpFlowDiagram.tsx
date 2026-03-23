@@ -1,4 +1,4 @@
-import { AnimatedDiagram } from '@study-ui/components'
+import { AnimatedDiagram, createD3Theme, useIsDark } from '@study-ui/components'
 
 const arpSteps = [
     {
@@ -23,9 +23,6 @@ const arpSteps = [
     },
 ]
 
-const FONT = "'Pretendard Variable', Pretendard, sans-serif"
-const MONO = "'JetBrains Mono', monospace"
-
 const HOST_A = { x: 80, label: 'Host A', ip: '10.0.0.1' }
 const HOST_B = { x: 420, label: 'Host B', ip: '10.0.0.2' }
 const HOST_C = { x: 250, label: 'Host C', ip: '10.0.0.3' }
@@ -48,6 +45,8 @@ function HostBox({
     dim?: boolean
     crossMark?: boolean
 }) {
+    const isDark = useIsDark()
+    const theme = createD3Theme(isDark)
     return (
         <g opacity={dim ? 0.3 : 1}>
             <rect
@@ -68,7 +67,7 @@ function HostBox({
                 y={HOST_Y}
                 textAnchor="middle"
                 className="fill-gray-800 dark:fill-gray-200"
-                style={{ fontFamily: FONT, fontSize: 12, fontWeight: 600 }}
+                style={{ fontFamily: theme.fonts.sans, fontSize: 12, fontWeight: 600 }}
             >
                 {label}
             </text>
@@ -77,7 +76,7 @@ function HostBox({
                 y={HOST_Y + 17}
                 textAnchor="middle"
                 className="fill-gray-500 dark:fill-gray-400"
-                style={{ fontFamily: MONO, fontSize: 9 }}
+                style={{ fontFamily: theme.fonts.mono, fontSize: 9 }}
             >
                 {ip}
             </text>
@@ -97,6 +96,8 @@ function HostBox({
 }
 
 function SwitchBox() {
+    const isDark = useIsDark()
+    const theme = createD3Theme(isDark)
     return (
         <g>
             <rect
@@ -113,7 +114,7 @@ function SwitchBox() {
                 y={SWITCH_Y + 5}
                 textAnchor="middle"
                 className="fill-purple-700 dark:fill-purple-300"
-                style={{ fontFamily: FONT, fontSize: 11, fontWeight: 600 }}
+                style={{ fontFamily: theme.fonts.sans, fontSize: 11, fontWeight: 600 }}
             >
                 L2 Switch
             </text>
@@ -138,6 +139,8 @@ function ConnectionLines() {
 }
 
 function MessageLabel({ text, color }: { text: string; color: string }) {
+    const isDark = useIsDark()
+    const theme = createD3Theme(isDark)
     const cls = color === 'amber'
         ? 'fill-amber-600 dark:fill-amber-400'
         : 'fill-green-600 dark:fill-green-400'
@@ -147,7 +150,7 @@ function MessageLabel({ text, color }: { text: string; color: string }) {
             y={SWITCH_Y - 26}
             textAnchor="middle"
             className={cls}
-            style={{ fontFamily: MONO, fontSize: 9 }}
+            style={{ fontFamily: theme.fonts.mono, fontSize: 9 }}
         >
             {text}
         </text>
@@ -222,6 +225,8 @@ function Step2Arrows() {
 
 /* Step 3: ARP cache updated on Host A */
 function Step3Cache() {
+    const isDark = useIsDark()
+    const theme = createD3Theme(isDark)
     return (
         <g>
             <rect
@@ -238,7 +243,7 @@ function Step3Cache() {
                 y={HOST_Y + 55}
                 textAnchor="middle"
                 className="fill-green-700 dark:fill-green-300"
-                style={{ fontFamily: MONO, fontSize: 9, fontWeight: 700 }}
+                style={{ fontFamily: theme.fonts.mono, fontSize: 9, fontWeight: 700 }}
             >
                 ARP Cache Updated
             </text>
@@ -247,7 +252,7 @@ function Step3Cache() {
                 y={HOST_Y + 70}
                 textAnchor="middle"
                 className="fill-green-600 dark:fill-green-400"
-                style={{ fontFamily: MONO, fontSize: 8 }}
+                style={{ fontFamily: theme.fonts.mono, fontSize: 8 }}
             >
                 10.0.0.2 → AA:BB:CC:DD:EE:FF
             </text>

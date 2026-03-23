@@ -1,9 +1,6 @@
 import { useCallback, useState } from 'react'
 import * as d3 from 'd3'
-import { createColorMap,themeColors,useIsDark , D3Container } from '@study-ui/components'
-
-const FONT = "'Pretendard Variable', Pretendard, sans-serif"
-const MONO = "'JetBrains Mono', monospace"
+import { createColorMap,themeColors,useIsDark , D3Container, createD3Theme } from '@study-ui/components'
 
 type ViewMode = 'both' | 'ns' | 'ew'
 
@@ -14,6 +11,7 @@ export function EastWestNorthSouth() {
     const renderFn = useCallback(
         (svg: d3.Selection<SVGSVGElement, unknown, null, undefined>, width: number, height: number) => {
             const tc = themeColors(isDark)
+            const theme = createD3Theme(isDark)
             const g = svg.append('g')
             const cx = width / 2
 
@@ -55,7 +53,7 @@ export function EastWestNorthSouth() {
                 .attr('x', cx).attr('y', titleY)
                 .attr('text-anchor', 'middle')
                 .attr('font-size', titleSize).attr('font-weight', 'bold')
-                .attr('fill', tc.text).attr('font-family', FONT)
+                .attr('fill', tc.text).attr('font-family', theme.fonts.sans)
                 .text('Datacenter Traffic Patterns')
 
             // ── Marker definitions (single block) ──
@@ -89,7 +87,7 @@ export function EastWestNorthSouth() {
                 .attr('x', cx).attr('y', internetY + fontSize * 0.35)
                 .attr('text-anchor', 'middle')
                 .attr('font-size', fontSize).attr('font-weight', 600)
-                .attr('fill', tc.cyanText).attr('font-family', FONT)
+                .attr('fill', tc.cyanText).attr('font-family', theme.fonts.sans)
                 .text('Internet / Client')
 
             // ── Datacenter box ──
@@ -106,7 +104,7 @@ export function EastWestNorthSouth() {
                 .attr('x', dcRight - 10).attr('y', dcTop + fontSize + 4)
                 .attr('text-anchor', 'end')
                 .attr('font-size', fontSize).attr('font-weight', 700)
-                .attr('fill', tc.textMuted).attr('font-family', MONO)
+                .attr('fill', tc.textMuted).attr('font-family', theme.fonts.mono)
                 .text('Datacenter')
 
             // ── Border devices (centered vertically) ──
@@ -126,7 +124,7 @@ export function EastWestNorthSouth() {
                 devG.append('text')
                     .attr('text-anchor', 'middle').attr('y', fontSize * 0.35)
                     .attr('font-size', fontSize * 0.85).attr('font-weight', 600)
-                    .attr('fill', tc.amberText).attr('font-family', FONT)
+                    .attr('fill', tc.amberText).attr('font-family', theme.fonts.sans)
                     .text(dev.label)
             })
 
@@ -174,7 +172,7 @@ export function EastWestNorthSouth() {
                 rg.append('text')
                     .attr('text-anchor', 'middle').attr('y', -rackH * 0.08)
                     .attr('font-size', fontSize * 0.85).attr('font-weight', 700)
-                    .attr('fill', rc.text).attr('font-family', FONT)
+                    .attr('fill', rc.text).attr('font-family', theme.fonts.sans)
                     .text(rack.label)
                 // sublabel: truncate to fit inside rack box
                 const maxChars = Math.max(4, Math.floor(rackW / (subFontSize * 0.55)))
@@ -184,7 +182,7 @@ export function EastWestNorthSouth() {
                 rg.append('text')
                     .attr('text-anchor', 'middle').attr('y', rackH * 0.28)
                     .attr('font-size', subFontSize)
-                    .attr('fill', tc.textDim).attr('font-family', MONO)
+                    .attr('fill', tc.textDim).attr('font-family', theme.fonts.mono)
                     .text(subText)
             })
 
@@ -228,7 +226,7 @@ export function EastWestNorthSouth() {
                     .attr('x', nsLabelX).attr('y', nsMidY)
                     .attr('text-anchor', 'middle')
                     .attr('font-size', fontSize * 0.75).attr('font-weight', 700)
-                    .attr('fill', tc.blueText).attr('font-family', MONO)
+                    .attr('fill', tc.blueText).attr('font-family', theme.fonts.mono)
                     .attr('transform', `rotate(-90, ${nsLabelX}, ${nsMidY})`)
                     .text('N-S Traffic')
 
@@ -245,7 +243,7 @@ export function EastWestNorthSouth() {
                     .attr('x', padX + badgeW / 2).attr('y', height - badgeH / 2 - 6 + fontSize * 0.35)
                     .attr('text-anchor', 'middle')
                     .attr('font-size', fontSize * 0.8).attr('font-weight', 600)
-                    .attr('fill', tc.blueText).attr('font-family', FONT)
+                    .attr('fill', tc.blueText).attr('font-family', theme.fonts.sans)
                     .text('N-S: Client ↔ Server')
             }
 
@@ -277,7 +275,7 @@ export function EastWestNorthSouth() {
                         .attr('x', (fromX + toX) / 2).attr('y', yOff - 4)
                         .attr('text-anchor', 'middle')
                         .attr('font-size', subFontSize)
-                        .attr('fill', tc.amberText).attr('font-family', MONO)
+                        .attr('fill', tc.amberText).attr('font-family', theme.fonts.mono)
                         .text(pair.label)
                 })
 
@@ -294,7 +292,7 @@ export function EastWestNorthSouth() {
                     .attr('x', width - padX - badgeW / 2).attr('y', height - badgeH / 2 - 6 + fontSize * 0.35)
                     .attr('text-anchor', 'middle')
                     .attr('font-size', fontSize * 0.8).attr('font-weight', 600)
-                    .attr('fill', tc.amberText).attr('font-family', FONT)
+                    .attr('fill', tc.amberText).attr('font-family', theme.fonts.sans)
                     .text('E-W: Server ↔ Server')
             }
         },

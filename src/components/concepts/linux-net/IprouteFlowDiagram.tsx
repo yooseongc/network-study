@@ -1,9 +1,6 @@
 import { useCallback } from 'react'
-import { createColorMap,themeColors,useIsDark , D3Container } from '@study-ui/components'
+import { createColorMap,themeColors,useIsDark , D3Container, createD3Theme } from '@study-ui/components'
 import * as d3 from 'd3'
-
-const FONT = "'Pretendard Variable', Pretendard, sans-serif"
-const MONO = "'JetBrains Mono', monospace"
 
 export function IprouteFlowDiagram() {
     const isDark = useIsDark()
@@ -11,6 +8,7 @@ export function IprouteFlowDiagram() {
     const render = useCallback(
         (svg: d3.Selection<SVGSVGElement, unknown, null, undefined>, width: number, _height: number) => {
             const c = themeColors(isDark)
+            const theme = createD3Theme(isDark)
             const cm = createColorMap(c, ['blue', 'green', 'amber', 'cyan', 'purple', 'red'])
             const g = svg.append('g')
 
@@ -28,11 +26,11 @@ export function IprouteFlowDiagram() {
                 const labelY = sub ? y + h / 2 - 3 : y + h / 2 + 4
                 g.append('text').attr('x', x).attr('y', labelY).attr('text-anchor', 'middle')
                     .attr('font-size', Math.min(11, w / (label.length * 0.6))).attr('font-weight', 600)
-                    .attr('fill', m.text).attr('font-family', FONT).text(label)
+                    .attr('fill', m.text).attr('font-family', theme.fonts.sans).text(label)
                 if (sub) {
                     g.append('text').attr('x', x).attr('y', y + h / 2 + 10).attr('text-anchor', 'middle')
                         .attr('font-size', Math.min(9, w / (sub.length * 0.5)))
-                        .attr('fill', c.textMuted).attr('font-family', MONO).text(sub)
+                        .attr('fill', c.textMuted).attr('font-family', theme.fonts.mono).text(sub)
                 }
             }
 
@@ -53,13 +51,13 @@ export function IprouteFlowDiagram() {
             function stepLabel(x: number, y: number, text: string, color: string) {
                 g.append('text').attr('x', x).attr('y', y).attr('text-anchor', 'middle')
                     .attr('font-size', 11).attr('font-weight', 'bold')
-                    .attr('fill', color).attr('font-family', FONT).text(text)
+                    .attr('fill', color).attr('font-family', theme.fonts.sans).text(text)
             }
 
             // ── Title ──
             g.append('text').attr('x', cx).attr('y', 20).attr('text-anchor', 'middle')
                 .attr('font-size', 13).attr('font-weight', 'bold')
-                .attr('fill', c.text).attr('font-family', FONT)
+                .attr('fill', c.text).attr('font-family', theme.fonts.sans)
                 .text('Linux RPDB (Routing Policy Database) Flow')
 
             // ── Vertical flow layout ──
@@ -100,12 +98,12 @@ export function IprouteFlowDiagram() {
                     .attr('font-size', Math.min(10, ruleBoxW / (text.length * 0.52)))
                     .attr('fill', isMatch ? cm.blue.text : c.textMuted)
                     .attr('font-weight', isMatch ? 'bold' : 'normal')
-                    .attr('font-family', MONO).text(text)
+                    .attr('font-family', theme.fonts.mono).text(text)
 
                 if (isMatch) {
                     g.append('text').attr('x', ruleX + ruleBoxW - 10).attr('y', ry + ruleH / 2 + 4)
                         .attr('text-anchor', 'end').attr('font-size', 9).attr('font-weight', 'bold')
-                        .attr('fill', cm.blue.text).attr('font-family', FONT).text('✓ MATCH')
+                        .attr('fill', cm.blue.text).attr('font-family', theme.fonts.sans).text('✓ MATCH')
                 }
             })
 
@@ -126,7 +124,7 @@ export function IprouteFlowDiagram() {
 
             g.append('text').attr('x', tableX + 12).attr('y', curY + 16)
                 .attr('font-size', 10).attr('font-weight', 'bold')
-                .attr('fill', cm.green.text).attr('font-family', MONO).text('table custom:')
+                .attr('fill', cm.green.text).attr('font-family', theme.fonts.mono).text('table custom:')
 
             const routes = [
                 { dst: '10.0.1.0/24', gw: 'via 10.0.0.1', dev: 'dev eth0', match: true },
@@ -140,11 +138,11 @@ export function IprouteFlowDiagram() {
                     .attr('font-size', Math.min(9.5, tableW / (text.length * 0.52)))
                     .attr('fill', rt.match ? cm.blue.text : c.textMuted)
                     .attr('font-weight', rt.match ? 'bold' : 'normal')
-                    .attr('font-family', MONO).text(text)
+                    .attr('font-family', theme.fonts.mono).text(text)
                 if (rt.match) {
                     g.append('text').attr('x', tableX + tableW - 12).attr('y', ry + 4)
                         .attr('text-anchor', 'end').attr('font-size', 9).attr('font-weight', 'bold')
-                        .attr('fill', cm.blue.text).attr('font-family', FONT).text('✓ longest prefix')
+                        .attr('fill', cm.blue.text).attr('font-family', theme.fonts.sans).text('✓ longest prefix')
                 }
             })
 
@@ -165,7 +163,7 @@ export function IprouteFlowDiagram() {
 
             // Bottom annotation
             g.append('text').attr('x', cx).attr('y', curY + boxH + 22).attr('text-anchor', 'middle')
-                .attr('font-size', 10).attr('fill', c.textMuted).attr('font-family', FONT)
+                .attr('font-size', 10).attr('fill', c.textMuted).attr('font-family', theme.fonts.sans)
                 .text('ip rule → routing table → nexthop → output interface')
         },
         [isDark],

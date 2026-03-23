@@ -1,4 +1,4 @@
-import { AnimatedDiagram } from '@study-ui/components'
+import { AnimatedDiagram, createD3Theme, useIsDark } from '@study-ui/components'
 
 const dnsSteps = [
     {
@@ -51,6 +51,8 @@ function ServerBox({
     sub,
     highlight,
     colorClass,
+    fontSans,
+    fontMono,
 }: {
     x: number
     y: number
@@ -58,6 +60,8 @@ function ServerBox({
     sub: string
     highlight?: boolean
     colorClass: string
+    fontSans: string
+    fontMono: string
 }) {
     const baseClass = highlight
         ? colorClass.replace('fill-gray-100', 'fill-blue-100').replace('fill-gray-800', 'fill-blue-900/40')
@@ -84,7 +88,7 @@ function ServerBox({
                 className={highlight
                     ? 'fill-blue-700 dark:fill-blue-200 text-xs font-semibold'
                     : 'fill-gray-800 dark:fill-gray-200 text-xs font-semibold'}
-                style={{ fontFamily: "'Pretendard Variable', Pretendard, sans-serif", fontSize: 11 }}
+                style={{ fontFamily: fontSans, fontSize: 11 }}
             >
                 {label}
             </text>
@@ -93,7 +97,7 @@ function ServerBox({
                 y={y + 12}
                 textAnchor="middle"
                 className="fill-gray-500 dark:fill-gray-400"
-                style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 8 }}
+                style={{ fontFamily: fontMono, fontSize: 8 }}
             >
                 {sub}
             </text>
@@ -109,6 +113,7 @@ function Arrow({
     color,
     label,
     dashed,
+    fontSans,
 }: {
     x1: number
     y1: number
@@ -117,6 +122,7 @@ function Arrow({
     color: string
     label?: string
     dashed?: boolean
+    fontSans: string
 }) {
     const dx = x2 - x1
     const dy = y2 - y1
@@ -161,7 +167,7 @@ function Arrow({
                     y={my - 6}
                     textAnchor="middle"
                     fill={color}
-                    style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 8, fontWeight: 600 }}
+                    style={{ fontFamily: fontSans, fontSize: 8, fontWeight: 600 }}
                 >
                     {label}
                 </text>
@@ -171,6 +177,8 @@ function Arrow({
 }
 
 export function DnsResolutionDiagram() {
+    const isDark = useIsDark()
+    const theme = createD3Theme(isDark)
     const renderStep = (step: number) => (
         <svg viewBox="0 0 860 195" className="w-full h-auto" style={{ maxHeight: 280 }}>
             {/* Server boxes */}
@@ -178,60 +186,65 @@ export function DnsResolutionDiagram() {
                 x={CX} y={Y_BOT} label="Client" sub="stub resolver"
                 highlight={step === 0 || step === 5}
                 colorClass="fill-green-100 dark:fill-green-900/30 stroke-green-400 dark:stroke-green-500"
+                fontSans={theme.fonts.sans} fontMono={theme.fonts.mono}
             />
             <ServerBox
                 x={LX} y={Y_BOT} label="Local Resolver" sub="8.8.8.8"
                 highlight={step >= 0 && step <= 5}
                 colorClass="fill-purple-100 dark:fill-purple-900/30 stroke-purple-400 dark:stroke-purple-500"
+                fontSans={theme.fonts.sans} fontMono={theme.fonts.mono}
             />
             <ServerBox
                 x={RX} y={Y_TOP} label="Root NS" sub=". (root)"
                 highlight={step === 1}
                 colorClass="fill-gray-100 dark:fill-gray-800 stroke-gray-300 dark:stroke-gray-600"
+                fontSans={theme.fonts.sans} fontMono={theme.fonts.mono}
             />
             <ServerBox
                 x={TX} y={Y_TOP} label="TLD NS" sub=".com"
                 highlight={step === 2}
                 colorClass="fill-gray-100 dark:fill-gray-800 stroke-gray-300 dark:stroke-gray-600"
+                fontSans={theme.fonts.sans} fontMono={theme.fonts.mono}
             />
             <ServerBox
                 x={AX} y={Y_TOP} label="Auth NS" sub="example.com"
                 highlight={step === 3 || step === 4}
                 colorClass="fill-amber-100 dark:fill-amber-900/30 stroke-amber-400 dark:stroke-amber-500"
+                fontSans={theme.fonts.sans} fontMono={theme.fonts.mono}
             />
 
             {/* Arrows per step */}
             {step === 0 && (
                 <Arrow x1={CX} y1={Y_BOT} x2={LX} y2={Y_BOT}
-                    color="#3b82f6" label="Recursive Query" dashed />
+                    color="#3b82f6" label="Recursive Query" dashed fontSans={theme.fonts.sans} />
             )}
             {step === 1 && (
                 <Arrow x1={LX} y1={Y_BOT} x2={RX} y2={Y_TOP}
-                    color="#f59e0b" label="Iterative Query" dashed />
+                    color="#f59e0b" label="Iterative Query" dashed fontSans={theme.fonts.sans} />
             )}
             {step === 2 && (
                 <>
                     <Arrow x1={RX} y1={Y_TOP} x2={LX} y2={Y_BOT}
-                        color="#9ca3af" label="TLD NS referral" />
+                        color="#9ca3af" label="TLD NS referral" fontSans={theme.fonts.sans} />
                     <Arrow x1={LX} y1={Y_BOT} x2={TX} y2={Y_TOP}
-                        color="#f59e0b" label="Iterative Query" dashed />
+                        color="#f59e0b" label="Iterative Query" dashed fontSans={theme.fonts.sans} />
                 </>
             )}
             {step === 3 && (
                 <>
                     <Arrow x1={TX} y1={Y_TOP} x2={LX} y2={Y_BOT}
-                        color="#9ca3af" label="Auth NS referral" />
+                        color="#9ca3af" label="Auth NS referral" fontSans={theme.fonts.sans} />
                     <Arrow x1={LX} y1={Y_BOT} x2={AX} y2={Y_TOP}
-                        color="#f59e0b" label="Iterative Query" dashed />
+                        color="#f59e0b" label="Iterative Query" dashed fontSans={theme.fonts.sans} />
                 </>
             )}
             {step === 4 && (
                 <Arrow x1={AX} y1={Y_TOP} x2={LX} y2={Y_BOT}
-                    color="#22c55e" label="A: 93.184.216.34" />
+                    color="#22c55e" label="A: 93.184.216.34" fontSans={theme.fonts.sans} />
             )}
             {step === 5 && (
                 <Arrow x1={LX} y1={Y_BOT} x2={CX} y2={Y_BOT}
-                    color="#22c55e" label="93.184.216.34" />
+                    color="#22c55e" label="93.184.216.34" fontSans={theme.fonts.sans} />
             )}
 
             {/* Query label */}
@@ -240,7 +253,7 @@ export function DnsResolutionDiagram() {
                 y={188}
                 textAnchor="middle"
                 className="fill-gray-500 dark:fill-gray-400"
-                style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 9 }}
+                style={{ fontFamily: theme.fonts.mono, fontSize: 9 }}
             >
                 Query: www.example.com → ?
             </text>

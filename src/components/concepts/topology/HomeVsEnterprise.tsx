@@ -1,6 +1,6 @@
 import { useCallback } from 'react'
 import * as d3 from 'd3'
-import { createColorMap,themeColors,useIsDark , D3Container } from '@study-ui/components'
+import { createColorMap,themeColors,useIsDark , D3Container, createD3Theme } from '@study-ui/components'
 
 interface NodeDef {
     id: string
@@ -16,15 +16,13 @@ interface LinkDef {
     target: string
 }
 
-const FONT = "'Pretendard Variable', Pretendard, sans-serif"
-const MONO = "'JetBrains Mono', monospace"
-
 export function HomeVsEnterprise() {
     const isDark = useIsDark()
 
     const renderFn = useCallback(
         (svg: d3.Selection<SVGSVGElement, unknown, null, undefined>, width: number, height: number) => {
             const tc = themeColors(isDark)
+            const theme = createD3Theme(isDark)
             const g = svg.append('g')
             const half = width / 2
             const dividerX = half
@@ -42,11 +40,11 @@ export function HomeVsEnterprise() {
 
             // Section titles
             g.append('text').attr('x', half / 2).attr('y', 30).attr('text-anchor', 'middle')
-                .attr('fill', tc.blueText).attr('font-family', MONO).attr('font-size', 13).attr('font-weight', 700)
+                .attr('fill', tc.blueText).attr('font-family', theme.fonts.mono).attr('font-size', 13).attr('font-weight', 700)
                 .text('Home Network')
 
             g.append('text').attr('x', dividerX + half / 2).attr('y', 30).attr('text-anchor', 'middle')
-                .attr('fill', tc.purpleText).attr('font-family', MONO).attr('font-size', 13).attr('font-weight', 700)
+                .attr('fill', tc.purpleText).attr('font-family', theme.fonts.mono).attr('font-size', 13).attr('font-weight', 700)
                 .text('Enterprise Network')
 
             // ── Home Network (left) ─────────────────────────────────────
@@ -136,7 +134,7 @@ export function HomeVsEnterprise() {
                         .attr('y', lines.length === 1 ? 4 : -4 + i * 13)
                         .attr('text-anchor', 'middle')
                         .attr('fill', c.text)
-                        .attr('font-family', FONT)
+                        .attr('font-family', theme.fonts.sans)
                         .attr('font-size', hasKorean ? 8 : 9)
                         .attr('font-weight', 600)
                         .text(line)
@@ -144,7 +142,7 @@ export function HomeVsEnterprise() {
             }
 
             // IP annotations
-            const annotStyle = { fill: tc.textMuted, fontFamily: MONO, fontSize: '8px' }
+            const annotStyle = { fill: tc.textMuted, fontFamily: theme.fonts.mono, fontSize: '8px' }
 
             // Home IP annotation — 공유기(y=150) 우측 아래
             g.append('text').attr('x', half / 2 + 52).attr('y', 155)

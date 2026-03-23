@@ -1,9 +1,6 @@
 import { useCallback, useState } from 'react'
 import * as d3 from 'd3'
-import { createColorMap,themeColors,useIsDark , D3Container } from '@study-ui/components'
-
-const FONT = "'Pretendard Variable', Pretendard, sans-serif"
-const MONO = "'JetBrains Mono', monospace"
+import { createColorMap,themeColors,useIsDark , D3Container, createD3Theme } from '@study-ui/components'
 
 type DeviceType = 'l2' | 'l3' | 'router' | 'firewall' | 'lb'
 
@@ -38,6 +35,7 @@ export function DevicePlacementDiagram() {
     const renderFn = useCallback(
         (svg: d3.Selection<SVGSVGElement, unknown, null, undefined>, width: number, _height: number) => {
             const tc = themeColors(isDark)
+            const theme = createD3Theme(isDark)
             const g = svg.append('g')
             const cm = createColorMap(tc, ['blue', 'purple', 'red', 'amber', 'green', 'cyan'])
             const cx = width / 2
@@ -137,7 +135,7 @@ export function DevicePlacementDiagram() {
                 .attr('x', cx).attr('y', titleY)
                 .attr('text-anchor', 'middle')
                 .attr('font-size', Math.max(11, fontSize * 1.2)).attr('font-weight', 'bold')
-                .attr('fill', tc.text).attr('font-family', FONT)
+                .attr('fill', tc.text).attr('font-family', theme.fonts.sans)
                 .text('이중화 네트워크 장비 배치도')
 
             // ── Zone backgrounds ──
@@ -158,7 +156,7 @@ export function DevicePlacementDiagram() {
                 g.append('text')
                     .attr('x', zoneMargin + 8).attr('y', z.yStart + 12)
                     .attr('font-size', subFont).attr('font-weight', 600)
-                    .attr('fill', z.text).attr('font-family', FONT).attr('opacity', 0.7)
+                    .attr('fill', z.text).attr('font-family', theme.fonts.sans).attr('opacity', 0.7)
                     .text(z.label)
             })
 
@@ -234,7 +232,7 @@ export function DevicePlacementDiagram() {
                     .attr('x', 0).attr('y', labelY)
                     .attr('text-anchor', 'middle')
                     .attr('font-size', fontSize * 0.85).attr('font-weight', 700)
-                    .attr('fill', c.text).attr('font-family', FONT)
+                    .attr('fill', c.text).attr('font-family', theme.fonts.sans)
                     .text(dev.label)
 
                 if (dev.sublabel) {
@@ -243,7 +241,7 @@ export function DevicePlacementDiagram() {
                         .attr('x', 0).attr('y', 10)
                         .attr('text-anchor', 'middle')
                         .attr('font-size', subFont).attr('font-weight', 400)
-                        .attr('fill', tc.textDim).attr('font-family', subHasKorean ? FONT : MONO)
+                        .attr('fill', tc.textDim).attr('font-family', subHasKorean ? theme.fonts.sans : theme.fonts.mono)
                         .text(dev.sublabel)
                 }
             }
@@ -262,7 +260,7 @@ export function DevicePlacementDiagram() {
                     .attr('x', lbl.x).attr('y', lbl.y - 5)
                     .attr('text-anchor', 'middle')
                     .attr('font-size', subFont * 0.85).attr('font-weight', 700)
-                    .attr('fill', tc.textMuted).attr('font-family', MONO)
+                    .attr('fill', tc.textMuted).attr('font-family', theme.fonts.mono)
                     .text(lbl.text)
             }
         },

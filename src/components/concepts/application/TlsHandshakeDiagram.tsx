@@ -1,5 +1,5 @@
 import { useCallback, useState } from 'react'
-import { createColorMap,themeColors,useIsDark , D3Container } from '@study-ui/components'
+import { createColorMap,createD3Theme,themeColors,useIsDark , D3Container } from '@study-ui/components'
 import * as d3 from 'd3'
 
 interface TlsMessage {
@@ -43,6 +43,7 @@ export function TlsHandshakeDiagram() {
     const render = useCallback(
         (svg: d3.Selection<SVGSVGElement, unknown, null, undefined>, width: number, _height: number) => {
             const c = themeColors(isDark)
+            const theme = createD3Theme(isDark)
             const g = svg.append('g')
             const pad = { left: 24, right: 24, top: 10 }
             const innerW = width - pad.left - pad.right
@@ -62,7 +63,7 @@ export function TlsHandshakeDiagram() {
                 .attr('font-size', 13)
                 .attr('font-weight', 'bold')
                 .attr('fill', c.text)
-                .attr('font-family', "'Pretendard Variable', Pretendard, sans-serif")
+                .attr('font-family', theme.fonts.sans)
                 .text('TLS 1.3 Handshake')
 
             // Client/Server headers
@@ -84,7 +85,7 @@ export function TlsHandshakeDiagram() {
                     .attr('font-size', 12)
                     .attr('font-weight', 'bold')
                     .attr('fill', c.text)
-                    .attr('font-family', "'Pretendard Variable', Pretendard, sans-serif")
+                    .attr('font-family', theme.fonts.sans)
                     .text(label)
             }
 
@@ -155,7 +156,7 @@ export function TlsHandshakeDiagram() {
                     .attr('font-weight', isCurrent ? 'bold' : 'normal')
                     .attr('fill', isCurrent ? mc.text : c.textMuted)
                     .attr('opacity', opacity)
-                    .attr('font-family', "'JetBrains Mono', monospace")
+                    .attr('font-family', theme.fonts.mono)
                     .text(msg.label)
 
                 // Detail text (only for current step)
@@ -166,7 +167,7 @@ export function TlsHandshakeDiagram() {
                         .attr('text-anchor', 'middle')
                         .attr('font-size', 9)
                         .attr('fill', mc.text)
-                        .attr('font-family', "'Pretendard Variable', Pretendard, sans-serif")
+                        .attr('font-family', theme.fonts.sans)
                         .text(msg.detail)
                 }
             })
@@ -188,7 +189,7 @@ export function TlsHandshakeDiagram() {
                 .attr('font-size', explFontSize)
                 .attr('fill', step === 4 ? c.greenText : c.textMuted)
                 .attr('font-weight', step === 4 ? 'bold' : 'normal')
-                .attr('font-family', "'Pretendard Variable', Pretendard, sans-serif")
+                .attr('font-family', theme.fonts.sans)
                 .text(explanation)
         },
         [isDark, step],

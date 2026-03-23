@@ -1,5 +1,5 @@
 import { useCallback } from 'react'
-import { themeColors,useIsDark , D3Container } from '@study-ui/components'
+import { createD3Theme,themeColors,useIsDark , D3Container } from '@study-ui/components'
 import * as d3 from 'd3'
 
 export function SkbuffDiagram() {
@@ -8,6 +8,7 @@ export function SkbuffDiagram() {
     const render = useCallback(
         (svg: d3.Selection<SVGSVGElement, unknown, null, undefined>, width: number, _height: number) => {
             const c = themeColors(isDark)
+            const theme = createD3Theme(isDark)
             const g = svg.append('g')
 
             const pad = { left: 30, right: 30 }
@@ -24,7 +25,7 @@ export function SkbuffDiagram() {
                 .attr('font-size', 13)
                 .attr('font-weight', 'bold')
                 .attr('fill', c.text)
-                .attr('font-family', "'Pretendard Variable', Pretendard, sans-serif")
+                .attr('font-family', theme.fonts.sans)
                 .text('sk_buff (skb) Linear Data Layout')
 
             // Memory regions
@@ -63,7 +64,7 @@ export function SkbuffDiagram() {
                     .attr('font-size', 11)
                     .attr('font-weight', 600)
                     .attr('fill', r.textColor)
-                    .attr('font-family', "'Pretendard Variable', Pretendard, sans-serif")
+                    .attr('font-family', theme.fonts.sans)
                     .text(r.label)
 
                 // data pointer (after headroom)
@@ -107,7 +108,7 @@ export function SkbuffDiagram() {
                     .attr('font-size', 11)
                     .attr('font-weight', 'bold')
                     .attr('fill', ptr.color)
-                    .attr('font-family', "'JetBrains Mono', monospace")
+                    .attr('font-family', theme.fonts.mono)
                     .text(ptr.label)
             })
 
@@ -147,7 +148,7 @@ export function SkbuffDiagram() {
                 .attr('font-size', 10)
                 .attr('font-weight', 'bold')
                 .attr('fill', c.cyanText)
-                .attr('font-family', "'Pretendard Variable', Pretendard, sans-serif")
+                .attr('font-family', theme.fonts.sans)
                 .text('skb->len')
 
             g.append('text')
@@ -155,7 +156,7 @@ export function SkbuffDiagram() {
                 .attr('y', (dataStartY + dataEndY) / 2 + 8)
                 .attr('font-size', 9)
                 .attr('fill', c.textMuted)
-                .attr('font-family', "'Pretendard Variable', Pretendard, sans-serif")
+                .attr('font-family', theme.fonts.sans)
                 .text('(data ~ tail)')
 
             // skb_push explanation
@@ -166,7 +167,7 @@ export function SkbuffDiagram() {
                 .attr('text-anchor', 'middle')
                 .attr('font-size', 10)
                 .attr('fill', c.textMuted)
-                .attr('font-family', "'Pretendard Variable', Pretendard, sans-serif")
+                .attr('font-family', theme.fonts.sans)
                 .text('skb_push(): data 포인터를 위로 이동하여 헤더 추가 공간 확보')
 
             g.append('text')
@@ -175,7 +176,7 @@ export function SkbuffDiagram() {
                 .attr('text-anchor', 'middle')
                 .attr('font-size', 10)
                 .attr('fill', c.textMuted)
-                .attr('font-family', "'Pretendard Variable', Pretendard, sans-serif")
+                .attr('font-family', theme.fonts.sans)
                 .text('skb_put(): tail 포인터를 아래로 이동하여 데이터 추가')
         },
         [isDark],

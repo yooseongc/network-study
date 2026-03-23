@@ -1,5 +1,5 @@
 import { useCallback } from 'react'
-import { createColorMap,themeColors,useIsDark , D3Container } from '@study-ui/components'
+import { createColorMap,createD3Theme,themeColors,useIsDark , D3Container } from '@study-ui/components'
 import * as d3 from 'd3'
 
 export function L4vsL7Diagram() {
@@ -8,11 +8,12 @@ export function L4vsL7Diagram() {
     const render = useCallback(
         (svg: d3.Selection<SVGSVGElement, unknown, null, undefined>, width: number, height: number) => {
             const c = themeColors(isDark)
+            const theme = createD3Theme(isDark)
             const g = svg.append('g')
             const mid = width / 2
             const colW = Math.min(mid - 20, 300)
-            const font = "'Pretendard Variable', Pretendard, sans-serif"
-            const mono = "'JetBrains Mono', monospace"
+            const font = theme.fonts.sans
+            const mono = theme.fonts.mono
 
             // ── Title ──
             g.append('text')
@@ -60,7 +61,7 @@ export function L4vsL7Diagram() {
                     .attr('text-anchor', 'middle')
                     .attr('font-size', 10)
                     .attr('fill', c.textMuted)
-                    .attr('font-family', mono)
+                    .attr('font-family', font)
                     .text(col.sub)
             })
 
@@ -101,7 +102,7 @@ export function L4vsL7Diagram() {
                         .attr('text-anchor', 'middle')
                         .attr('font-size', Math.min(9, w / (sublabel.length * 0.55)))
                         .attr('fill', c.textMuted)
-                        .attr('font-family', mono)
+                        .attr('font-family', font)
                         .text(sublabel)
                 }
             }

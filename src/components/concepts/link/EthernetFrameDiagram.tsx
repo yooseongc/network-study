@@ -1,4 +1,4 @@
-import { createColorMap,themeColors,useIsDark , D3Container } from '@study-ui/components'
+import { createColorMap,createD3Theme,themeColors,useIsDark , D3Container } from '@study-ui/components'
 import * as d3 from 'd3'
 
 const fields = [
@@ -23,6 +23,7 @@ export function EthernetFrameDiagram() {
         height: number,
     ) => {
         const c = themeColors(isDark)
+        const theme = createD3Theme(isDark)
         const margin = { left: 20, right: 20, top: 30, bottom: 50 }
         const barH = 60
         const usableW = width - margin.left - margin.right
@@ -37,7 +38,7 @@ export function EthernetFrameDiagram() {
             .attr('text-anchor', 'middle')
             .attr('font-size', 14)
             .attr('font-weight', 'bold')
-            .attr('font-family', "'Pretendard Variable', Pretendard, sans-serif")
+            .attr('font-family', theme.fonts.sans)
             .attr('fill', c.text)
             .text('Ethernet II Frame Structure')
 
@@ -70,7 +71,7 @@ export function EthernetFrameDiagram() {
                     .attr('text-anchor', 'middle')
                     .attr('font-size', w > 50 ? 11 : 9)
                     .attr('font-weight', '600')
-                    .attr('font-family', "'Pretendard Variable', Pretendard, sans-serif")
+                    .attr('font-family', theme.fonts.sans)
                     .attr('fill', cm.text)
                     .text(f.name)
 
@@ -80,7 +81,7 @@ export function EthernetFrameDiagram() {
                     .attr('y', y + barH / 2 + 12)
                     .attr('text-anchor', 'middle')
                     .attr('font-size', 10)
-                    .attr('font-family', "'JetBrains Mono', monospace")
+                    .attr('font-family', theme.fonts.mono)
                     .attr('fill', c.textMuted)
                     .text(f.bytes)
             }
@@ -94,7 +95,7 @@ export function EthernetFrameDiagram() {
             .attr('y', y + barH + 28)
             .attr('text-anchor', 'middle')
             .attr('font-size', 11)
-            .attr('font-family', "'JetBrains Mono', monospace")
+            .attr('font-family', theme.fonts.sans)
             .attr('fill', c.textMuted)
             .text('Total: 64 ~ 1518 bytes (excluding Preamble & SFD)')
 

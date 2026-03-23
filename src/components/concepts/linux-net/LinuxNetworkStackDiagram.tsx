@@ -1,5 +1,5 @@
 import { useCallback } from 'react'
-import { createColorMap,themeColors,useIsDark , D3Container } from '@study-ui/components'
+import { createColorMap,createD3Theme,themeColors,useIsDark , D3Container } from '@study-ui/components'
 import * as d3 from 'd3'
 
 interface LayerDef {
@@ -26,6 +26,7 @@ export function LinuxNetworkStackDiagram() {
     const render = useCallback(
         (svg: d3.Selection<SVGSVGElement, unknown, null, undefined>, width: number, _height: number) => {
             const c = themeColors(isDark)
+            const theme = createD3Theme(isDark)
             const g = svg.append('g')
 
             const pad = { top: 30, left: 20, right: 20, bottom: 20 }
@@ -45,7 +46,7 @@ export function LinuxNetworkStackDiagram() {
                 .attr('font-size', 13)
                 .attr('font-weight', 'bold')
                 .attr('fill', c.text)
-                .attr('font-family', "'Pretendard Variable', Pretendard, sans-serif")
+                .attr('font-family', theme.fonts.sans)
                 .text('Linux Network Stack (Packet Flow)')
 
             const colorMap = createColorMap(c, ['blue', 'green', 'amber', 'purple', 'cyan', 'red', 'indigo'])
@@ -70,7 +71,7 @@ export function LinuxNetworkStackDiagram() {
                     .attr('font-size', 12)
                     .attr('font-weight', 'bold')
                     .attr('fill', cm.text)
-                    .attr('font-family', "'Pretendard Variable', Pretendard, sans-serif")
+                    .attr('font-family', theme.fonts.sans)
                     .text(layer.label)
 
                 const subFontSize = layer.sublabel.length > 45 ? 8 : 9.5
@@ -79,7 +80,7 @@ export function LinuxNetworkStackDiagram() {
                     .attr('y', y + 31)
                     .attr('font-size', subFontSize)
                     .attr('fill', c.textMuted)
-                    .attr('font-family', "'JetBrains Mono', monospace")
+                    .attr('font-family', theme.fonts.mono)
                     .text(layer.sublabel)
 
                 // Arrow between layers
@@ -121,7 +122,7 @@ export function LinuxNetworkStackDiagram() {
                 .attr('text-anchor', 'middle')
                 .attr('font-size', 10).attr('font-weight', 700)
                 .attr('fill', c.blueText)
-                .attr('font-family', "'JetBrains Mono', monospace")
+                .attr('font-family', theme.fonts.mono)
                 .text('TX ↓')
 
             // RX — right side, upward
@@ -140,7 +141,7 @@ export function LinuxNetworkStackDiagram() {
                 .attr('text-anchor', 'middle')
                 .attr('font-size', 10).attr('font-weight', 700)
                 .attr('fill', c.greenText)
-                .attr('font-family', "'JetBrains Mono', monospace")
+                .attr('font-family', theme.fonts.mono)
                 .text('RX ↑')
         },
         [isDark],

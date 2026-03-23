@@ -1,9 +1,6 @@
 import { useCallback } from 'react'
-import { createColorMap,themeColors,useIsDark , D3Container } from '@study-ui/components'
+import { createColorMap,themeColors,useIsDark , D3Container, createD3Theme } from '@study-ui/components'
 import * as d3 from 'd3'
-
-const FONT = "'Pretendard Variable', Pretendard, sans-serif"
-const MONO = "'JetBrains Mono', monospace"
 
 export function GslbDiagram() {
     const isDark = useIsDark()
@@ -11,6 +8,7 @@ export function GslbDiagram() {
     const render = useCallback(
         (svg: d3.Selection<SVGSVGElement, unknown, null, undefined>, width: number, height: number) => {
             const c = themeColors(isDark)
+            const theme = createD3Theme(isDark)
             const cm = createColorMap(c, ['blue', 'green', 'red', 'amber', 'cyan', 'purple'])
             const g = svg.append('g')
 
@@ -46,7 +44,7 @@ export function GslbDiagram() {
                     .attr('font-size', Math.min(11, w / (label.length * 0.6)))
                     .attr('font-weight', '600')
                     .attr('fill', m.text)
-                    .attr('font-family', FONT)
+                    .attr('font-family', theme.fonts.sans)
                     .text(label)
                 if (sublabel) {
                     g.append('text')
@@ -55,7 +53,7 @@ export function GslbDiagram() {
                         .attr('text-anchor', 'middle')
                         .attr('font-size', Math.min(9, w / (sublabel.length * 0.5)))
                         .attr('fill', c.textMuted)
-                        .attr('font-family', MONO)
+                        .attr('font-family', theme.fonts.mono)
                         .text(sublabel)
                 }
             }
@@ -99,7 +97,7 @@ export function GslbDiagram() {
                         .attr('y', my - 2)
                         .attr('font-size', 8)
                         .attr('fill', c.textDim)
-                        .attr('font-family', MONO)
+                        .attr('font-family', theme.fonts.mono)
                         .text(label)
                 }
             }
@@ -112,7 +110,7 @@ export function GslbDiagram() {
                 .attr('font-size', 14)
                 .attr('font-weight', 'bold')
                 .attr('fill', c.text)
-                .attr('font-family', FONT)
+                .attr('font-family', theme.fonts.sans)
                 .text('GSLB (Global Server Load Balancing)')
 
             // ── Client ──
@@ -170,7 +168,7 @@ export function GslbDiagram() {
                     .attr('font-size', 11)
                     .attr('font-weight', '600')
                     .attr('fill', m.text)
-                    .attr('font-family', FONT)
+                    .attr('font-family', theme.fonts.sans)
                     .text(dc.name)
 
                 // Status indicator
@@ -186,7 +184,7 @@ export function GslbDiagram() {
                     .attr('y', dcY + 40)
                     .attr('font-size', 9)
                     .attr('fill', c.textMuted)
-                    .attr('font-family', MONO)
+                    .attr('font-family', theme.fonts.mono)
                     .text(dc.status)
 
                 if (i === selectedIdx) {
@@ -204,7 +202,7 @@ export function GslbDiagram() {
                 .attr('y', dcY - 8)
                 .attr('font-size', 8)
                 .attr('fill', c.textDim)
-                .attr('font-family', MONO)
+                .attr('font-family', theme.fonts.mono)
                 .text('health check')
 
             // ── "geo-routing: lowest latency" label on the selected path ──
@@ -227,7 +225,7 @@ export function GslbDiagram() {
                 .attr('font-size', 9)
                 .attr('font-weight', '600')
                 .attr('fill', cm.blue.text)
-                .attr('font-family', MONO)
+                .attr('font-family', theme.fonts.mono)
                 .text('geo-routing: lowest latency')
 
             // ── Bottom annotation ──
@@ -237,7 +235,7 @@ export function GslbDiagram() {
                 .attr('text-anchor', 'middle')
                 .attr('font-size', 10)
                 .attr('fill', c.textMuted)
-                .attr('font-family', FONT)
+                .attr('font-family', theme.fonts.sans)
                 .text('GSLB는 DNS 응답을 통해 클라이언트를 최적의 데이터센터로 유도합니다')
         },
         [isDark],

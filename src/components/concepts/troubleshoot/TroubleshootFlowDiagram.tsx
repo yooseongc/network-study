@@ -1,5 +1,5 @@
 import { useCallback, useState } from 'react'
-import { themeColors,useIsDark , D3Container } from '@study-ui/components'
+import { createD3Theme,themeColors,useIsDark , D3Container } from '@study-ui/components'
 import * as d3 from 'd3'
 
 interface FlowNode {
@@ -56,6 +56,7 @@ export function TroubleshootFlowDiagram() {
     const render = useCallback(
         (svg: d3.Selection<SVGSVGElement, unknown, null, undefined>, width: number, _height: number) => {
             const c = themeColors(isDark)
+            const theme = createD3Theme(isDark)
             const g = svg.append('g')
 
             const scaleX = Math.min(width / 600, 1)
@@ -63,8 +64,8 @@ export function TroubleshootFlowDiagram() {
 
             g.attr('transform', `translate(${offsetX}, 10) scale(${scaleX}, 1)`)
 
-            const font = "'Pretendard Variable', Pretendard, sans-serif"
-            const monoFont = "'JetBrains Mono', monospace"
+            const font = theme.fonts.sans
+
 
             // Title
             svg.append('text')
@@ -136,7 +137,7 @@ export function TroubleshootFlowDiagram() {
                         .attr('y', ly)
                         .attr('text-anchor', 'middle')
                         .attr('font-size', 10)
-                        .attr('font-family', monoFont)
+                        .attr('font-family', font)
                         .attr('fill', isSuccess ? c.greenText : c.redText)
                         .attr('font-weight', '600')
                         .text(edge.label)

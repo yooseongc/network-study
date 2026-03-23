@@ -1,9 +1,6 @@
 import { useCallback, useState } from 'react'
 import * as d3 from 'd3'
-import { createColorMap,themeColors,useIsDark , D3Container } from '@study-ui/components'
-
-const FONT = "'Pretendard Variable', Pretendard, sans-serif"
-const MONO = "'JetBrains Mono', monospace"
+import { createColorMap,themeColors,useIsDark , D3Container, createD3Theme } from '@study-ui/components'
 
 type ColorName = 'blue' | 'amber' | 'red' | 'green' | 'cyan' | 'purple' | 'indigo'
 
@@ -65,6 +62,7 @@ export function TrafficFlowDiagram() {
     const renderFn = useCallback(
         (svg: d3.Selection<SVGSVGElement, unknown, null, undefined>, width: number, height: number) => {
             const tc = themeColors(isDark)
+            const theme = createD3Theme(isDark)
             const g = svg.append('g')
             const cx = width / 2
 
@@ -90,7 +88,7 @@ export function TrafficFlowDiagram() {
                 .attr('x', cx).attr('y', titleY)
                 .attr('text-anchor', 'middle')
                 .attr('font-size', titleSize).attr('font-weight', 'bold')
-                .attr('fill', tc.text).attr('font-family', FONT)
+                .attr('fill', tc.text).attr('font-family', theme.fonts.sans)
                 .text('End-to-End Request Flow')
 
             // ── Color map ──
@@ -179,7 +177,7 @@ export function TrafficFlowDiagram() {
                     .attr('text-anchor', 'middle')
                     .attr('font-size', badgeR * 1.1).attr('font-weight', 700)
                     .attr('fill', active ? tc.blueText : tc.textDim)
-                    .attr('font-family', MONO)
+                    .attr('font-family', theme.fonts.mono)
                     .text(String(i + 1))
 
                 // Arrow label (only when this step is active and in step mode)
@@ -192,7 +190,7 @@ export function TrafficFlowDiagram() {
                         .attr('x', labelX).attr('y', labelY - subFontSize * 0.3)
                         .attr('text-anchor', anchor)
                         .attr('font-size', subFontSize * 1.1).attr('font-weight', 600)
-                        .attr('fill', tc.blueText).attr('font-family', MONO)
+                        .attr('fill', tc.blueText).attr('font-family', theme.fonts.mono)
                         .text(flow.label)
 
                     if (flow.sublabel) {
@@ -200,7 +198,7 @@ export function TrafficFlowDiagram() {
                             .attr('x', labelX).attr('y', labelY + subFontSize * 1.1)
                             .attr('text-anchor', anchor)
                             .attr('font-size', subFontSize)
-                            .attr('fill', tc.textDim).attr('font-family', FONT)
+                            .attr('fill', tc.textDim).attr('font-family', theme.fonts.sans)
                             .text(flow.sublabel)
                     }
                 }
@@ -223,14 +221,14 @@ export function TrafficFlowDiagram() {
                     .attr('y', -boxH * 0.08)
                     .attr('text-anchor', 'middle')
                     .attr('font-size', fontSize).attr('font-weight', 700)
-                    .attr('fill', colors.text).attr('font-family', FONT)
+                    .attr('fill', colors.text).attr('font-family', theme.fonts.sans)
                     .text(dev.label)
 
                 nodeG.append('text')
                     .attr('y', boxH * 0.28)
                     .attr('text-anchor', 'middle')
                     .attr('font-size', subFontSize)
-                    .attr('fill', tc.textDim).attr('font-family', MONO)
+                    .attr('fill', tc.textDim).attr('font-family', theme.fonts.mono)
                     .text(dev.sublabel)
             })
 
@@ -257,14 +255,14 @@ export function TrafficFlowDiagram() {
                 .attr('x', cx).attr('y', topRowY - boxH / 2 - 10)
                 .attr('text-anchor', 'middle')
                 .attr('font-size', arrowLabelSize)
-                .attr('fill', tc.textDim).attr('font-family', FONT)
+                .attr('fill', tc.textDim).attr('font-family', theme.fonts.sans)
                 .text('→ Request 방향 →')
 
             g.append('text')
                 .attr('x', cx).attr('y', bottomRowY + boxH / 2 + arrowLabelSize + 8)
                 .attr('text-anchor', 'middle')
                 .attr('font-size', arrowLabelSize)
-                .attr('fill', tc.textDim).attr('font-family', FONT)
+                .attr('fill', tc.textDim).attr('font-family', theme.fonts.sans)
                 .text('← 내부 처리 방향 ←')
 
             // ── Step explanation box ──
@@ -286,7 +284,7 @@ export function TrafficFlowDiagram() {
                     .attr('x', cx).attr('y', boxY + expBoxH / 2 + expFontSize * 0.35)
                     .attr('text-anchor', 'middle')
                     .attr('font-size', expFontSize)
-                    .attr('fill', tc.blueText).attr('font-family', FONT)
+                    .attr('fill', tc.blueText).attr('font-family', theme.fonts.sans)
                     .text(stepText)
             }
         },

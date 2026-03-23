@@ -1,4 +1,4 @@
-import { AnimatedDiagram } from '@study-ui/components'
+import { AnimatedDiagram, createD3Theme, useIsDark } from '@study-ui/components'
 
 const steps = [
     {
@@ -36,6 +36,7 @@ function Arrow({
     sublabel,
     active,
     color,
+    fontMono,
 }: {
     fromX: number
     toX: number
@@ -44,6 +45,7 @@ function Arrow({
     sublabel: string
     active: boolean
     color: string
+    fontMono: string
 }) {
     const midX = (fromX + toX) / 2
     const dir = toX > fromX ? 1 : -1
@@ -70,7 +72,7 @@ function Arrow({
                 y={y - 10}
                 textAnchor="middle"
                 className="text-xs font-bold fill-gray-800 dark:fill-gray-100"
-                style={{ fontFamily: "'JetBrains Mono', monospace" }}
+                style={{ fontFamily: fontMono }}
             >
                 {label}
             </text>
@@ -79,7 +81,7 @@ function Arrow({
                 y={y + 16}
                 textAnchor="middle"
                 className="text-[10px] fill-gray-500 dark:fill-gray-400"
-                style={{ fontFamily: "'JetBrains Mono', monospace" }}
+                style={{ fontFamily: fontMono }}
             >
                 {sublabel}
             </text>
@@ -92,11 +94,13 @@ function StateLabel({
     y,
     text,
     active,
+    fontMono,
 }: {
     x: number
     y: number
     text: string
     active: boolean
+    fontMono: string
 }) {
     return (
         <text
@@ -108,108 +112,114 @@ function StateLabel({
                     ? 'fill-emerald-600 dark:fill-emerald-400 font-bold'
                     : 'fill-gray-400 dark:fill-gray-600'
             }`}
-            style={{ fontFamily: "'JetBrains Mono', monospace" }}
+            style={{ fontFamily: fontMono }}
         >
             {text}
         </text>
     )
 }
 
-function renderStep(step: number) {
-    const arrowY1 = timelineTop + 64
-    const arrowY2 = arrowY1 + stepGap
-    const arrowY3 = arrowY2 + stepGap
-
-    return (
-        <svg viewBox="0 0 540 240" className="w-full h-auto" preserveAspectRatio="xMidYMid meet">
-            {/* Column headers */}
-            <text
-                x={clientX}
-                y={18}
-                textAnchor="middle"
-                className="text-sm font-bold fill-blue-600 dark:fill-blue-400"
-                style={{ fontFamily: "'Pretendard Variable', Pretendard, sans-serif" }}
-            >
-                Client
-            </text>
-            <text
-                x={serverX}
-                y={18}
-                textAnchor="middle"
-                className="text-sm font-bold fill-purple-600 dark:fill-purple-400"
-                style={{ fontFamily: "'Pretendard Variable', Pretendard, sans-serif" }}
-            >
-                Server
-            </text>
-
-            {/* Timeline lines */}
-            <line
-                x1={clientX}
-                y1={timelineTop + 10}
-                x2={clientX}
-                y2={230}
-                stroke="currentColor"
-                strokeWidth={2}
-                strokeDasharray="4,3"
-                className="text-gray-300 dark:text-gray-700"
-            />
-            <line
-                x1={serverX}
-                y1={timelineTop + 10}
-                x2={serverX}
-                y2={230}
-                stroke="currentColor"
-                strokeWidth={2}
-                strokeDasharray="4,3"
-                className="text-gray-300 dark:text-gray-700"
-            />
-
-            {/* Client states */}
-            <StateLabel x={clientX - 60} y={arrowY1 - 8} text="CLOSED" active={step === 0} />
-            <StateLabel x={clientX - 60} y={arrowY1 + 8} text="SYN_SENT" active={step >= 1} />
-            <StateLabel x={clientX - 60} y={arrowY3 + 8} text="ESTABLISHED" active={step >= 3} />
-
-            {/* Server states */}
-            <StateLabel x={serverX + 60} y={arrowY1 - 8} text="LISTEN" active={step >= 0} />
-            <StateLabel x={serverX + 60} y={arrowY2 + 8} text="SYN_RCVD" active={step >= 2} />
-            <StateLabel x={serverX + 60} y={arrowY3 + 8} text="ESTABLISHED" active={step >= 3} />
-
-            {/* Arrow 1: SYN */}
-            <Arrow
-                fromX={clientX}
-                toX={serverX}
-                y={arrowY1}
-                label="SYN"
-                sublabel="seq=x"
-                active={step >= 1}
-                color={step >= 1 ? '#3b82f6' : '#94a3b8'}
-            />
-
-            {/* Arrow 2: SYN+ACK */}
-            <Arrow
-                fromX={serverX}
-                toX={clientX}
-                y={arrowY2}
-                label="SYN+ACK"
-                sublabel="seq=y, ack=x+1"
-                active={step >= 2}
-                color={step >= 2 ? '#8b5cf6' : '#94a3b8'}
-            />
-
-            {/* Arrow 3: ACK */}
-            <Arrow
-                fromX={clientX}
-                toX={serverX}
-                y={arrowY3}
-                label="ACK"
-                sublabel="ack=y+1"
-                active={step >= 3}
-                color={step >= 3 ? '#10b981' : '#94a3b8'}
-            />
-        </svg>
-    )
-}
-
 export function TcpHandshakeDiagram() {
+    const isDark = useIsDark()
+    const theme = createD3Theme(isDark)
+
+    const renderStep = (step: number) => {
+        const arrowY1 = timelineTop + 64
+        const arrowY2 = arrowY1 + stepGap
+        const arrowY3 = arrowY2 + stepGap
+
+        return (
+            <svg viewBox="0 0 540 240" className="w-full h-auto" preserveAspectRatio="xMidYMid meet">
+                {/* Column headers */}
+                <text
+                    x={clientX}
+                    y={18}
+                    textAnchor="middle"
+                    className="text-sm font-bold fill-blue-600 dark:fill-blue-400"
+                    style={{ fontFamily: theme.fonts.sans }}
+                >
+                    Client
+                </text>
+                <text
+                    x={serverX}
+                    y={18}
+                    textAnchor="middle"
+                    className="text-sm font-bold fill-purple-600 dark:fill-purple-400"
+                    style={{ fontFamily: theme.fonts.sans }}
+                >
+                    Server
+                </text>
+
+                {/* Timeline lines */}
+                <line
+                    x1={clientX}
+                    y1={timelineTop + 10}
+                    x2={clientX}
+                    y2={230}
+                    stroke="currentColor"
+                    strokeWidth={2}
+                    strokeDasharray="4,3"
+                    className="text-gray-300 dark:text-gray-700"
+                />
+                <line
+                    x1={serverX}
+                    y1={timelineTop + 10}
+                    x2={serverX}
+                    y2={230}
+                    stroke="currentColor"
+                    strokeWidth={2}
+                    strokeDasharray="4,3"
+                    className="text-gray-300 dark:text-gray-700"
+                />
+
+                {/* Client states */}
+                <StateLabel x={clientX - 60} y={arrowY1 - 8} text="CLOSED" active={step === 0} fontMono={theme.fonts.mono} />
+                <StateLabel x={clientX - 60} y={arrowY1 + 8} text="SYN_SENT" active={step >= 1} fontMono={theme.fonts.mono} />
+                <StateLabel x={clientX - 60} y={arrowY3 + 8} text="ESTABLISHED" active={step >= 3} fontMono={theme.fonts.mono} />
+
+                {/* Server states */}
+                <StateLabel x={serverX + 60} y={arrowY1 - 8} text="LISTEN" active={step >= 0} fontMono={theme.fonts.mono} />
+                <StateLabel x={serverX + 60} y={arrowY2 + 8} text="SYN_RCVD" active={step >= 2} fontMono={theme.fonts.mono} />
+                <StateLabel x={serverX + 60} y={arrowY3 + 8} text="ESTABLISHED" active={step >= 3} fontMono={theme.fonts.mono} />
+
+                {/* Arrow 1: SYN */}
+                <Arrow
+                    fromX={clientX}
+                    toX={serverX}
+                    y={arrowY1}
+                    label="SYN"
+                    sublabel="seq=x"
+                    active={step >= 1}
+                    color={step >= 1 ? '#3b82f6' : '#94a3b8'}
+                    fontMono={theme.fonts.mono}
+                />
+
+                {/* Arrow 2: SYN+ACK */}
+                <Arrow
+                    fromX={serverX}
+                    toX={clientX}
+                    y={arrowY2}
+                    label="SYN+ACK"
+                    sublabel="seq=y, ack=x+1"
+                    active={step >= 2}
+                    color={step >= 2 ? '#8b5cf6' : '#94a3b8'}
+                    fontMono={theme.fonts.mono}
+                />
+
+                {/* Arrow 3: ACK */}
+                <Arrow
+                    fromX={clientX}
+                    toX={serverX}
+                    y={arrowY3}
+                    label="ACK"
+                    sublabel="ack=y+1"
+                    active={step >= 3}
+                    color={step >= 3 ? '#10b981' : '#94a3b8'}
+                    fontMono={theme.fonts.mono}
+                />
+            </svg>
+        )
+    }
+
     return <AnimatedDiagram steps={steps} renderStep={renderStep} autoPlayInterval={2000} />
 }

@@ -1,6 +1,6 @@
 import { useCallback } from 'react'
 import * as d3 from 'd3'
-import { createColorMap,themeColors,useIsDark , D3Container } from '@study-ui/components'
+import { createColorMap,createD3Theme,themeColors,useIsDark , D3Container } from '@study-ui/components'
 
 const osiLayers = [
     { name: '7. 응용 계층', en: 'Application', protocols: 'HTTP, FTP, DNS, SMTP', color: 'purple' as const },
@@ -32,6 +32,7 @@ export function OsiTcpIpCompare() {
     const render = useCallback(
         (svg: d3.Selection<SVGSVGElement, unknown, null, undefined>, width: number, height: number) => {
             const c = themeColors(isDark)
+            const theme = createD3Theme(isDark)
             const margin = { top: 44, bottom: 16, left: 16, right: 16 }
             const gap = 40
             const colW = (width - margin.left - margin.right - gap) / 2
@@ -48,7 +49,7 @@ export function OsiTcpIpCompare() {
                 .attr('fill', c.text)
                 .attr('font-size', 14)
                 .attr('font-weight', 700)
-                .attr('font-family', "'Pretendard Variable', Pretendard, sans-serif")
+                .attr('font-family', theme.fonts.sans)
                 .text('OSI 7계층 모델')
 
             g.append('text')
@@ -58,7 +59,7 @@ export function OsiTcpIpCompare() {
                 .attr('fill', c.text)
                 .attr('font-size', 14)
                 .attr('font-weight', 700)
-                .attr('font-family', "'Pretendard Variable', Pretendard, sans-serif")
+                .attr('font-family', theme.fonts.sans)
                 .text('TCP/IP 4계층 모델')
 
             // OSI layers
@@ -84,7 +85,7 @@ export function OsiTcpIpCompare() {
                     .attr('fill', cp.text)
                     .attr('font-size', 12)
                     .attr('font-weight', 600)
-                    .attr('font-family', "'Pretendard Variable', Pretendard, sans-serif")
+                    .attr('font-family', theme.fonts.sans)
                     .text(layer.name)
 
                 g.append('text')
@@ -93,7 +94,7 @@ export function OsiTcpIpCompare() {
                     .attr('dominant-baseline', 'middle')
                     .attr('fill', c.textMuted)
                     .attr('font-size', 10)
-                    .attr('font-family', "'JetBrains Mono', monospace")
+                    .attr('font-family', theme.fonts.sans)
                     .text(layer.protocols)
             })
 
@@ -121,7 +122,7 @@ export function OsiTcpIpCompare() {
                     .attr('fill', cp.text)
                     .attr('font-size', 12)
                     .attr('font-weight', 600)
-                    .attr('font-family', "'Pretendard Variable', Pretendard, sans-serif")
+                    .attr('font-family', theme.fonts.sans)
                     .text(layer.name)
 
                 g.append('text')
@@ -130,7 +131,7 @@ export function OsiTcpIpCompare() {
                     .attr('dominant-baseline', 'middle')
                     .attr('fill', c.textMuted)
                     .attr('font-size', 10)
-                    .attr('font-family', "'JetBrains Mono', monospace")
+                    .attr('font-family', theme.fonts.mono)
                     .text(layer.protocols)
 
                 // Connection lines

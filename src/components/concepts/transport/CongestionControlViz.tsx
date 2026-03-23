@@ -1,5 +1,5 @@
 import { useCallback } from 'react'
-import { themeColors,useIsDark , D3Container } from '@study-ui/components'
+import { createD3Theme,themeColors,useIsDark , D3Container } from '@study-ui/components'
 import * as d3 from 'd3'
 
 /**
@@ -56,6 +56,7 @@ export function CongestionControlViz() {
     const render = useCallback(
         (svg: d3.Selection<SVGSVGElement, unknown, null, undefined>, width: number, height: number) => {
             const c = themeColors(isDark)
+            const theme = createD3Theme(isDark)
             const { points, firstSsthresh, secondSsthresh } = generateCwndData()
             const g = svg.append('g')
 
@@ -102,7 +103,7 @@ export function CongestionControlViz() {
                 .attr('y', y(firstSsthresh) - 6)
                 .attr('text-anchor', 'end')
                 .attr('font-size', 10)
-                .attr('font-family', "'JetBrains Mono', monospace")
+                .attr('font-family', theme.fonts.mono)
                 .attr('fill', c.amberText)
                 .text(`ssthresh = ${firstSsthresh}`)
 
@@ -123,7 +124,7 @@ export function CongestionControlViz() {
                 .attr('y', y(secondSsthresh) - 6)
                 .attr('text-anchor', 'end')
                 .attr('font-size', 10)
-                .attr('font-family', "'JetBrains Mono', monospace")
+                .attr('font-family', theme.fonts.mono)
                 .attr('fill', c.redText)
                 .text(`new ssthresh = ${secondSsthresh}`)
 
@@ -224,7 +225,7 @@ export function CongestionControlViz() {
                     .attr('y', py)
                     .attr('font-size', 10)
                     .attr('font-weight', 'bold')
-                    .attr('font-family', "'Pretendard Variable', Pretendard, sans-serif")
+                    .attr('font-family', theme.fonts.sans)
                     .attr('fill', phaseColor[ph.phase])
                     .text(ph.labelKo)
             })
@@ -243,7 +244,7 @@ export function CongestionControlViz() {
                     sel.selectAll('.tick text')
                         .attr('fill', c.textMuted)
                         .attr('font-size', 10)
-                        .attr('font-family', "'JetBrains Mono', monospace")
+                        .attr('font-family', theme.fonts.mono)
                 })
 
             chartG
@@ -255,7 +256,7 @@ export function CongestionControlViz() {
                     sel.selectAll('.tick text')
                         .attr('fill', c.textMuted)
                         .attr('font-size', 10)
-                        .attr('font-family', "'JetBrains Mono', monospace")
+                        .attr('font-family', theme.fonts.mono)
                 })
 
             // Axis labels
@@ -266,7 +267,7 @@ export function CongestionControlViz() {
                 .attr('text-anchor', 'middle')
                 .attr('font-size', 12)
                 .attr('fill', c.textMuted)
-                .attr('font-family', "'Pretendard Variable', Pretendard, sans-serif")
+                .attr('font-family', theme.fonts.sans)
                 .text('전송 라운드 (RTT)')
 
             chartG
@@ -277,7 +278,7 @@ export function CongestionControlViz() {
                 .attr('transform', 'rotate(-90)')
                 .attr('font-size', 12)
                 .attr('fill', c.textMuted)
-                .attr('font-family', "'Pretendard Variable', Pretendard, sans-serif")
+                .attr('font-family', theme.fonts.sans)
                 .text('혼잡 윈도우 (cwnd, segments)')
 
             // Title
@@ -288,7 +289,7 @@ export function CongestionControlViz() {
                 .attr('font-size', 13)
                 .attr('font-weight', 'bold')
                 .attr('fill', c.text)
-                .attr('font-family', "'Pretendard Variable', Pretendard, sans-serif")
+                .attr('font-family', theme.fonts.sans)
                 .text('TCP 혼잡 제어: cwnd 변화 과정')
 
             // Legend — positioned at top-right to avoid X-axis RTT label overlap
@@ -315,7 +316,7 @@ export function CongestionControlViz() {
                     .attr('y', ly)
                     .attr('font-size', 9)
                     .attr('fill', c.textMuted)
-                    .attr('font-family', "'Pretendard Variable', Pretendard, sans-serif")
+                    .attr('font-family', theme.fonts.sans)
                     .text(item.label)
             })
         },

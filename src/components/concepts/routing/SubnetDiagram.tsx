@@ -1,5 +1,5 @@
 import { useCallback } from 'react'
-import { themeColors,useIsDark , D3Container } from '@study-ui/components'
+import { createD3Theme,themeColors,useIsDark , D3Container } from '@study-ui/components'
 import * as d3 from 'd3'
 
 export function SubnetDiagram() {
@@ -8,6 +8,7 @@ export function SubnetDiagram() {
     const render = useCallback(
         (svg: d3.Selection<SVGSVGElement, unknown, null, undefined>, width: number, _height: number) => {
             const c = themeColors(isDark)
+            const theme = createD3Theme(isDark)
             const g = svg.append('g')
 
             const pad = { top: 30, left: 20, right: 20, bottom: 30 }
@@ -25,7 +26,7 @@ export function SubnetDiagram() {
                 .attr('font-size', 13)
                 .attr('font-weight', 'bold')
                 .attr('fill', c.text)
-                .attr('font-family', "'Pretendard Variable', Pretendard, sans-serif")
+                .attr('font-family', theme.fonts.sans)
                 .text('192.168.1.100 / 24  IPv4 주소 구조')
 
             // Binary representation of 192.168.1.100
@@ -58,7 +59,7 @@ export function SubnetDiagram() {
                     .attr('text-anchor', 'middle')
                     .attr('dominant-baseline', 'middle')
                     .attr('font-size', Math.min(11, bitW - 2))
-                    .attr('font-family', "'JetBrains Mono', monospace")
+                    .attr('font-family', theme.fonts.mono)
                     .attr('fill', isNetwork ? c.blueText : c.greenText)
                     .text(bits[i])
             }
@@ -91,7 +92,7 @@ export function SubnetDiagram() {
                 .attr('y', bitStartY - 12)
                 .attr('text-anchor', 'middle')
                 .attr('font-size', 10)
-                .attr('font-family', "'JetBrains Mono', monospace")
+                .attr('font-family', theme.fonts.mono)
                 .attr('fill', c.redText)
                 .text('/24')
 
@@ -107,7 +108,7 @@ export function SubnetDiagram() {
                 .attr('font-size', 11)
                 .attr('font-weight', 'bold')
                 .attr('fill', c.blueText)
-                .attr('font-family', "'Pretendard Variable', Pretendard, sans-serif")
+                .attr('font-family', theme.fonts.sans)
                 .text('Network Part (24 bits)')
 
             // Host part label
@@ -119,7 +120,7 @@ export function SubnetDiagram() {
                 .attr('font-size', 11)
                 .attr('font-weight', 'bold')
                 .attr('fill', c.greenText)
-                .attr('font-family', "'Pretendard Variable', Pretendard, sans-serif")
+                .attr('font-family', theme.fonts.sans)
                 .text('Host Part (8 bits)')
 
             // Decimal representation below
@@ -144,7 +145,7 @@ export function SubnetDiagram() {
                     .attr('text-anchor', 'middle')
                     .attr('font-size', 13)
                     .attr('font-weight', 'bold')
-                    .attr('font-family', "'JetBrains Mono', monospace")
+                    .attr('font-family', theme.fonts.mono)
                     .attr('fill', isNet ? c.blueText : c.greenText)
                     .text(decLabels[i])
 
@@ -157,7 +158,7 @@ export function SubnetDiagram() {
                         .attr('font-size', 16)
                         .attr('font-weight', 'bold')
                         .attr('fill', c.textMuted)
-                        .attr('font-family', "'JetBrains Mono', monospace")
+                        .attr('font-family', theme.fonts.mono)
                         .text('.')
                 }
             }
@@ -187,7 +188,7 @@ export function SubnetDiagram() {
                     .attr('y', legendY + 4)
                     .attr('font-size', Math.min(10, legendSpacing / 22))
                     .attr('fill', c.textMuted)
-                    .attr('font-family', "'Pretendard Variable', Pretendard, sans-serif")
+                    .attr('font-family', theme.fonts.sans)
                     .text(item.label)
             })
         },

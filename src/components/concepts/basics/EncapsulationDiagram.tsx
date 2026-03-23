@@ -1,4 +1,4 @@
-import { themeColors,useIsDark , AnimatedDiagram } from '@study-ui/components'
+import { themeColors,useIsDark , AnimatedDiagram, createD3Theme } from '@study-ui/components'
 
 const steps = [
     {
@@ -37,6 +37,7 @@ interface LayerBlock {
 function EncapVisual({ currentStep }: { currentStep: number; isDark: boolean }) {
     const isDk = useIsDark()
     const c = themeColors(isDk)
+    const theme = createD3Theme(isDk)
 
     const allLayers: LayerBlock[] = [
         { label: 'Eth Header', color: c.amberFill, width: 80 },
@@ -116,7 +117,7 @@ function EncapVisual({ currentStep }: { currentStep: number; isDark: boolean }) 
                                 fill={layer.textColor}
                                 fontSize={layer.width < 60 ? 9 : 11}
                                 fontWeight={600}
-                                fontFamily="'Pretendard Variable', Pretendard, sans-serif"
+                                fontFamily={theme.fonts.sans}
                             >
                                 {layer.label}
                             </text>

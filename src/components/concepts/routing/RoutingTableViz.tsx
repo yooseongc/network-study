@@ -1,5 +1,5 @@
 import { useCallback, useState } from 'react'
-import { themeColors,useIsDark , D3Container } from '@study-ui/components'
+import { createD3Theme,themeColors,useIsDark , D3Container } from '@study-ui/components'
 import * as d3 from 'd3'
 
 interface RouteEntry {
@@ -36,6 +36,7 @@ export function RoutingTableViz() {
     const render = useCallback(
         (svg: d3.Selection<SVGSVGElement, unknown, null, undefined>, width: number, _height: number) => {
             const c = themeColors(isDark)
+            const theme = createD3Theme(isDark)
             const g = svg.append('g')
             const pad = { top: 10, left: 16, right: 16 }
             const innerW = width - pad.left - pad.right
@@ -48,7 +49,7 @@ export function RoutingTableViz() {
                 .attr('font-size', 13)
                 .attr('font-weight', 'bold')
                 .attr('fill', c.text)
-                .attr('font-family', "'Pretendard Variable', Pretendard, sans-serif")
+                .attr('font-family', theme.fonts.sans)
                 .text(`Longest Prefix Match: ${targetIp} 의 경로 탐색`)
 
             // Target IP display
@@ -68,7 +69,7 @@ export function RoutingTableViz() {
                 .attr('text-anchor', 'middle')
                 .attr('font-size', 12)
                 .attr('font-weight', 'bold')
-                .attr('font-family', "'JetBrains Mono', monospace")
+                .attr('font-family', theme.fonts.mono)
                 .attr('fill', c.amberText)
                 .text(`Destination: ${targetIp}  (${targetBinary.replace(/\./g, '')})`)
 
@@ -100,7 +101,7 @@ export function RoutingTableViz() {
                     .attr('font-size', 11)
                     .attr('font-weight', 'bold')
                     .attr('fill', c.text)
-                    .attr('font-family', "'Pretendard Variable', Pretendard, sans-serif")
+                    .attr('font-family', theme.fonts.sans)
                     .text(h)
             })
 
@@ -170,7 +171,7 @@ export function RoutingTableViz() {
                             .attr('dominant-baseline', 'middle')
                             .attr('font-size', 11)
                             .attr('font-weight', 'bold')
-                            .attr('font-family', "'JetBrains Mono', monospace")
+                            .attr('font-family', theme.fonts.sans)
                             .attr('fill', resultFill)
                             .text(resultText)
                     } else {
@@ -179,7 +180,7 @@ export function RoutingTableViz() {
                             .attr('y', ry + rowH / 2 + 1)
                             .attr('dominant-baseline', 'middle')
                             .attr('font-size', 11)
-                            .attr('font-family', "'JetBrains Mono', monospace")
+                            .attr('font-family', theme.fonts.mono)
                             .attr('fill', isChecking ? c.amberText : c.textMuted)
                             .text(val)
                     }
@@ -217,7 +218,7 @@ export function RoutingTableViz() {
                 .attr('font-size', explFontSize)
                 .attr('fill', step === 4 ? c.greenText : c.textMuted)
                 .attr('font-weight', step === 4 ? 'bold' : 'normal')
-                .attr('font-family', "'Pretendard Variable', Pretendard, sans-serif")
+                .attr('font-family', theme.fonts.sans)
                 .text(explanation)
         },
         [isDark, step],

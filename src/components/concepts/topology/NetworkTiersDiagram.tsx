@@ -1,9 +1,6 @@
 import { useCallback } from 'react'
 import * as d3 from 'd3'
-import { themeColors,useIsDark , D3Container } from '@study-ui/components'
-
-const FONT = "'Pretendard Variable', Pretendard, sans-serif"
-const MONO = "'JetBrains Mono', monospace"
+import { themeColors,useIsDark , D3Container, createD3Theme } from '@study-ui/components'
 
 interface TierNode {
     id: string
@@ -18,6 +15,7 @@ export function NetworkTiersDiagram() {
     const renderFn = useCallback(
         (svg: d3.Selection<SVGSVGElement, unknown, null, undefined>, width: number, _height: number) => {
             const tc = themeColors(isDark)
+            const theme = createD3Theme(isDark)
             const g = svg.append('g')
             const cx = width / 2
 
@@ -41,13 +39,13 @@ export function NetworkTiersDiagram() {
                 g.append('text')
                     .attr('x', 50).attr('y', tier.y + 20)
                     .attr('fill', tier.text)
-                    .attr('font-family', MONO).attr('font-size', 11).attr('font-weight', 700)
+                    .attr('font-family', theme.fonts.mono).attr('font-size', 11).attr('font-weight', 700)
                     .text(tier.label)
 
                 g.append('text')
                     .attr('x', 50).attr('y', tier.y + 35)
                     .attr('fill', tc.textDim)
-                    .attr('font-family', FONT).attr('font-size', 9)
+                    .attr('font-family', theme.fonts.sans).attr('font-size', 9)
                     .text(tier.sublabel)
             }
 
@@ -109,7 +107,7 @@ export function NetworkTiersDiagram() {
                         .attr('x', 0).attr('y', 4)
                         .attr('text-anchor', 'middle')
                         .attr('fill', textColor)
-                        .attr('font-family', FONT).attr('font-size', 9).attr('font-weight', 600)
+                        .attr('font-family', theme.fonts.sans).attr('font-size', 9).attr('font-weight', 600)
                         .text(node.label)
                 }
             }
@@ -137,7 +135,7 @@ export function NetworkTiersDiagram() {
                     .attr('x', dev.x).attr('y', dev.y + 20)
                     .attr('text-anchor', 'middle')
                     .attr('fill', tc.textMuted)
-                    .attr('font-family', FONT).attr('font-size', 8)
+                    .attr('font-family', theme.fonts.sans).attr('font-size', 8)
                     .text(dev.label)
             }
 
@@ -146,7 +144,7 @@ export function NetworkTiersDiagram() {
                 .attr('x', cx).attr('y', 68)
                 .attr('text-anchor', 'middle')
                 .attr('fill', tc.textDim)
-                .attr('font-family', MONO).attr('font-size', 8)
+                .attr('font-family', theme.fonts.mono).attr('font-size', 8)
                 .text('redundant link')
         },
         [isDark]
